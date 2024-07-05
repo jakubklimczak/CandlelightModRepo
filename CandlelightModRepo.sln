@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CandlelightModRepo.Server", "CandlelightModRepo.Server\CandlelightModRepo.Server.csproj", "{7E509C89-DB3C-4F3B-BBFA-82896044A7E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Candlelight.Backend", "CandlelightModRepo.Server\Candlelight.Backend.csproj", "{7E509C89-DB3C-4F3B-BBFA-82896044A7E6}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "candlelightmodrepo.client", "candlelightmodrepo.client\candlelightmodrepo.client.esproj", "{8884F774-D8B7-4291-BD47-8DE0576638B6}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "candlelight.client", "candlelightmodrepo.client\candlelight.client.esproj", "{8884F774-D8B7-4291-BD47-8DE0576638B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Candlelight.Backend.Tests", "CandlelightBackendTests\Candlelight.Backend.Tests.csproj", "{D7560057-9E1C-4D58-988C-BE7D9634DCD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{8884F774-D8B7-4291-BD47-8DE0576638B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8884F774-D8B7-4291-BD47-8DE0576638B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8884F774-D8B7-4291-BD47-8DE0576638B6}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D7560057-9E1C-4D58-988C-BE7D9634DCD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7560057-9E1C-4D58-988C-BE7D9634DCD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7560057-9E1C-4D58-988C-BE7D9634DCD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7560057-9E1C-4D58-988C-BE7D9634DCD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
