@@ -1,0 +1,6 @@
+@CandlelightModRepo.Server_HostAddress = http://localhost:5251
+
+GET {{CandlelightModRepo.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
