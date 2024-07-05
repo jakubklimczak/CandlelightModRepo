@@ -21,11 +21,15 @@
     "@angular/platform-browser": "^18.0.0",
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
+    "eslint": "^9.6.0",
+    "jest-editor-support": "*",
+    "lodash-es": "^4.17.21",
+    "prettier": "^3.3.2",
+    "prettier-eslint": "^16.3.0",
+    "run-script-os": "*",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.3",
-    "jest-editor-support": "*",
-    "run-script-os": "*"
+    "zone.js": "~0.14.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.0.7",
@@ -38,6 +42,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "prettier": "^3.3.2",
     "typescript": "~5.4.2"
   }
 }
