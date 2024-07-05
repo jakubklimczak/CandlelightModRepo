@@ -267,3 +267,9 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# User secrets
+secrets.json
+
+# Environment variables (if you store them in a file)
+.env
