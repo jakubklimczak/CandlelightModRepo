@@ -1,4 +1,4 @@
-namespace CandlelightModRepo.Server
+namespace Candlelight.Backend.Entities
 {
     public class WeatherForecast
     {

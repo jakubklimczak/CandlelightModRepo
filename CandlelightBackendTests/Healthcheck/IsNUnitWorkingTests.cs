@@ -1,4 +1,4 @@
-namespace CandlelightBackendTests;
+namespace Candlelight.Backend.Tests.Healthcheck;
 
 public class IsNUnitWorkingTests
 {

@@ -1,4 +1,4 @@
-namespace CandlelightModRepo.Server.Entities;
+namespace Candlelight.Server.Entities;
 
 public class AppUser
 {
