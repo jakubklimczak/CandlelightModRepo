@@ -5,6 +5,7 @@ namespace Candlelight.Backend.Data;
 public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
 {
     public DbSet<AppUser> Users { get; set; }
+    public DbSet<TestEntity> Tests { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -16,6 +17,9 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             .IsUnique();
         modelBuilder.Entity<AppUser>()
             .HasIndex(u => u.UserName)
+            .IsUnique();
+        modelBuilder.Entity<TestEntity>()
+            .HasIndex(u => u.Id)
             .IsUnique();
     }
 }

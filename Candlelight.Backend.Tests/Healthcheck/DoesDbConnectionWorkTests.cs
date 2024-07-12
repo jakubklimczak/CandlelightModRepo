@@ -1,18 +1,16 @@
 ﻿using Candlelight.Backend.Data;
 using Candlelight.Server.Entities;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace Candlelight.Backend.Tests.Healthcheck;
 
-[Ignore("Disabled, use when setting up the database.")]
 [TestFixture]
 public class DoesDbConnectionWorkTests
 {
     private DataContext _context;
-
+    private readonly Guid id1 = Guid.NewGuid();
+    private readonly Guid id2 = Guid.NewGuid();
     [SetUp]
     public void Setup()
     {
@@ -35,9 +33,9 @@ public class DoesDbConnectionWorkTests
 
     private void SeedTestData()
     {
-        _context.Users.AddRange(
-            new AppUser { Id = Guid.NewGuid(), UserName = "Entity 1", UserEmail="email1@email.com" },
-            new AppUser { Id = Guid.NewGuid(), UserName = "Entity 2", UserEmail="email2@email.com" }
+        _context.Tests.AddRange(
+            new TestEntity { Id = id1, Name = "Entity 1", Description = "Description 1" },
+            new TestEntity { Id = id2, Name = "Entity 2", Description = "Description 2" }
         );
         _context.SaveChanges();
     }
@@ -46,16 +44,38 @@ public class DoesDbConnectionWorkTests
     public void CanConnectToDatabase()
     {
         // Act
-        var entitiesCount = _context.Users.Count();
+        var entitiesCount = _context.Tests.Count();
 
         // Assert
         Assert.That(entitiesCount, Is.EqualTo(2));
     }
 
+    [Test]
+    public void EntitiesSavedCorrectly()
+    {
+        // Act
+        var entitiesCount = _context.Tests.Count();
+        var entity1 = _context.Tests.FirstOrDefault(e => e.Id == id1);
+        var entity2 = _context.Tests.FirstOrDefault(e => e.Id == id2);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(entitiesCount, Is.EqualTo(2));
+            Assert.That(entity1, Is.Not.Null);
+            Assert.That(entity1!.Name, Is.EqualTo("Entity 1"));
+            Assert.That(entity1!.Description, Is.EqualTo("Description 1"));
+            Assert.That(entity2, Is.Not.Null);
+            Assert.That(entity2!.Name, Is.EqualTo("Entity 2"));
+            Assert.That(entity2!.Description, Is.EqualTo("Description 2"));
+        });
+    }
+
     [TearDown]
     public void Cleanup()
     {
-        _context.Database.EnsureDeleted();
+        var sql = @"TRUNCATE TABLE ""Tests""";
+        _context.Database.ExecuteSqlRaw(sql);
         _context.Dispose();
     }
 }
