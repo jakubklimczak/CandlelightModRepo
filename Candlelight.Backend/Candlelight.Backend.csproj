@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\candlelightmodrepo.client\candlelight.client.esproj">
+    <ProjectReference Include="..\candlelight.client\candlelight.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
