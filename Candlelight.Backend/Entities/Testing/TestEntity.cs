@@ -1,4 +1,4 @@
-namespace Candlelight.Server.Entities;
+namespace Candlelight.Backend.Entities.Testing;
 public class TestEntity
 {
     public Guid Id { get; set; }

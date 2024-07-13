@@ -1,12 +1,12 @@
 ﻿using Candlelight.Backend.Data;
-using Candlelight.Server.Entities;
+using Candlelight.Backend.Entities.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Candlelight.Backend.Tests.Healthcheck;
 
 [TestFixture]
-public class DoesDbConnectionWorkTests
+public class DbConnectionTests
 {
     private DataContext _context;
     private readonly Guid id1 = Guid.NewGuid();
@@ -41,7 +41,7 @@ public class DoesDbConnectionWorkTests
     }
 
     [Test]
-    public void CanConnectToDatabase()
+    public void CanDatabaseBeConnectedTo()
     {
         // Act
         var entitiesCount = _context.Tests.Count();
@@ -51,7 +51,7 @@ public class DoesDbConnectionWorkTests
     }
 
     [Test]
-    public void EntitiesSavedCorrectly()
+    public void AreEntitiesSavedCorrectly()
     {
         // Act
         var entitiesCount = _context.Tests.Count();
