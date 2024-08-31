@@ -1,4 +1,4 @@
-namespace Candlelight.Backend.Entities
+namespace Candlelight.Backend.Entities.Testing
 {
     public class WeatherForecast
     {

@@ -1,10 +1,10 @@
-﻿using Candlelight.Backend.Entities;
+﻿using Candlelight.Backend.Entities.Testing;
 using Candlelight.Server.Controllers;
 
 namespace Candlelight.Backend.Tests.Healthcheck;
 
 [TestFixture]
-public class IsWeatherForecastWorkingTests
+public class WeatherForecastTests
 {
     private WeatherForecastController _controller;
 
@@ -12,7 +12,7 @@ public class IsWeatherForecastWorkingTests
     public void Setup() => _controller = new WeatherForecastController();
 
     [Test]
-    public void Get_ReturnsWeatherForecasts()
+    public void DoesGetReturnWeatherForecasts()
     {
         // Act
         var result = _controller.Get();
@@ -24,7 +24,7 @@ public class IsWeatherForecastWorkingTests
     }
 
     [Test]
-    public void Get_ReturnsValidWeatherForecasts()
+    public void DoesGetReturnValidWeatherForecasts()
     {
         // Act
         var result = _controller.Get().ToList();

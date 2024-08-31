@@ -1,6 +1,6 @@
 namespace Candlelight.Backend.Tests.Healthcheck;
 
-public class IsNUnitWorkingTests
+public class NUnitTests
 {
     [Test]
     public void IsTestLibraryWorkingTest()
