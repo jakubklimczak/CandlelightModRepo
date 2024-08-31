@@ -1,7 +1,7 @@
 using Candlelight.Backend.Entities.Testing;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Candlelight.Server.Controllers;
+namespace Candlelight.Backend.Controllers;
 
 /*
 * This Controller exists for testing purposes.

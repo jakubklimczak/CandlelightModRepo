@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "candlelightmodrepo.client": {
+    "candlelight.client": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/candlelightmodrepo.client",
+            "outputPath": "dist/candlelight.client",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -69,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "candlelightmodrepo.client:build:production"
+              "buildTarget": "candlelight.client:build:production"
             },
             "development": {
-              "buildTarget": "candlelightmodrepo.client:build:development"
+              "buildTarget": "candlelight.client:build:development"
             }
           },
           "defaultConfiguration": "development",
