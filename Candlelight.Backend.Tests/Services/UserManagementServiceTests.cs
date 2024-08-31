@@ -4,7 +4,6 @@ using Candlelight.Backend.Helpers;
 using Candlelight.Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Moq;
 
 namespace Candlelight.Backend.Tests.Services;
 
@@ -13,7 +12,7 @@ public class UserManagementServiceTests
 {
     private DataContext _context;
     private UserManagementService _userManagementService;
-    private readonly UserInfo _userToAdd = new() { Id = Guid.NewGuid(), UserName = "username", UserEmail = "email@email.com", PasswordHash = "unhashedPassword;)" };
+    private readonly UserInfo _userToAdd = new() {Id = Guid.NewGuid(), UserName = "username", UserEmail = "email@email.com", PasswordHash = "unhashedPassword;)", Created = DateTime.Now, LastUpdated = DateTime.Now };
     
     [SetUp]
     public void Setup()

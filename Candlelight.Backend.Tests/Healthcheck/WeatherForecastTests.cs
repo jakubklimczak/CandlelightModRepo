@@ -1,5 +1,5 @@
-﻿using Candlelight.Backend.Entities.Testing;
-using Candlelight.Server.Controllers;
+﻿using Candlelight.Backend.Controllers;
+using Candlelight.Backend.Entities.Testing;
 
 namespace Candlelight.Backend.Tests.Healthcheck;
 

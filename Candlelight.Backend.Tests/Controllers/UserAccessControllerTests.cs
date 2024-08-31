@@ -1,8 +1,8 @@
-﻿using Candlelight.Backend.Data;
+﻿using Candlelight.Backend.Controllers;
+using Candlelight.Backend.Data;
 using Candlelight.Backend.Entities;
 using Candlelight.Backend.Entities.Forms;
 using Candlelight.Backend.Services;
-using Candlelight.Server.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,12 +12,12 @@ namespace Candlelight.Backend.Tests.Controllers;
 
 [Ignore("Doesn't work yet")]
 [TestFixture]
-public class UserRegistrationControllerTests
+public class UserAccessControllerTests
 {
     private DataContext _context;
     private Mock<UserManagementService> _userManagementService;
     private Mock<AuthenticationService> _mockAuthenticationService;
-    private UserRegistrationController _controller;
+    private UserAccessController _controller;
 
     [SetUp]
     public void Setup()
@@ -37,7 +37,7 @@ public class UserRegistrationControllerTests
 
         _userManagementService = new Mock<UserManagementService>(_context);
         _mockAuthenticationService = new Mock<AuthenticationService>(_userManagementService.Object);
-        _controller = new UserRegistrationController(_mockAuthenticationService.Object);
+        _controller = new UserAccessController(_mockAuthenticationService.Object);
     }
 
     [Test]
@@ -57,7 +57,9 @@ public class UserRegistrationControllerTests
             Id = Guid.NewGuid(),
             UserName = form.UserName,
             UserEmail = form.UserEmail,
-            PasswordHash = "47yxds290"
+            PasswordHash = "47yxds290",
+            Created = DateTime.Now,
+            LastUpdated = DateTime.Now
         };
 
         _mockAuthenticationService.Setup(x => x.IsRegistrationFormValid(form)).Returns(true);

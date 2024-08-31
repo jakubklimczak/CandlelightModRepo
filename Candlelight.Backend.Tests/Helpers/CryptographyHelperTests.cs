@@ -12,7 +12,9 @@ public class CryptographyHelperTests
         Id = Guid.NewGuid(),
         UserEmail = "email@candlelight.com",
         UserName = "testUser",
-        PasswordHash = ""
+        PasswordHash = "",
+        Created = DateTime.Now,
+        LastUpdated = DateTime.Now
     };
 
     [Test]
