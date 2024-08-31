@@ -16,14 +16,29 @@ public class UserManagementService(DataContext context)
             Id = Guid.NewGuid(),
             UserName = userName,
             UserEmail = userEmail,
-            PasswordHash = ""
+            PasswordHash = "",
+            Created = DateTime.Now,
+            LastUpdated = DateTime.Now
         };
 
         var encodedPassword = EncodingHelper.Base64Encode(passwordString);
         var hashedPassword = CryptographyHelper.HashPassword(newUser, encodedPassword);
         newUser.PasswordHash = hashedPassword;
 
+        UserProfile newProfile = new()
+        {
+            Id = Guid.NewGuid(),
+            UserId = newUser.Id,
+            DisplayName = newUser.UserName,
+            AvatarFilename = null,
+            BackgroundColour = null,
+            Bio = null,
+            Created = DateTime.Now,
+            LastUpdated = DateTime.Now
+        };
+
         await _context.Users.AddAsync(newUser);
+        await _context.UserProfiles.AddAsync(newProfile);
         await _context.SaveChangesAsync();
 
         return newUser;

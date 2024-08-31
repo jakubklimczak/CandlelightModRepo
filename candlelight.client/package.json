@@ -1,5 +1,5 @@
 {
-  "name": "candlelightmodrepo.client",
+  "name": "candlelight.client",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
