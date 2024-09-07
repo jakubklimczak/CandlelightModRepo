@@ -10,8 +10,6 @@ export class AppComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
+    console.log("App initialised. Remove after release.")
   }
-
-
-  title = 'candlelight.client';
 }

@@ -6,10 +6,4 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   styleUrl: './topbar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopbarComponent {
-  constructor() { }
-
-  ngOnInit() {
-    
-  }
-}
+export class TopbarComponent {}

@@ -7,9 +7,4 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   styleUrl: './hero-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroPageComponent {
-  constructor() { }
-
-  ngOnInit() {
-  }
-}
+export class HeroPageComponent {}
