@@ -2,12 +2,17 @@ mat-toolbar {
     padding: 1rem;
     justify-content: space-between;
     color: "primary";
-    
+    background-color: "secondary";
     nav a {
       color: "secondary";
       margin-left: 1rem;
     }
-  
+
+    .text {
+      font-size: 0.75rem;
+      color: #ffb0cc;
+    }
+
     .spacer {
       flex: 1 1 auto;
     }
