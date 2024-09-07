@@ -1,4 +1,4 @@
-﻿module.exports = function (config) {
+﻿export default function (config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
@@ -34,7 +34,7 @@
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['Firefox'],
     singleRun: false,
     restartOnFileChange: true,
     listenAddress: 'localhost',

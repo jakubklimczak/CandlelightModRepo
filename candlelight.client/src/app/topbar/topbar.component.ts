@@ -1,14 +1,9 @@
-import { Component } from "@angular/core";
-
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
   selector: 'topbar',
   templateUrl: './topbar.component.html',
-  styleUrl: './topbar.component.scss'
+  styleUrl: './topbar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopbarComponent {
-  constructor() { }
-
-  ngOnInit() {
-  }
-}
+export class TopbarComponent {}
