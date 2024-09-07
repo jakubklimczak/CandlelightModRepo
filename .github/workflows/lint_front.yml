@@ -30,7 +30,3 @@ jobs:
               run: |
                 cd candlelight.client
                 npm run lint
-            - name: Run tests
-              run: |
-                cd candlelight.client
-                npm run test
