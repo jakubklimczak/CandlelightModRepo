@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
-  selector: 'topbar',
-  templateUrl: './topbar.component.html',
-  styleUrl: './topbar.component.scss',
+  selector: 'candlelight-footer',
+  templateUrl: './footer.component.html',
+  styleUrl: './footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopbarComponent {
+export class FooterComponent {
   constructor() { }
 
   ngOnInit() {
-    
   }
 }

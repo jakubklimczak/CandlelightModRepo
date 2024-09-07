@@ -1,0 +1,52 @@
+.container {
+  max-width: 95%;
+  margin: 0 auto;
+  padding: 1.25rem;
+  
+  .hero {
+    text-align: center;
+    margin: 2.5rem 0;
+    padding: 2.5rem;
+    border-radius: 0.625rem;
+
+    h2 {
+      font-size: 2.5rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .button-group {
+      button {
+        margin: 0 0.625rem;
+      }
+    }
+  }
+
+  .features {
+    display: flex;
+    justify-content: space-around;
+    margin: 2.5rem 0;
+
+    .feature-card {
+      width: 20%;
+      padding: 1.25rem;
+
+      mat-card-header {
+        text-align: center;
+      }
+
+      mat-card-title {
+        font-size: 1.5rem;
+      }
+
+      mat-card-content {
+        p {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
