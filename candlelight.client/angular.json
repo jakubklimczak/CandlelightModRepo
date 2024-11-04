@@ -33,8 +33,9 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
-              }
+                "input": "src/public"
+              },
+              "src/public"
             ],
             "styles": [
               "./src/styles.scss"
@@ -104,11 +105,12 @@
               {
                 "glob": "**/*",
                 "input": "src/public"
-              }
+              },
+              "src/public"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/magenta-violet.css",
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": [],
             "karmaConfig": "karma.conf.js"
