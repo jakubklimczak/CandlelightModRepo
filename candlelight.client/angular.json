@@ -33,9 +33,9 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "src/public"
               },
-              "public"
+              "src/public"
             ],
             "styles": [
               "./src/styles.scss"
@@ -105,7 +105,8 @@
               {
                 "glob": "**/*",
                 "input": "src/public"
-              }
+              },
+              "src/public"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/magenta-violet.css",

@@ -1,10 +1,35 @@
 .app-container {
     min-width: 100%;
-    min-height: 100%;
     margin-top: 0rem;
     padding: 0rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100%;
+
     .app-footer {
-        max-height: 5%;
+        max-height: 10vh;
+        min-height: 5vh;
+        flex: 0 0 auto;
         margin-bottom: 0rem;
+    }
+
+    .app-router-outlet {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        overflow: auto; 
+        height: 100%;
+        width: 100%;
+        background-color: #640037;
+    }
+
+    .app-topbar {
+        max-height: 10vh;
+        min-height: 5vh;
+        flex: 0 0 auto;
+        margin-top: 0rem;
     }
 }
