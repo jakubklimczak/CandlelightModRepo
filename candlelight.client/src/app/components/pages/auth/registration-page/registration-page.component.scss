@@ -1,0 +1,41 @@
+:host {
+    max-width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+    height: 100%;
+    background-color: #640037;
+
+    .container {
+        text-align: center;
+        margin: 2.5rem;
+        padding: 2.5rem;
+        border-radius: 0.625rem;
+        background-color: #890f50;
+        overflow-y: hidden;
+
+        .title {
+            font-size: 3rem;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+
+            .form-row {
+                padding: 1rem;
+                width: 50%;
+                
+                button {
+                    width: 30%;
+                    margin: 1.5rem;
+                }
+            }
+        }
+    }
+}

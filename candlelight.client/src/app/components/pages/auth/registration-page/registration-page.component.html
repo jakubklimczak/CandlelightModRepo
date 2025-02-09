@@ -1,22 +1,46 @@
-<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
-  <label for="username">Username:</label>
-  <input id="username" formControlName="username" type="text" />
-  <div *ngIf="registrationForm.get('username')?.invalid && registrationForm.get('username')?.touched">
-    Username is required.
-  </div>
+<div class="container mat-elevation-z4">
+  <h1 class="title">Register 🕯️</h1>
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="form">
 
-  <label for="email">Email:</label>
-  <input id="email" formControlName="email" type="email" />
-  <div *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
-    Valid email is required.
-  </div>
+    <mat-form-field class="form-row">
+      <mat-label>Username</mat-label>
+      <input matInput id="username" formControlName="username" type="text" />
+      <mat-error *ngIf="registrationForm.get('username')?.invalid && registrationForm.get('username')?.touched">
+        Username is required.
+      </mat-error>
+    </mat-form-field>
 
-  <label for="password">Password:</label>
-  <input id="password" formControlName="password" type="password" />
-  <div *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched">
-    Password must be at least 6 characters long.
-  </div>
+    <mat-form-field class="form-row">
+      <mat-label>Email</mat-label>
+      <input matInput id="email" formControlName="email" type="email" />
+      <mat-error *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
+        Valid email is required.
+      </mat-error>
+    </mat-form-field>
 
-  <button type="submit" [disabled]="registrationForm.invalid">Register</button>
-  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-</form>
+    <mat-form-field class="form-row">
+      <mat-label>Password</mat-label>
+      <input matInput id="password" formControlName="password" type="password" />
+      <mat-error *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched">
+        Password must be at least 6 characters long.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="form-row">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput id="confirm-password" formControlName="confirm-password" type="password" />
+      <mat-error *ngIf="registrationForm.get('confirm-password')?.invalid && registrationForm.get('confirm-password')?.touched">
+        Password does not match.
+      </mat-error>
+    </mat-form-field>
+
+    <div class="form-row">
+      <button mat-raised-button color="primary" type="submit" [disabled]="registrationForm.invalid">Register</button>
+    </div>
+
+    <div class="form-row">
+      <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+    </div>
+
+  </form>
+</div>
