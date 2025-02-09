@@ -1,3 +1,7 @@
+:host {
+  overflow-y: hidden;
+}
+
 .container {
   max-width: 100%;
   flex: 1;
@@ -5,10 +9,9 @@
   flex-direction: column;
   margin: 0;
   padding: 0;
-  overflow: auto;
+  overflow-y: hidden;
   height: 100%;
   background-color: #640037;
-
   .hero {
     text-align: center;
     margin: 2.5rem;
@@ -46,6 +49,7 @@
       mat-card-header {
         text-align: center;
         background-color: #890f50;
+        margin-bottom: 1rem;
       }
 
       mat-card-title {
@@ -72,8 +76,11 @@
       width: 40%;
       padding: 1.25rem;
       background-color: #890f50;
-      align-content: center;
-
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center; 
+      
       mat-card-header {
         text-align: center;
         background-color: #890f50;
@@ -92,7 +99,8 @@
       }
 
       button {
-          margin: 1.25rem;
+        width: 15%;
+        margin: 1.5rem 0.625rem;
       }
     }
   }
