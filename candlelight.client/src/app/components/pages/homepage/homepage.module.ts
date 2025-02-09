@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-
+import { RouterModule } from '@angular/router';
 import { HeroPageComponent } from './hero/hero-page.component';
 
 @NgModule({
@@ -12,7 +12,8 @@ import { HeroPageComponent } from './hero/hero-page.component';
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    RouterModule,
   ],
   providers: [],
   bootstrap: [HeroPageComponent]
