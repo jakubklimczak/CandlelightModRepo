@@ -15,12 +15,19 @@ export class AuthService {
   login(credentials: { email: string; password: string }): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.post(`${this.apiUrl}/SendLoginForm`, credentials, { headers, withCredentials: true });
+    return this.http.post(`${this.apiUrl}/SendLoginForm`, credentials, { headers });
   }
 
   register(user: { username: string; email: string; password: string; confirmPassword: string; }): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     
-    return this.http.post(`${this.apiUrl}/SendRegistrationForm`, user, { headers, withCredentials: true });
+    const requestBody = {
+      userName: user.username, 
+      userEmail: user.email,
+      passwordString: user.password,
+      confirmPasswordString: user.confirmPassword
+    };
+
+    return this.http.post(`${this.apiUrl}/SendRegistrationForm`, requestBody, { headers });
   }
 }
