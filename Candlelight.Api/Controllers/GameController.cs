@@ -8,9 +8,9 @@ public class GameController(GameService gameService) : ControllerBase
     private readonly GameService _gameService = gameService;
     /// <summary>
     /// Get a paginated list of games.
-    /// Example: GET /api/GetGamesFromDb?page=1&pageSize=10
+    /// Example: GET /api/GetGamesFromDbPaginatedQuery?page=1&pageSize=10
     /// </summary>
-    [HttpGet]
+    [HttpGet("GetGamesFromDbPaginatedQuery")]
     [ActionName("GetGamesFromDb")]
     public async Task<IActionResult> GetGamesFromDb([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
