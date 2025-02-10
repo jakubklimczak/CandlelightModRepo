@@ -1,5 +1,6 @@
 using Candlelight.Core.Entities.Testing;
 using Candlelight.Core.Entities;
+using Candlelight.Core.Entities.Steam;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -8,6 +9,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 {
     public DbSet<UserInfo> Users { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
+    public DbSet<GameDetails> Games { get; set; }
     public DbSet<TestEntity> Tests { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,5 +46,14 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<UserProfile>()
             .HasIndex(u => u.UserId)
             .IsUnique();
+        modelBuilder.Entity<GameDetails>()
+            .HasIndex(g => g.AppId)
+            .IsUnique();
+        modelBuilder.Entity<GameDetails>()
+            .OwnsMany(g => g.Genres);
+        modelBuilder.Entity<GameDetails>()
+            .OwnsMany(g => g.Categories);
+        modelBuilder.Entity<GameDetails>()
+            .OwnsMany(g => g.Platforms);
     }
 }

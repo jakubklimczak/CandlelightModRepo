@@ -1,6 +1,7 @@
 using Candlelight.Infrastructure.Persistence.Data;
 using Candlelight.Application.Services;
 using Microsoft.EntityFrameworkCore;
+using Candlelight.Core.Entities.Steam;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ builder.Configuration
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? builder.Configuration["ConnectionStrings:DefaultConnection"];
 
+
+
 // Add services to the container.
 
 builder.Services.AddDbContext<DataContext>(options =>
@@ -21,6 +24,11 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 builder.Services.AddScoped<UserManagementService>();
 builder.Services.AddScoped<AuthenticationService>();
+
+builder.Services.Configure<SteamSettings>(builder.Configuration);
+builder.Services.AddHttpClient<SteamService>();
+
+builder.Services.AddScoped<GameService>();
 
 builder.Services.AddControllers();
 

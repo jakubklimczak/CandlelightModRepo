@@ -19,15 +19,15 @@ export class LoginPageComponent {
     });
   }
 
+  //TODO: error snackbar and handle login
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe(
         (response) => {
           console.log('Login successful:', response);
-          // Handle successful login (e.g., save token, navigate)
         },
-        (error) => {
-          this.errorMessage = 'Login failed. Please check your credentials.';
+        (error: string) => {
+          this.errorMessage = 'Login failed. Please check your credentials. Error: ' + error;
         }
       );
     }
