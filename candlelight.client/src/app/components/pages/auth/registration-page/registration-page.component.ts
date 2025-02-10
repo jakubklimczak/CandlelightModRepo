@@ -47,8 +47,8 @@ export class RegistrationPageComponent {
         });
         this.router.navigate(['/login']);
       },
-      error: (err) => {
-        this.snackBar.open('Registration failed. Please try again.', 'Close', {
+      error: (err: string) => {
+        this.snackBar.open('Registration failed. Please try again. Error: ' + err, 'Close', {
           duration: 3000,
           panelClass: ['snackbar-error']
         });
