@@ -1,7 +1,10 @@
 ﻿using Candlelight.Core.Entities.Steam;
 using Candlelight.Infrastructure.Persistence.Data;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Candlelight.Application.Services;
 
