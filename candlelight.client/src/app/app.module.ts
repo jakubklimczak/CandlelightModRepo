@@ -12,6 +12,7 @@ import { MatIconModule }  from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthModule } from './components/pages/auth/auth.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { AuthModule } from './components/pages/auth/auth.module';
     HomepageModule,
     ReactiveFormsModule,
     AuthModule,
+    MatSnackBarModule,
   ],
   providers: [provideHttpClient(), provideAnimationsAsync()],
   bootstrap: [AppComponent]

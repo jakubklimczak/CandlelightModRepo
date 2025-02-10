@@ -14,6 +14,20 @@ public class UserAccessController(AuthenticationService authenticationService, U
     private readonly AuthenticationService _authenticationService = authenticationService;
     private readonly UserManagementService _userManagementService = userManagementService;
 
+    [HttpOptions]
+    [Route("SendRegistrationForm")]
+    [Route("SendLoginForm")]
+    [Route("GetUsersList")]
+    public IActionResult HandlePreflight()
+    {
+        Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:4200");
+        Response.Headers.Add("Access-Control-Allow-Methods", "POST, OPTIONS");
+        Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        Response.Headers.Add("Access-Control-Allow-Credentials", "true");
+
+        return Ok();
+    }
+
     [HttpPost]
     [ActionName("SendRegisterForm")]
     [Route("SendRegistrationForm")]
@@ -28,7 +42,7 @@ public class UserAccessController(AuthenticationService authenticationService, U
             }
 
             await _authenticationService.RegisterUser(form);
-            return Ok(form);
+            return Ok(new { message = "User registered successfully" });
         }
         catch (Exception ex) 
         { 
@@ -53,7 +67,7 @@ public class UserAccessController(AuthenticationService authenticationService, U
             {
                 return Unauthorized(form);
             }
-            return Ok(form);
+            return Ok(new { message = "User logged in successfully" });
         }
         catch (Exception ex)
         {

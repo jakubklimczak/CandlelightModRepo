@@ -28,9 +28,9 @@
 
     <mat-form-field class="form-row">
       <mat-label>Confirm Password</mat-label>
-      <input matInput id="confirm-password" formControlName="confirm-password" type="password" />
-      <mat-error *ngIf="registrationForm.get('confirm-password')?.invalid && registrationForm.get('confirm-password')?.touched">
-        Password does not match.
+      <input matInput id="confirmPassword" formControlName="confirmPassword" type="password" />
+      <mat-error *ngIf="(registrationForm.get('confirmPassword')?.invalid || registrationForm.hasError('stringsMismatch')) && registrationForm.get('confirmPassword')?.touched">
+        Passwords do not match.
       </mat-error>
     </mat-form-field>
 

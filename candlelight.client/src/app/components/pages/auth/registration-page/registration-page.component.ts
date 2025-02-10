@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
+import { matchStrings } from '../../../../shared/match-strings.validator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-registration-page',
@@ -12,25 +16,44 @@ export class RegistrationPageComponent {
   registrationForm: FormGroup;
   errorMessage: string | null = null;
 
-  constructor(private readonly fb: FormBuilder, private readonly authService: AuthService) {
-    this.registrationForm = this.fb.group({
-      username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
+  constructor(
+    private readonly fb: FormBuilder, 
+    private readonly authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar,
+  ) {
+    this.registrationForm = this.fb.group(
+      {
+        username: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
+      },
+      {
+        validators: matchStrings('password', 'confirmPassword')
+      }
+    );
   }
 
   onSubmit(): void {
-    if (this.registrationForm.valid) {
-      this.authService.register(this.registrationForm.value).subscribe(
-        (response) => {
-          console.log('Registration successful:', response);
-          // Handle successful registration (e.g., navigate to login)
-        },
-        (error) => {
-          this.errorMessage = 'Registration failed. Please try again.';
-        }
-      );
-    }
+    if (this.registrationForm.invalid) return;
+
+    this.authService.register(this.registrationForm.value).subscribe(
+    {
+      next: () => {
+        this.snackBar.open('Registration successful! You can now login.', 'OK', {
+          duration: 3000,
+          panelClass: ['snackbar-success']
+        });
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        this.snackBar.open('Registration failed. Please try again.', 'Close', {
+          duration: 3000,
+          panelClass: ['snackbar-error']
+        });
+        this.router.navigate(['/register']);
+      }
+    });
   }
 }
