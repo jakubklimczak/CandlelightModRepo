@@ -9,27 +9,27 @@ public class UserManagementService(DataContext context)
 {
     private readonly DataContext _context = context;
 
-    public async Task<UserInfo> CreateUserAsync(string userName, string userEmail, string passwordString)
+    public async Task<AppUser> CreateUserAsync(string userName, string userEmail, string passwordString)
     {
-        UserInfo newUser = new()
+        AppUser newAppUser = new()
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid().ToString(),
             UserName = userName,
-            UserEmail = userEmail,
+            Email = userEmail,
             PasswordHash = "",
             Created = DateTime.Now,
             LastUpdated = DateTime.Now
         };
 
         //var encodedPassword = EncodingHelper.Base64Encode(passwordString);
-        var hashedPassword = CryptographyHelper.HashPassword(newUser, /*encodedPassword*/ passwordString);
-        newUser.PasswordHash = hashedPassword;
+        var hashedPassword = CryptographyHelper.HashPassword(newAppUser, /*encodedPassword*/ passwordString);
+        newAppUser.PasswordHash = hashedPassword;
 
         UserProfile newProfile = new()
         {
             Id = Guid.NewGuid(),
-            UserId = newUser.Id,
-            DisplayName = newUser.UserName,
+            UserId = Guid.Parse(newAppUser.Id),
+            DisplayName = newAppUser.UserName,
             AvatarFilename = null,
             BackgroundColour = null,
             Bio = null,
@@ -37,29 +37,60 @@ public class UserManagementService(DataContext context)
             LastUpdated = DateTime.Now
         };
 
-        await _context.Users.AddAsync(newUser);
+        await _context.Users.AddAsync(newAppUser);
         await _context.UserProfiles.AddAsync(newProfile);
         await _context.SaveChangesAsync();
 
-        return newUser;
+        return newAppUser;
     }
 
-    public async Task<UserInfo?> GetUserByIdAsync(Guid id)
+    public async Task<AppUser?> UpdateUserAsync(AppUser updatedUser)
+    {
+        var user = await GetUserByIdAsync(Guid.Parse(updatedUser.Id));
+        if (user == null)
+            return null;
+
+        if (!string.IsNullOrEmpty(updatedUser.UserName))
+            user.UserName = updatedUser.UserName;
+
+        if (!string.IsNullOrEmpty(updatedUser.Email))
+            user.Email = updatedUser.Email;
+
+        if (!string.IsNullOrEmpty(updatedUser.PasswordHash))
+            user.PasswordHash = updatedUser.PasswordHash;
+
+        user.SteamId = updatedUser.SteamId;
+
+        user.LastUpdated = DateTime.Now;
+
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        return user;
+    }
+
+
+    public async Task<AppUser?> GetUserByIdAsync(Guid id)
     {
         return await _context.Users.FindAsync(id);
+    }       
+    
+    public async Task<AppUser?> GetUserBySteamIdAsync(string steamId)
+    {
+        return await _context.Users.SingleOrDefaultAsync(u => u.SteamId == steamId);
     }    
     
-    public async Task<UserInfo?> GetUserByNameAsync(string userName)
+    public async Task<AppUser?> GetUserByNameAsync(string userName)
     {
         return await _context.Users.SingleOrDefaultAsync(u => u.UserName == userName);
     }    
     
-    public async Task<UserInfo?> GetUserByEmailAsync(string userEmail)
+    public async Task<AppUser?> GetUserByEmailAsync(string userEmail)
     {
-        return await _context.Users.SingleOrDefaultAsync(u => u.UserEmail == userEmail);
+        return await _context.Users.SingleOrDefaultAsync(u => u.Email == userEmail);
     }
 
-    public async Task<IEnumerable<UserInfo>> GetAllUsersAsync()
+    public async Task<IEnumerable<AppUser>> GetAllUsersAsync()
     {
         return await _context.Users.ToListAsync();
     }

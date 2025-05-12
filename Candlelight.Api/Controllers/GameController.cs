@@ -1,6 +1,8 @@
 using Candlelight.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
+namespace Candlelight.Api.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class GameController(GameService gameService) : ControllerBase

@@ -5,16 +5,16 @@ namespace Candlelight.Core.Helpers;
 
 public static class CryptographyHelper
 {
-    private static readonly PasswordHasher<UserInfo> _passwordHasher = new();
+    private static readonly PasswordHasher<AppUser> _passwordHasher = new();
 
-    public static string HashPassword(UserInfo user, string password)
+    public static string HashPassword(AppUser appUser, string password)
     {
-        return _passwordHasher.HashPassword(user, password);
+        return _passwordHasher.HashPassword(appUser, password);
     }
 
-    public static bool VerifyPassword(UserInfo user, string hashedPassword, string password)
+    public static bool VerifyPassword(AppUser appUser, string hashedPassword, string password)
     {
-        var result = _passwordHasher.VerifyHashedPassword(user, hashedPassword, password);
+        var result = _passwordHasher.VerifyHashedPassword(appUser, hashedPassword, password);
         return result == PasswordVerificationResult.Success;
     }
 }
