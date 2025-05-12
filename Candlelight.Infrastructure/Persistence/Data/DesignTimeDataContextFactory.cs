@@ -9,12 +9,19 @@ public class DesignTimeDataContextFactory : IDesignTimeDbContextFactory<DataCont
     {
         var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..");
         var config = new ConfigurationBuilder()
+            .AddUserSecrets<UserSecretsAnchor>()
             .SetBasePath(basePath + "/Candlelight.Api/")
             .AddJsonFile("appsettings.json")
             .Build();
 
+        var connectionString = config.GetConnectionString("DefaultConnection")
+                               ?? config["ConnectionStrings:DefaultConnection"];
+
+        if (string.IsNullOrEmpty(connectionString))
+            throw new InvalidOperationException("Connection string is missing or invalid! Check UserSecrets for any misconfiguration.");
+
         var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-        optionsBuilder.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+        optionsBuilder.UseNpgsql(connectionString);
 
         return new DataContext(optionsBuilder.Options);
     }

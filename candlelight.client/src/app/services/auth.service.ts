@@ -12,14 +12,14 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   //TODO: replace any w dto
-  login(credentials: { email: string; password: string }): Observable<any> {
+  public login(credentials: { userEmail: string; passwordString: string }): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     return this.http.post(`${this.apiUrl}/SendLoginForm`, credentials, { headers });
   }
 
   //TODO: replace any w dto
-  register(user: { username: string; email: string; password: string; confirmPassword: string; }): Observable<any> {
+  public register(user: { username: string; email: string; password: string; confirmPassword: string; }): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     
     const requestBody = {

@@ -14,8 +14,8 @@ export class LoginPageComponent {
 
   constructor(private readonly fb: FormBuilder, private readonly authService: AuthService) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      userEmail: ['', [Validators.required, Validators.email]],
+      passwordString: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -26,8 +26,8 @@ export class LoginPageComponent {
         (response) => {
           console.log('Login successful:', response);
         },
-        (error: string) => {
-          this.errorMessage = 'Login failed. Please check your credentials. Error: ' + error;
+        (error: Error) => {
+          this.errorMessage = 'Login failed. Please check your credentials. Error: ' + error.name;
         }
       );
     }

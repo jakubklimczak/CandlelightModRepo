@@ -21,8 +21,7 @@ public class UserManagementService(DataContext context)
             LastUpdated = DateTime.Now
         };
 
-        //var encodedPassword = EncodingHelper.Base64Encode(passwordString);
-        var hashedPassword = CryptographyHelper.HashPassword(newAppUser, /*encodedPassword*/ passwordString);
+        var hashedPassword = CryptographyHelper.HashPassword(newAppUser, passwordString);
         newAppUser.PasswordHash = hashedPassword;
 
         UserProfile newProfile = new()
