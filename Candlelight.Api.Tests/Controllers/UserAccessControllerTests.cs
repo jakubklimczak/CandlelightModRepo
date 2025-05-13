@@ -52,31 +52,31 @@ public class UserAccessControllerTests
             ConfirmPasswordString = "notasecurepassword"
         };
 
-        UserInfo expectedUserInfo = new()
+        AppUser expectedAppUser = new()
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid().ToString(),
             UserName = form.UserName,
-            UserEmail = form.UserEmail,
+            Email = form.UserEmail,
             PasswordHash = "47yxds290",
             Created = DateTime.Now,
             LastUpdated = DateTime.Now
         };
 
         _mockAuthenticationService.Setup(x => AuthenticationService.IsRegistrationFormValid(form)).Returns(true);
-        _mockAuthenticationService.Setup(x => x.RegisterUser(It.IsAny<RegistrationForm>())).Returns(Task.FromResult(expectedUserInfo));
+        _mockAuthenticationService.Setup(x => x.RegisterUser(It.IsAny<RegistrationForm>())).Returns(Task.FromResult(expectedAppUser));
 
         // Act
         var result = await _controller.PostAsync(form);
 
         // Assert
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
-        var actualUserInfo = (UserInfo)result;
+        var actualUserInfo = (AppUser)result;
 
         Assert.Multiple(() =>
         {
-            Assert.That(expectedUserInfo.Id, Is.EqualTo(actualUserInfo.Id));
-            Assert.That(expectedUserInfo.UserName, Is.EqualTo(actualUserInfo.UserName));
-            Assert.That(expectedUserInfo.UserEmail, Is.EqualTo(actualUserInfo.UserEmail));
+            Assert.That(expectedAppUser.Id, Is.EqualTo(actualUserInfo.Id));
+            Assert.That(expectedAppUser.UserName, Is.EqualTo(actualUserInfo.UserName));
+            Assert.That(expectedAppUser.Email, Is.EqualTo(actualUserInfo.Email));
         });
     }
 

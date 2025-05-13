@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Candlelight.Infrastructure.Persistence.Data;
 public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
 {
-    public DbSet<UserInfo> Users { get; set; }
+    public DbSet<AppUser> Users { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
     public DbSet<GameDetails> Games { get; set; }
     public DbSet<TestEntity> Tests { get; set; }
@@ -28,13 +28,13 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             }
         }
 
-        modelBuilder.Entity<UserInfo>()
+        modelBuilder.Entity<AppUser>()
             .HasIndex(u => u.Id)
             .IsUnique();
-        modelBuilder.Entity<UserInfo>()
-            .HasIndex(u => u.UserEmail)
+        modelBuilder.Entity<AppUser>()
+            .HasIndex(u => u.Email)
             .IsUnique();
-        modelBuilder.Entity<UserInfo>()
+        modelBuilder.Entity<AppUser>()
             .HasIndex(u => u.UserName)
             .IsUnique();
         modelBuilder.Entity<TestEntity>()

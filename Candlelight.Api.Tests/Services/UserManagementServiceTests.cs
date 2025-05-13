@@ -12,7 +12,7 @@ public class UserManagementServiceTests
 {
     private DataContext _context;
     private UserManagementService _userManagementService;
-    private readonly UserInfo _userToAdd = new() {Id = Guid.NewGuid(), UserName = "username", UserEmail = "email@email.com", PasswordHash = "unhashedPassword;)", Created = DateTime.Now, LastUpdated = DateTime.Now };
+    private readonly AppUser _appUserToAdd = new() { Id = Guid.NewGuid().ToString(), UserName = "username", Email = "email@email.com", PasswordHash = "unhashedPassword;)", Created = DateTime.Now, LastUpdated = DateTime.Now };
     
     [SetUp]
     public void Setup()
@@ -36,22 +36,22 @@ public class UserManagementServiceTests
     public async Task DoesAddingAUserWithProperDataWork()
     {
         // Act
-        var result = await _userManagementService.CreateUserAsync(_userToAdd.UserName, _userToAdd.UserEmail, _userToAdd.PasswordHash);
-        var user = await _userManagementService.GetUserByNameAsync(_userToAdd.UserName);
+        var result = await _userManagementService.CreateUserAsync(_appUserToAdd.UserName!, _appUserToAdd.Email!, _appUserToAdd.PasswordHash!);
+        var user = await _userManagementService.GetUserByNameAsync(_appUserToAdd.UserName!);
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(result.UserName, Is.EqualTo(_userToAdd.UserName));
-            Assert.That(result.UserEmail, Is.EqualTo(_userToAdd.UserEmail));
-            Assert.That(CryptographyHelper.VerifyPassword(_userToAdd, result.PasswordHash, _userToAdd.PasswordHash), Is.True);
+            Assert.That(result.UserName, Is.EqualTo(_appUserToAdd.UserName));
+            Assert.That(result.Email, Is.EqualTo(_appUserToAdd.Email));
+            Assert.That(CryptographyHelper.VerifyPassword(_appUserToAdd, result.PasswordHash!, _appUserToAdd.PasswordHash!), Is.True);
         });  
         
         Assert.Multiple(() =>
         {
             Assert.That(user, Is.Not.Null);
-            Assert.That(user!.UserName, Is.EqualTo(_userToAdd.UserName));
-            Assert.That(user!.UserEmail, Is.EqualTo(_userToAdd.UserEmail));
-            Assert.That(CryptographyHelper.VerifyPassword(_userToAdd, user.PasswordHash, _userToAdd.PasswordHash), Is.True);
+            Assert.That(user!.UserName, Is.EqualTo(_appUserToAdd.UserName));
+            Assert.That(user!.Email, Is.EqualTo(_appUserToAdd.Email));
+            Assert.That(CryptographyHelper.VerifyPassword(_appUserToAdd, user.PasswordHash!, _appUserToAdd.PasswordHash!), Is.True);
         });
     }
 

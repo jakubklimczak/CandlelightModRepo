@@ -1,12 +1,20 @@
 using Candlelight.Core.Entities;
 using Candlelight.Core.Entities.Forms;
 using Candlelight.Core.Helpers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Candlelight.Application.Services;
 
-public class AuthenticationService(UserManagementService userService)
+public class AuthenticationService(UserManagementService userService, IConfiguration configuration)
 {
     private readonly UserManagementService _userService = userService;
+    private readonly string _jwtKey = configuration["Jwt:Key"] ?? throw new Exception("JWT Key is missing");
+    private readonly string _issuer = configuration["Jwt:Issuer"] ?? "DefaultIssuer";
+    private readonly string _audience = configuration["Jwt:Audience"] ?? "DefaultAudience";
 
     public static bool IsRegistrationFormValid(RegistrationForm form)
     {
@@ -53,20 +61,43 @@ public class AuthenticationService(UserManagementService userService)
         return true;
     }
 
-    public async Task<UserInfo> RegisterUser(RegistrationForm form)
+    public async Task<AppUser> RegisterUser(RegistrationForm form)
     {
         var result = await _userService.CreateUserAsync(form.UserName, form.UserEmail, form.PasswordString);
         return result;
     }
 
-    public async Task<UserInfo?> AttemptLogin(LoginForm form)
+    public async Task<AppUser?> AttemptLogin(LoginForm form)
     {
         var user = await _userService.GetUserByEmailAsync(form.UserEmail);
         return ValidateLoginInfo(user, form) ? user : null;
     }
 
-    public static bool ValidateLoginInfo(UserInfo? user, LoginForm form)
+    public static bool ValidateLoginInfo(AppUser? user, LoginForm form)
     {
-        return user != null && CryptographyHelper.VerifyPassword(user, user.PasswordHash, form.PasswordString);
+        return user != null && CryptographyHelper.VerifyPassword(user, user.PasswordHash!, form.PasswordString);
+    }
+
+    public string GenerateJwtToken(AppUser user)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        var token = new JwtSecurityToken(
+            _issuer,
+            _audience,
+            claims,
+            expires: DateTime.UtcNow.AddHours(2),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

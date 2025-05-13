@@ -1,7 +1,10 @@
 ﻿using Candlelight.Core.Entities.Steam;
 using Candlelight.Infrastructure.Persistence.Data;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Candlelight.Application.Services;
 
@@ -28,7 +31,7 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
         var url = $"{SteamStoreApiUrl}{appId}";
         try
         {
-            var response = await httpClient.GetStringAsync(url);
+            var response = await _httpClient.GetStringAsync(url);
             if (string.IsNullOrEmpty(response))
             {
                 return null;
@@ -143,4 +146,3 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
         }
     }
 }
-

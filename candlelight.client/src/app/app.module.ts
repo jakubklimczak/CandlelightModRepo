@@ -8,17 +8,21 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { HomepageModule } from './components/pages/homepage/homepage.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FooterComponent } from './components/footer/footer.component';
-import { MatIconModule }  from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthModule } from './components/pages/auth/auth.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { GamesModule } from './components/pages/games/game.module';
+import { AboutPageComponent } from './components/pages/about-page/about-page.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     TopbarComponent,
     FooterComponent,
+    AboutPageComponent,
   ],
   imports: [
     MatToolbarModule,
@@ -29,9 +33,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     HomepageModule,
     ReactiveFormsModule,
     AuthModule,
+    GamesModule,
+    SharedModule,
     MatSnackBarModule,
   ],
   providers: [provideHttpClient(), provideAnimationsAsync()],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

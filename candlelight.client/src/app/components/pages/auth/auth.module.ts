@@ -8,10 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
-  declarations: [
-    LoginPageComponent, 
-    RegistrationPageComponent,
-  ],
+  declarations: [LoginPageComponent, RegistrationPageComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -20,4 +17,4 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatFormFieldModule,
   ],
 })
-export class AuthModule { }
+export class AuthModule {}

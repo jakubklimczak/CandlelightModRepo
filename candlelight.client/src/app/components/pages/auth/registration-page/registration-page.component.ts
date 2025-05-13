@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../../../services/auth.service';
-import { matchStrings } from '../../../../shared/match-strings.validator';
+import { AuthService } from '../services/auth.service';
+import { matchStrings } from '../../../../shared/validators/match-strings.validator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-registration-page',
@@ -17,7 +16,7 @@ export class RegistrationPageComponent {
   errorMessage: string | null = null;
 
   constructor(
-    private readonly fb: FormBuilder, 
+    private readonly fb: FormBuilder,
     private readonly authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -30,30 +29,39 @@ export class RegistrationPageComponent {
         confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
       },
       {
-        validators: matchStrings('password', 'confirmPassword')
-      }
+        validators: matchStrings('password', 'confirmPassword'),
+      },
     );
   }
 
   onSubmit(): void {
-    if (this.registrationForm.invalid) return;
+    if (this.registrationForm.invalid) {
+      return;
+    }
 
-    this.authService.register(this.registrationForm.value).subscribe(
-    {
+    this.authService.register(this.registrationForm.value).subscribe({
       next: () => {
-        this.snackBar.open('Registration successful! You can now login.', 'OK', {
-          duration: 3000,
-          panelClass: ['snackbar-success']
-        });
+        this.snackBar.open(
+          'Registration successful! You can now login.',
+          'OK',
+          {
+            duration: 3000,
+            panelClass: ['snackbar-success'],
+          },
+        );
         this.router.navigate(['/login']);
       },
       error: (err: string) => {
-        this.snackBar.open('Registration failed. Please try again. Error: ' + err, 'Close', {
-          duration: 3000,
-          panelClass: ['snackbar-error']
-        });
+        this.snackBar.open(
+          'Registration failed. Please try again. Error: ' + err,
+          'Close',
+          {
+            duration: 3000,
+            panelClass: ['snackbar-error'],
+          },
+        );
         this.router.navigate(['/register']);
-      }
+      },
     });
   }
 }

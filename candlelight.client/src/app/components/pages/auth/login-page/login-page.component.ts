@@ -1,21 +1,24 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../../../services/auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login-page',
   templateUrl: 'login-page.component.html',
-  styleUrls: ['login-page.component.scss'],  
+  styleUrls: ['login-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPageComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
 
-  constructor(private readonly fb: FormBuilder, private readonly authService: AuthService) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+  ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      userEmail: ['', [Validators.required, Validators.email]],
+      passwordString: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -26,9 +29,10 @@ export class LoginPageComponent {
         (response) => {
           console.log('Login successful:', response);
         },
-        (error: string) => {
-          this.errorMessage = 'Login failed. Please check your credentials. Error: ' + error;
-        }
+        (error: Error) => {
+          this.errorMessage =
+            'Login failed. Please check your credentials. Error: ' + error.name;
+        },
       );
     }
   }

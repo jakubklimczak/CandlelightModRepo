@@ -1,7 +1,13 @@
-using Candlelight.Infrastructure.Persistence.Data;
 using Candlelight.Application.Services;
-using Microsoft.EntityFrameworkCore;
+using Candlelight.Core.Entities;
 using Candlelight.Core.Entities.Steam;
+using Candlelight.Infrastructure.Persistence.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,8 +45,8 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins(
                     "http://localhost:4200", 
-                    "https://127.0.0.1:4200/",
-                    "http://127.0.0.1:4200/",
+                    "https://127.0.0.1:4200",
+                    "http://127.0.0.1:4200",
                     "https://localhost:4200")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
@@ -49,6 +55,29 @@ builder.Services.AddCors(options =>
         });
 });
 
+
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
+
+// JWT Authentication
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"] ?? string.Empty)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    })
+    .AddSteam()
+    .AddCookie();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -68,6 +97,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

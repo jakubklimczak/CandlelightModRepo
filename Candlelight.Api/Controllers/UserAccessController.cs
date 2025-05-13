@@ -1,5 +1,5 @@
-using Candlelight.Core.Entities.Forms;
 using Candlelight.Application.Services;
+using Candlelight.Core.Entities.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Candlelight.Api.Controllers;
@@ -67,7 +67,8 @@ public class UserAccessController(AuthenticationService authenticationService, U
             {
                 return Unauthorized(form);
             }
-            return Ok(new { message = "User logged in successfully" });
+            var token = _authenticationService.GenerateJwtToken(result);
+            return Ok(new { Token = token });
         }
         catch (Exception ex)
         {
@@ -90,4 +91,54 @@ public class UserAccessController(AuthenticationService authenticationService, U
             return StatusCode(500, new { error = "Internal Server Error", details = ex.Message });
         }
     }
+
+    [HttpPost("LinkSteam")]
+    public async Task<IActionResult> LinkSteam([FromBody] LinkSteamRequest model)
+    {
+        var user = await _userManagementService.GetUserByIdAsync(model.UserId);
+        if (user == null) return NotFound("User not found");
+
+        var steamId = model.SteamId;
+        var existingUser = await _userManagementService.GetUserBySteamIdAsync(steamId);
+        if (existingUser != null) return BadRequest("Steam account already linked to another user");
+
+        user.SteamId = steamId;
+        await _userManagementService.UpdateUserAsync(user);
+
+        return Ok(new { Message = "Steam account linked successfully" });
+    }
+
+
+    /*
+    [HttpGet("SteamLogin")]
+    [Route("SteamLogin")]
+    public IActionResult SteamLogin()
+    {
+        var redirectUrl = Url.Action(nameof(SteamCallback), "", null, Request.Scheme);
+        return Challenge(new AuthenticationProperties { RedirectUri = redirectUrl }, "Steam");
+    }
+
+    [HttpGet("SteamCallback")]
+    [Route("SteamCallback")]
+    public async Task<IActionResult> SteamCallback()
+    {
+        var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        if (!result.Succeeded) return Unauthorized();
+
+        var steamId = result.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        // TODO: Check if user exists in DB, create account if necessary
+        // Redirect to frontend with session token
+
+        return Ok(new { SteamId = steamId, Message = "Login successful!" });
+    }
+
+    [HttpPost("Logout")]
+    [Route("Logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return Ok(new { Message = "Logged out successfully" });
+    }
+    */
 }

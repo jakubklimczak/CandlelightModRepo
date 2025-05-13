@@ -7,10 +7,10 @@ namespace Candlelight.Api.Tests.Helpers;
 public class CryptographyHelperTests
 {
 
-    readonly UserInfo user = new()
+    readonly AppUser _appUser = new()
     {
-        Id = Guid.NewGuid(),
-        UserEmail = "email@candlelight.com",
+        Id = Guid.NewGuid().ToString(),
+        Email = "email@candlelight.com",
         UserName = "testUser",
         PasswordHash = "",
         Created = DateTime.Now,
@@ -24,8 +24,8 @@ public class CryptographyHelperTests
         string password = "notasecurepassword";
 
         // Act
-        string hash1 = CryptographyHelper.HashPassword(user, password);
-        string hash2 = CryptographyHelper.HashPassword(user, password);
+        string hash1 = CryptographyHelper.HashPassword(_appUser, password);
+        string hash2 = CryptographyHelper.HashPassword(_appUser, password);
 
         // Assert
         Assert.That(hash1, Is.Not.EqualTo(hash2)); // Hashes should be different due to different salts
@@ -36,10 +36,10 @@ public class CryptographyHelperTests
     {
         // Arrange
         string password = "notasecurepassword";
-        string hash = CryptographyHelper.HashPassword(user, password);
+        string hash = CryptographyHelper.HashPassword(_appUser, password);
 
         // Act
-        bool isVerified = CryptographyHelper.VerifyPassword(user, hash, password);
+        bool isVerified = CryptographyHelper.VerifyPassword(_appUser, hash, password);
 
         // Assert
         Assert.That(isVerified, Is.True);
@@ -51,10 +51,10 @@ public class CryptographyHelperTests
         // Arrange
         string password = "notasecurepassword";
         string incorrectPassword = "stillnotasecurepassword";
-        string hash = CryptographyHelper.HashPassword(user, password);
+        string hash = CryptographyHelper.HashPassword(_appUser, password);
 
         // Act
-        bool isVerified = CryptographyHelper.VerifyPassword(user, hash, incorrectPassword);
+        bool isVerified = CryptographyHelper.VerifyPassword(_appUser, hash, incorrectPassword);
 
         // Assert
         Assert.That(isVerified, Is.False);
