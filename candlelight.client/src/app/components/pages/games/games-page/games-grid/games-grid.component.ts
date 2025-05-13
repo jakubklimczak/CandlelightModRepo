@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { GameListItem } from '../../models/game-list-item.model';
 
 @Component({
-  selector: 'games-grid',
+  selector: 'app-games-grid',
   templateUrl: './games-grid.component.html',
   styleUrl: './games-grid.component.scss',
 })

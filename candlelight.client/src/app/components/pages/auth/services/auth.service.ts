@@ -14,7 +14,7 @@ export class AuthService {
   public login(credentials: {
     userEmail: string;
     passwordString: string;
-  }): Observable<any> {
+  }): Observable<unknown> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     return this.http.post(`${this.apiUrl}/SendLoginForm`, credentials, {
@@ -28,7 +28,7 @@ export class AuthService {
     email: string;
     password: string;
     confirmPassword: string;
-  }): Observable<any> {
+  }): Observable<unknown> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     const requestBody = {

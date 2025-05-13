@@ -3,7 +3,7 @@ import { GameListItem } from '../../../models/game-list-item.model';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'game-tile',
+  selector: 'app-game-tile',
   templateUrl: './game-tile.component.html',
   styleUrl: './game-tile.component.scss',
 })

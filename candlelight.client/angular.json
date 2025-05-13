@@ -16,6 +16,9 @@
           "standalone": false
         }
       },
+      "cli": {
+        "schematicCollections": ["angular-eslint"]
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",

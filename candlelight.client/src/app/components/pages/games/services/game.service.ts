@@ -11,7 +11,7 @@ import { PaginatedResponse } from '../../../../shared/models/paginated-result.mo
 })
 export class GameService {
   constructor(private http: HttpClient) {}
-  private apiUrl: string = `${environment.apiUrl}/Game/`;
+  private apiUrl = `${environment.apiUrl}/Game/`;
 
   public getGames(
     pagination: PaginatedQuery,
