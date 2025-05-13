@@ -7,12 +7,12 @@ import { PaginatedQuery } from '../../../../shared/models/paginated-query.model'
 @Component({
   selector: 'app-games-page',
   templateUrl: './games-page.component.html',
-  styleUrl: './games-page.component.scss'
+  styleUrl: './games-page.component.scss',
 })
 export class GamesPageComponent implements OnInit {
   response?: PaginatedResponse<GameListItem>;
   query: PaginatedQuery = { page: 1, pageSize: 10 };
-  
+
   constructor(private gameService: GameService) {}
 
   ngOnInit(): void {
@@ -20,7 +20,9 @@ export class GamesPageComponent implements OnInit {
   }
 
   private loadGames(): void {
-    this.gameService.getGames(this.query).subscribe(games => this.response = games);
+    this.gameService
+      .getGames(this.query)
+      .subscribe((games) => (this.response = games));
   }
 
   onPageChanged(event: { page: number; pageSize: number }) {

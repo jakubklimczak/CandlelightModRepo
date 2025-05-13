@@ -4,7 +4,7 @@ import { GameListItem } from '../../models/game-list-item.model';
 @Component({
   selector: 'games-grid',
   templateUrl: './games-grid.component.html',
-  styleUrl: './games-grid.component.scss'
+  styleUrl: './games-grid.component.scss',
 })
 export class GamesGridComponent {
   @Input() games: GameListItem[] = [];

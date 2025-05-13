@@ -16,6 +16,6 @@ import { HeroPageComponent } from './hero/hero-page.component';
     RouterModule,
   ],
   providers: [],
-  bootstrap: [HeroPageComponent]
+  bootstrap: [HeroPageComponent],
 })
-export class HomepageModule { }
+export class HomepageModule {}

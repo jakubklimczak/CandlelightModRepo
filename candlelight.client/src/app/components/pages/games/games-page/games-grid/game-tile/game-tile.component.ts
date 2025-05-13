@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'game-tile',
   templateUrl: './game-tile.component.html',
-  styleUrl: './game-tile.component.scss'
+  styleUrl: './game-tile.component.scss',
 })
 export class GameTileComponent {
   @Input() game!: GameListItem;
@@ -13,7 +13,9 @@ export class GameTileComponent {
   constructor(private router: Router) {}
 
   public openMods(): void {
-    this.router.navigate(['/mods'], { queryParams: { gameId: this.game.appId } });
+    this.router.navigate(['/mods'], {
+      queryParams: { gameId: this.game.appId },
+    });
   }
 
   public openDetails(event: MouseEvent): void {
