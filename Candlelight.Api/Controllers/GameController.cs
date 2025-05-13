@@ -1,4 +1,6 @@
 using Candlelight.Application.Services;
+using Candlelight.Core.Dtos.Game;
+using Candlelight.Core.Dtos.Query;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Candlelight.Api.Controllers;
@@ -14,17 +16,25 @@ public class GameController(GameService gameService) : ControllerBase
     /// </summary>
     [HttpGet("GetGamesFromDbPaginatedQuery")]
     [ActionName("GetGamesFromDb")]
-    public async Task<IActionResult> GetGamesFromDb([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetGamesFromDb([FromQuery] PaginatedQuery query)
     {
-        var (games, totalGames) = await _gameService.GetGamesFromDbAsync(page, pageSize);
+        var (games, totalGames) = await _gameService.GetGamesFromDbAsync(query.Page, query.PageSize);
 
-        var response = new
+        var mappedGameResults = games.Select(game => new GameListItemDto()
         {
-            TotalGames = totalGames,
-            Page = page,
-            PageSize = pageSize,
-            TotalPages = (int)Math.Ceiling((double)totalGames / pageSize),
-            Games = games
+            AppId = game.AppId,
+            Name = game.Name,
+            HeaderImage = game.HeaderImage,
+            Developer = game.Developer,
+            Publisher = game.Publisher
+        });
+
+        var response = new PaginatedResponse<GameListItemDto>()
+        {
+            TotalItems = totalGames,
+            Page = query.Page,
+            PageSize = query.PageSize,
+            Items = mappedGameResults.ToList(),
         };
 
         return Ok(response);

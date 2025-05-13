@@ -1,14 +1,46 @@
 <div class="container">
-    <mat-toolbar>
-        <img src="../../public/icons/candle-icon.svg" alt="🕯️" />
-        <span class="title">Candlelight Mod Repository</span>
-        <span class="spacer"></span>
-        <nav class="nav-links">
-          <button mat-raised-button routerLink="/"><mat-icon fontIcon="home" /> Home</button>
-          <button mat-raised-button routerLink="/games"><mat-icon fontIcon="games" /> Browse Games</button>
-          <button mat-raised-button routerLink="/favourite-games"><mat-icon fontIcon="favorite_border" />Favourite Games</button>
-          <button mat-raised-button routerLink="/favourite-mods"><mat-icon fontIcon="favorite_border" /> Favourite Mods</button>
-          <button mat-raised-button routerLink="/upload"><mat-icon fontIcon="file_upload" /> Upload Mod</button>
-        </nav>
-    </mat-toolbar>
+  <mat-toolbar>
+    <img src="../../public/icons/candle-icon.svg" alt="🕯️" />
+    <span class="title">Candlelight Mod Repository</span>
+    <span class="spacer"></span>
+
+    <nav class="nav-links">
+      <!-- Always visible -->
+      <button mat-raised-button routerLink="/">
+        <mat-icon fontIcon="home"></mat-icon> Home
+      </button>
+      <button mat-raised-button routerLink="/games">
+        <mat-icon fontIcon="games"></mat-icon> Browse Games
+      </button>
+
+      <!-- Logged-in user options -->
+      <ng-container *ngIf="isLoggedIn">
+        <!-- TODO: Add userId to the link -->
+        <button mat-raised-button routerLink="/favourite-games">
+          <mat-icon fontIcon="favorite_border"></mat-icon> Favourite Games
+        </button>
+        <!-- TODO: Add userId to the link -->
+        <button mat-raised-button routerLink="/favourite-mods">
+          <mat-icon fontIcon="favorite_border"></mat-icon> Favourite Mods
+        </button>
+        <button mat-raised-button routerLink="/upload">
+          <mat-icon fontIcon="file_upload"></mat-icon> Upload Mod
+        </button>
+        <!-- TODO: Add userId to the link -->
+        <button mat-icon-button [routerLink]="'/profile'" class="profile-button" matTooltip="Profile">
+          <img [src]="userProfilePictureLink" alt="Profile" class="profile-icon" />
+        </button>
+      </ng-container>
+
+      <!-- Unlogged user options -->
+      <ng-container *ngIf="!isLoggedIn">
+        <button mat-raised-button routerLink="/login">
+          <mat-icon fontIcon="login"></mat-icon> Login
+        </button>
+        <button mat-raised-button routerLink="/register">
+          <mat-icon fontIcon="person_add"></mat-icon> Register
+        </button>
+      </ng-container>
+    </nav>
+  </mat-toolbar>
 </div>

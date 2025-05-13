@@ -6,4 +6,8 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   styleUrl: './topbar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopbarComponent {}
+export class TopbarComponent {
+  isLoggedIn: boolean = false;
+  //TODO: make it a placeholder by default
+  userProfilePictureLink: string = '';
+}

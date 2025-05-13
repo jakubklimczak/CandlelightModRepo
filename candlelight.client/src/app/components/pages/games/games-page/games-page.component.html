@@ -1,0 +1,10 @@
+<div class="page-container" *ngIf="response">
+    <main class="page-content">
+        <games-grid [games]="response!.items" />
+    </main>
+    <app-paginator class="paginator"
+        [length]="response!.totalItems || 0"
+        [pageSize]="query.pageSize"
+        [pageIndex]="query.page - 1"
+        (pageChange)="onPageChanged($event)" />
+</div>

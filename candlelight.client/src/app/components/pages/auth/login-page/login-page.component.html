@@ -1,16 +1,44 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <label for="email">Email:</label>
-  <input id="email" formControlName="userEmail" type="email" />
-  <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-    Valid email is required.
-  </div>
-
-  <label for="password">Password:</label>
-  <input id="password" formControlName="passwordString" type="password" />
-  <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-    Password must be at least 6 characters long.
-  </div>
-
-  <button type="submit" [disabled]="loginForm.invalid">Login</button>
-  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-</form>
+<div class="container">
+  <div class="title">Login</div>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form">
+     <mat-form-field class="form-row">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        id="userEmail"
+        formControlName="userEmail"
+        type="email"
+      />
+      <mat-error
+        *ngIf="
+          loginForm.get('userEmail')?.invalid  &&
+          loginForm.get('userEmail')?.touched
+        "
+      >
+        Invalid email address.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-row">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        id="passwordString"
+        formControlName="passwordString"
+        type="password"
+      />
+    </mat-form-field>
+    <div class="form-row">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="loginForm.invalid"
+      >
+        Login
+      </button>
+    </div>
+    <div class="form-row">
+      <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+    </div>
+  </form>
+</div>

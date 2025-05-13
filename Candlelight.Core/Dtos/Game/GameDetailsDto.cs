@@ -1,5 +1,5 @@
-﻿namespace Candlelight.Core.Dtos;
-public class GameDto
+﻿namespace Candlelight.Core.Dtos.Game;
+public class GameDetailsDto
 {
     public int AppId { get; set; }
     public string Name { get; set; } = string.Empty;

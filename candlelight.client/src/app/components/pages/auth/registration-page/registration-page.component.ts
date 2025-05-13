@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../../../services/auth.service';
-import { matchStrings } from '../../../../shared/match-strings.validator';
+import { AuthService } from '../services/auth.service';
+import { matchStrings } from '../../../../shared/validators/match-strings.validator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
