@@ -3,18 +3,33 @@ using Candlelight.Core.Entities;
 using Candlelight.Core.Entities.Steam;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Candlelight.Infrastructure.Persistence.Data;
-public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
+public class DataContext(DbContextOptions<DataContext> options)
+    : IdentityDbContext<
+        AppUser,
+        IdentityRole<Guid>,
+        Guid,
+        IdentityUserClaim<Guid>,
+        IdentityUserRole<Guid>,
+        IdentityUserLogin<Guid>,
+        IdentityRoleClaim<Guid>,
+        IdentityUserToken<Guid>
+    >(options)
 {
-    public DbSet<AppUser> Users { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
-    public DbSet<GameDetails> Games { get; set; }
+    public DbSet<Game> Games { get; set; }
     public DbSet<TestEntity> Tests { get; set; }
+    public DbSet<Mod> Mods { get; set; }
+    public DbSet<ModVersion> ModVersions { get; set; }
+    public DbSet<SteamGameDetails> SteamGameDetails { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        foreach (var entityType in builder.Model.GetEntityTypes())
         {
             foreach (var property in entityType.GetProperties())
             {
@@ -28,32 +43,77 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             }
         }
 
-        modelBuilder.Entity<AppUser>()
-            .HasIndex(u => u.Id)
-            .IsUnique();
-        modelBuilder.Entity<AppUser>()
-            .HasIndex(u => u.Email)
-            .IsUnique();
-        modelBuilder.Entity<AppUser>()
-            .HasIndex(u => u.UserName)
-            .IsUnique();
-        modelBuilder.Entity<TestEntity>()
-            .HasIndex(u => u.Id)
-            .IsUnique();
-        modelBuilder.Entity<UserProfile>()
-            .HasIndex(u => u.Id)
-            .IsUnique();
-        modelBuilder.Entity<UserProfile>()
-            .HasIndex(u => u.UserId)
-            .IsUnique();
-        modelBuilder.Entity<GameDetails>()
-            .HasIndex(g => g.AppId)
-            .IsUnique();
-        modelBuilder.Entity<GameDetails>()
-            .OwnsMany(g => g.Genres);
-        modelBuilder.Entity<GameDetails>()
-            .OwnsMany(g => g.Categories);
-        modelBuilder.Entity<GameDetails>()
-            .OwnsMany(g => g.Platforms);
+        // AspNetCore Identity types
+        builder.Entity<IdentityUserLogin<Guid>>()
+            .HasKey(l => new { l.LoginProvider, l.ProviderKey });
+
+        builder.Entity<IdentityUserRole<Guid>>()
+            .HasKey(r => new { r.UserId, r.RoleId });
+
+        builder.Entity<IdentityUserToken<Guid>>()
+            .HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
+
+        builder.Entity<IdentityRole<Guid>>()
+            .HasKey(r => new { r.Id, r.Name });
+
+        // AppUser
+        builder.Entity<AppUser>()
+            .HasIndex(u => u.Id).IsUnique();
+        builder.Entity<AppUser>()
+            .HasIndex(u => u.Email).IsUnique();
+        builder.Entity<AppUser>()
+            .HasIndex(u => u.UserName).IsUnique();
+        builder.Entity<AppUser>()
+            .HasOne(u => u.UserProfile)
+            .WithOne(p => p.User)
+            .HasForeignKey<UserProfile>(p => p.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // UserProfile
+        builder.Entity<UserProfile>()
+            .HasIndex(p => p.Id).IsUnique();
+        builder.Entity<UserProfile>()
+            .HasIndex(p => p.UserId).IsUnique();
+
+        // TestEntity
+        builder.Entity<TestEntity>()
+            .HasIndex(t => t.Id).IsUnique();
+
+        // SteamGameDetails
+        builder.Entity<SteamGameDetails>()
+            .HasIndex(gd => gd.AppId).IsUnique();
+        builder.Entity<SteamGameDetails>()
+            .OwnsMany(gd => gd.Genres);
+        builder.Entity<SteamGameDetails>()
+            .OwnsMany(gd => gd.Categories);
+        builder.Entity<SteamGameDetails>()
+            .OwnsMany(gd => gd.Platforms);
+        builder.Entity<SteamGameDetails>()
+            .HasIndex(d => d.Id).IsUnique();
+
+        // Game
+        builder.Entity<Game>()
+            .HasIndex(g => g.Id).IsUnique();
+        builder.Entity<Game>()
+            .HasOne(g => g.SteamGameDetails)
+            .WithOne(d => d.Game)
+            .HasForeignKey<SteamGameDetails>(d => d.GameId)
+            .OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<Game>()
+            .HasMany(g => g.Mods)
+            .WithOne(m => m.Game)
+            .HasForeignKey(m => m.GameId);
+
+        // Mod
+        builder.Entity<Mod>()
+            .HasIndex(m => m.Id).IsUnique();
+        builder.Entity<Mod>()
+            .HasMany(m => m.Versions)
+            .WithOne(v => v.Mod)
+            .HasForeignKey(v => v.ModId);
+
+        // ModVersion
+        builder.Entity<ModVersion>()
+            .HasIndex(v => v.Id).IsUnique();
     }
 }

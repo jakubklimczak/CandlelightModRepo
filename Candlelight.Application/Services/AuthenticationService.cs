@@ -12,7 +12,7 @@ namespace Candlelight.Application.Services;
 public class AuthenticationService(UserManagementService userService, IConfiguration configuration)
 {
     private readonly UserManagementService _userService = userService;
-    private readonly string _jwtKey = configuration["Jwt:Key"] ?? throw new Exception("JWT Key is missing");
+    private readonly string _jwtKey = configuration["Jwt:Key"] ?? throw new ArgumentException("JWT Key is missing");
     private readonly string _issuer = configuration["Jwt:Issuer"] ?? "DefaultIssuer";
     private readonly string _audience = configuration["Jwt:Audience"] ?? "DefaultAudience";
 
@@ -85,7 +85,7 @@ public class AuthenticationService(UserManagementService userService, IConfigura
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email!),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };

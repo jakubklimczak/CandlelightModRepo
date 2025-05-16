@@ -16,6 +16,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GamesModule } from './components/pages/games/game.module';
 import { AboutPageComponent } from './components/pages/about-page/about-page.component';
 import { SharedModule } from './shared/shared.module';
+import { ModsModule } from './components/pages/mods/mods.module';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { SharedModule } from './shared/shared.module';
     GamesModule,
     SharedModule,
     MatSnackBarModule,
+    ModsModule,
   ],
   providers: [provideHttpClient(), provideAnimationsAsync()],
   bootstrap: [AppComponent],

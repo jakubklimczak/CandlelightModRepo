@@ -9,8 +9,8 @@ namespace Candlelight.Api.Tests.Healthcheck;
 public class DbConnectionTests
 {
     private DataContext _context;
-    private readonly Guid id1 = Guid.NewGuid();
-    private readonly Guid id2 = Guid.NewGuid();
+    private readonly Guid _id1 = Guid.NewGuid();
+    private readonly Guid _id2 = Guid.NewGuid();
     [SetUp]
     public void Setup()
     {
@@ -34,8 +34,8 @@ public class DbConnectionTests
     private void SeedTestData()
     {
         _context.Tests.AddRange(
-            new TestEntity { Id = id1, Name = "Entity 1", Description = "Description 1" },
-            new TestEntity { Id = id2, Name = "Entity 2", Description = "Description 2" }
+            new TestEntity { Id = _id1, Name = "Entity 1", Description = "Description 1", CreatedBy = Guid.Empty, CreatedAt = DateTime.UtcNow, LastUpdatedAt = DateTime.UtcNow },
+            new TestEntity { Id = _id2, Name = "Entity 2", Description = "Description 2", CreatedBy = Guid.Empty, CreatedAt = DateTime.UtcNow, LastUpdatedAt = DateTime.UtcNow }
         );
         _context.SaveChanges();
     }
@@ -55,8 +55,8 @@ public class DbConnectionTests
     {
         // Act
         var entitiesCount = _context.Tests.Count();
-        var entity1 = _context.Tests.FirstOrDefault(e => e.Id == id1);
-        var entity2 = _context.Tests.FirstOrDefault(e => e.Id == id2);
+        var entity1 = _context.Tests.FirstOrDefault(e => e.Id == _id1);
+        var entity2 = _context.Tests.FirstOrDefault(e => e.Id == _id2);
 
         // Assert
         Assert.Multiple(() =>

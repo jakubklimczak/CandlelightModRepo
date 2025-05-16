@@ -1,10 +1,9 @@
-﻿using Candlelight.Core.Entities.Steam;
+﻿using System.Text.Json;
+using Candlelight.Core.Entities;
+using Candlelight.Core.Entities.Steam;
 using Candlelight.Infrastructure.Persistence.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using System;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Candlelight.Application.Services;
 
@@ -26,7 +25,7 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
         return _steamApiKey;
     }
 
-    public async Task<GameDetails?> FetchGameDetailsAsync(int appId)
+    public async Task<SteamGameDetails?> FetchGameDetailsAsync(int appId)
     {
         var url = $"{SteamStoreApiUrl}{appId}";
         try
@@ -37,7 +36,7 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
                 return null;
             }
 
-            using JsonDocument json = JsonDocument.Parse(response);
+            using var json = JsonDocument.Parse(response);
 
             if (!json.RootElement.TryGetProperty(appId.ToString(), out var appData) ||
                 !appData.TryGetProperty("success", out var success) ||
@@ -47,8 +46,12 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
                 return null;
             }
 
-            return new GameDetails
+            return new SteamGameDetails
             {
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.Now,
+                LastUpdatedAt = DateTime.Now,
+                CreatedBy = Guid.Empty, // TODO: Set the CreatedBy field to the appropriate user ID
                 AppId = appId,
                 Name = data.TryGetProperty("name", out var name) ? name.GetString() ?? "Unknown" : "Unknown",
                 ShortDescription = data.TryGetProperty("short_description", out var shortDesc) ? shortDesc.GetString() : null,
@@ -58,7 +61,7 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
                 IsFree = data.TryGetProperty("is_free", out var isFree) && isFree.GetBoolean(),
                 Price = data.TryGetProperty("price_overview", out var price) && price.TryGetProperty("final", out var finalPrice)
                 ? finalPrice.GetDecimal() / 100
-                : (decimal?)null,
+                : null,
                 Currency = data.TryGetProperty("price_overview", out var priceCurrency) && priceCurrency.TryGetProperty("currency", out var currency)
                 ? currency.GetString()
                 : null,
@@ -75,7 +78,7 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
                           release.TryGetProperty("coming_soon", out var comingSoon) &&
                           !comingSoon.GetBoolean() &&
                           release.TryGetProperty("date", out var date)
-                ? DateTime.TryParse(date.GetString(), out var parsedDate) ? parsedDate.ToUniversalTime() : (DateTime?)null
+                ? DateTime.TryParse(date.GetString(), out var parsedDate) ? parsedDate.ToUniversalTime() : null
                 : null,
                 Genres = data.TryGetProperty("genres", out var genres) && genres.ValueKind == JsonValueKind.Array
                 ? genres.EnumerateArray().Select(g => new Genre { Name = g.GetProperty("description").GetString() ?? "Unknown" }).ToList()
@@ -125,15 +128,30 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
             var savedCount = 0;
             foreach (var appId in topAppIds)
             {
-                var existingGame = await _dataContext.Games.FindAsync(appId);
-                if (existingGame != null) continue;
+                if (await _dataContext.SteamGameDetails.AnyAsync(gd => gd.AppId == appId))
+                    continue;
 
                 var gameDetails = await FetchGameDetailsAsync(appId);
                 if (gameDetails == null) continue;
 
-                _dataContext.Games.Add(gameDetails);
+                var gameId = Guid.NewGuid();
+
+                gameDetails.GameId = gameId;
+
+                var game = new Game
+                {
+                    Id = gameId,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = Guid.Empty, // TODO: Set the CreatedBy field to the appropriate user ID
+                    LastUpdatedAt = DateTime.UtcNow,
+                    SteamGameDetails = gameDetails,
+                    Mods = []
+                };
+
+                _dataContext.Games.Add(game);
                 savedCount++;
             }
+
 
             if (savedCount > 0)
             {

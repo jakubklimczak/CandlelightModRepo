@@ -13,7 +13,7 @@ public class UserManagementService(DataContext context)
     {
         AppUser newAppUser = new()
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.NewGuid(),
             UserName = userName,
             Email = userEmail,
             PasswordHash = "",
@@ -27,13 +27,14 @@ public class UserManagementService(DataContext context)
         UserProfile newProfile = new()
         {
             Id = Guid.NewGuid(),
-            UserId = Guid.Parse(newAppUser.Id),
+            UserId = newAppUser.Id,
             DisplayName = newAppUser.UserName,
             AvatarFilename = null,
             BackgroundColour = null,
             Bio = null,
-            Created = DateTime.Now,
-            LastUpdated = DateTime.Now
+            CreatedAt = DateTime.Now,
+            LastUpdatedAt = DateTime.Now,
+            CreatedBy = newAppUser.Id,
         };
 
         await _context.Users.AddAsync(newAppUser);
@@ -45,7 +46,7 @@ public class UserManagementService(DataContext context)
 
     public async Task<AppUser?> UpdateUserAsync(AppUser updatedUser)
     {
-        var user = await GetUserByIdAsync(Guid.Parse(updatedUser.Id));
+        var user = await GetUserByIdAsync(updatedUser.Id);
         if (user == null)
             return null;
 

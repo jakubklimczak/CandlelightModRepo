@@ -1,0 +1,36 @@
+.mod-list-item {
+    display: flex;
+    padding: 1rem;
+
+    .mod-item-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .mod-thumb {
+        width: 15rem;
+        height: 20rem;
+        object-fit: cover;
+        border-radius: 1rem;
+    }
+
+    .mod-details {
+        flex: 1;
+
+        h3 {
+            margin: 0 0 0.5rem 0;
+        }
+
+        .meta {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+
+        .desc {
+            margin: 0;
+            color: #333;
+        }
+    }
+}

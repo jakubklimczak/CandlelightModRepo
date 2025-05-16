@@ -15,10 +15,10 @@ public class GameController(GameService gameService) : ControllerBase
     /// Example: GET /api/GetGamesFromDbPaginatedQuery?page=1&pageSize=10
     /// </summary>
     [HttpGet("GetGamesFromDbPaginatedQuery")]
-    [ActionName("GetGamesFromDb")]
-    public async Task<IActionResult> GetGamesFromDb([FromQuery] PaginatedQuery query)
+    [ActionName("GetPaginatedSteamGameDetailsFromDb")]
+    public async Task<IActionResult> GetPaginatedSteamGameDetailsFromDb([FromQuery] PaginatedQuery query)
     {
-        var (games, totalGames) = await _gameService.GetGamesFromDbAsync(query.Page, query.PageSize);
+        var (games, totalGames) = await _gameService.GetSteamGameDetailsFromDbAsync(query.Page, query.PageSize);
 
         var mappedGameResults = games.Select(game => new GameListItemDto()
         {
@@ -40,11 +40,11 @@ public class GameController(GameService gameService) : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("GetGame/{appId}")]
+    [HttpGet("GetGame/{appId:int}")]
     [ActionName("GetGame")]
     public async Task<IActionResult> GetGame(int appId)
     {
-        var game = await _gameService.GetOrFetchGameByIdAsync(appId);
+        var game = await _gameService.GetOrFetchSteamGameDetailsByIdAsync(appId);
         if (game == null)
         {
             return NotFound($"Game with AppId {appId} not found.");
@@ -53,11 +53,11 @@ public class GameController(GameService gameService) : ControllerBase
         return Ok(game);
     }
 
-    [HttpGet("GetGameFromDb/{appId}")]
+    [HttpGet("GetGameFromDb/{appId:int}")]
     [ActionName("GetGameFromDb")]
     public async Task<IActionResult> GetGameFromDb(int appId)
     {
-        var game = await _gameService.GetGameByIdAsync(appId);
+        var game = await _gameService.GetSteamGameDetailsByIdAsync(appId);
         if (game == null)
         {
             return NotFound($"Game with AppId {appId} not found.");

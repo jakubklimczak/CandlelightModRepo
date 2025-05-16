@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Candlelight.Core.Entities.Steam;
 
-public class GameDetails
+public class SteamGameDetails : BaseEntity
 {
-    [Key]
     public int AppId { get; set; }  // Steam's ID
 
     [Required]
@@ -38,4 +38,8 @@ public class GameDetails
     public List<Category> Categories { get; set; } = [];
 
     public List<Platform> Platforms { get; set; } = [];
+
+    public Guid GameId { get; set; }
+
+    public Game Game { get; set; } = null!;
 }

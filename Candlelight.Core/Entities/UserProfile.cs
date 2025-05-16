@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Candlelight.Core.Entities;
 
 public class UserProfile : BaseEntity
 {
-    public required Guid UserId { get; set; }
 
     [MaxLength(30)]
     public string? DisplayName { get; set; }
@@ -17,4 +17,9 @@ public class UserProfile : BaseEntity
 
     [MaxLength(30)]
     public string? BackgroundColour { get; set; }
+
+    public required Guid UserId { get; set; }
+
+    [ForeignKey(nameof(AppUser))]
+    public AppUser User { get; set; } = null!;
 }
