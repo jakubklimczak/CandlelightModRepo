@@ -273,3 +273,5 @@ secrets.json
 
 # Environment variables (if you store them in a file)
 .env
+
+/Candlelight.Api/wwwroot/mods/*
