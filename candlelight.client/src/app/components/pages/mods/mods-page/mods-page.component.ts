@@ -19,14 +19,14 @@ export class ModsPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.gameId = params['gameId'];
+      this.gameId = params['appId'];
       this.query.page = 1;
       this.loadMods();
     });
   }
 
   private loadMods(): void {
-    this.modService.getModsForGame(this.gameId, this.query.page, this.query.pageSize).subscribe(res => {
+    this.modService.getModsForSteamGame(this.gameId, this.query.page, this.query.pageSize).subscribe(res => {
       this.response = res;
     });
   }

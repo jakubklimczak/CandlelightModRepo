@@ -7,6 +7,7 @@ import { GamesPageComponent } from './components/pages/games/games-page/games-pa
 import { AboutPageComponent } from './components/pages/about-page/about-page.component';
 import { ModsPageComponent } from './components/pages/mods/mods-page/mods-page.component';
 import { ModDetailsPageComponent } from './components/pages/mods/mod-details-page/mod-details-page.component';
+import { GameDetailsPageComponent } from './components/pages/games/game-details-page/game-details-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegistrationPageComponent },
   { path: 'games', component: GamesPageComponent },
+  { path: 'games/:id', component: GameDetailsPageComponent },
   { path: 'mods', component: ModsPageComponent },
   { path: 'mods/:id', component: ModDetailsPageComponent }
 ];

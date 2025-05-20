@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Candlelight.Application.Services;
+﻿using Candlelight.Application.Services;
 using Candlelight.Core.Dtos.Mod;
 using Candlelight.Core.Dtos.Query;
 using Candlelight.Core.Entities;
@@ -182,6 +181,44 @@ public class ModController(
                 AuthorId = mod.CreatedBy,
                 LastUpdatedDate = mod.LastUpdatedAt
             }).ToList()
+        };
+
+        return Ok(result);
+    }
+
+    [HttpGet("GetModDetailsById")]
+    public async Task<IActionResult> GetModDetailsById([FromQuery] Guid modId)
+    {
+        var mod = await modService.GetModDetailsById(modId);
+
+        if (mod == null)
+        {
+            return BadRequest($"Mod with id {modId} doesn\'t exist.");
+        }
+
+        var result = new ModDetailsResponseDto()
+        {
+            Id = mod.Id,
+            GameId = mod.GameId,
+            AuthorUsername = mod.AuthorUsername,
+            Description = mod.Description,
+            Name = mod.Name,
+            GameName = mod.Game.SteamGameDetails != null ? mod.Game.SteamGameDetails.Name : "",
+            Versions = mod.Versions.Select(v => new ModVersionDto()
+            {
+                Id = v.Id,
+                ModId = v.ModId, 
+                FileUrl = v.FileUrl, 
+                Changelog = v.Changelog, 
+                Version = v.Version,
+                CreatedAt = v.CreatedAt,
+                CreatedBy = v.CreatedBy,
+                LastUpdatedAt = v.LastUpdatedAt
+            }).ToList(),
+            ThumbnailUrl = mod.ThumbnailUrl,
+            CreatedAt = mod.CreatedAt,
+            CreatedBy = mod.CreatedBy,
+            LastUpdatedAt = mod.LastUpdatedAt,
         };
 
         return Ok(result);

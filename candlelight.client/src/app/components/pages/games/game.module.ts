@@ -6,9 +6,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../shared/shared.module';
+import { GameDetailsPageComponent } from './game-details-page/game-details-page.component';
 
 @NgModule({
-  declarations: [GamesPageComponent, GamesGridComponent, GameTileComponent],
+  declarations: [GamesPageComponent, GamesGridComponent, GameTileComponent, GameDetailsPageComponent],
   imports: [MatCardModule, MatIconModule, CommonModule, SharedModule],
 })
 export class GamesModule {}

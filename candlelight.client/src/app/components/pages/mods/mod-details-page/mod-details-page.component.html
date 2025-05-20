@@ -1,1 +1,19 @@
-<p>mod-details-page works!</p>
+<ng-container class="container" *appSkeletonLoader="isLoading">
+    <div *ngIf="!isLoading && details">
+        <h1>{{ details.name }}</h1>
+        <h3>By {{ details.authorUsername }}</h3>
+        <img [src]="details.thumbnailUrl" alt="Mod thumbnail" width="300" />
+        <P>Description: </P>
+        <p>{{ details.description }}</p>
+        <p><strong>Game:</strong> {{ details.gameName }}</p>
+
+        <h2>Versions</h2>
+        <ul>
+            <li *ngFor="let version of details.versions">
+            <strong>{{ version.version }}</strong><br />
+            <em>{{ version.changelog }}</em><br />
+            <a [href]="version.fileUrl" target="_blank">Download</a>
+            </li>
+        </ul>
+    </div>
+</ng-container>

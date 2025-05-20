@@ -4,7 +4,8 @@
       <img [src]="mod.thumbnailUrl" alt="{{ mod.name }}" class="mod-thumb" />
       <div class="mod-details">
         <h3>{{ mod.name }}</h3>
-        <p class="meta">By {{ mod.author }} — {{ mod.lastUpdatedDate| date }}</p>
+        <p class="meta">By {{ mod.author }}</p>
+        <p class="meta">Last updated: {{ mod.lastUpdatedDate | date }}</p>
         <p class="desc">{{ mod.descriptionSnippet }}</p>
       </div>
     </div>

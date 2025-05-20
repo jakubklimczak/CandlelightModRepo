@@ -64,6 +64,8 @@ public class ModService(DataContext context)
     public async Task<(List<Mod> Mods, int TotalCount)> GetModsBySteamAppIdAsync(int appId, int page, int pageSize)
     {
         var query = _context.Mods
+            .Include(m => m.Game)
+                .ThenInclude(g => g.SteamGameDetails)
             .Where(m => m.Game.SteamGameDetails != null && m.Game.SteamGameDetails.AppId == appId)
             .OrderByDescending(m => m.CreatedAt);
 
@@ -75,5 +77,18 @@ public class ModService(DataContext context)
             .ToListAsync();
 
         return (mods, totalCount);
+    }
+
+    public async Task<Mod?> GetModDetailsById(Guid modId)
+    {
+        var query = _context.Mods
+            .Include(m => m.Versions)
+            .Include(m => m.Game)
+                .ThenInclude(g => g.SteamGameDetails)
+            .Where(m => m.Id == modId);
+
+        var mod = await query.FirstOrDefaultAsync();
+
+        return mod;
     }
 }
