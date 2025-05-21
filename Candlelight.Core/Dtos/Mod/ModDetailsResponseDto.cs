@@ -12,6 +12,9 @@ public class ModDetailsResponseDto
     public required Guid CreatedBy { get; set; }
     public required DateTime CreatedAt { get; set; }
     public required DateTime LastUpdatedAt { get; set; }
+    public required double AverageRating { get; set; }
+    public required int ReviewCount { get; set; }
+    public required int FavouriteCount { get; set; }
     public required List<ModVersionDto> Versions { get; set; } 
 }
 

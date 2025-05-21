@@ -2,7 +2,9 @@
 using Candlelight.Core.Dtos.Mod;
 using Candlelight.Core.Dtos.Query;
 using Candlelight.Core.Entities;
+using Candlelight.Core.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Candlelight.Api.Controllers;
 
@@ -219,7 +221,39 @@ public class ModController(
             CreatedAt = mod.CreatedAt,
             CreatedBy = mod.CreatedBy,
             LastUpdatedAt = mod.LastUpdatedAt,
+            AverageRating = ModService.GetRatingsAverage(mod.Reviews),
+            ReviewCount = mod.Reviews.Count,
+            FavouriteCount = mod.Favourites.Count 
         };
+
+        return Ok(result);
+    }
+
+    [HttpPost("{modId}/favourite")]
+    public async Task<IActionResult> AddFavourite(Guid modId)
+    {
+        //TODO: implement
+        var userId = Guid.Empty;
+
+        if (!await modService.MarkModAsFavourite(modId, userId))
+            return BadRequest("This mod is already in favourites!");
+        return Ok();
+    }
+
+    [HttpDelete("{modId}/favourite")]
+    public async Task<IActionResult> RemoveFavourite(Guid modId)
+    {
+        //TODO: implement
+        var userId = Guid.Empty;
+        if (!await modService.RemoveModFromFavourites(modId, userId))
+            return BadRequest("This mod is not in your favourites!");
+        return Ok();
+    }
+
+    [HttpGet("{modId}/reviews")]
+    public async Task<IActionResult> GetReviewsPaginatedQuery(Guid modId, ReviewsSortingOptions? sortBy = ReviewsSortingOptions.HighestRated, int page = 1, int pageSize = 10)
+    {
+        var result = await modService.GetModReviewsPaginatedResponse(modId, page, pageSize, sortBy);
 
         return Ok(result);
     }

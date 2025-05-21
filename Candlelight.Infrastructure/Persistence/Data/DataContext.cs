@@ -25,6 +25,8 @@ public class DataContext(DbContextOptions<DataContext> options)
     public DbSet<Mod> Mods { get; set; }
     public DbSet<ModVersion> ModVersions { get; set; }
     public DbSet<SteamGameDetails> SteamGameDetails { get; set; }
+    public DbSet<ModFavourite> ModFavourites { get; set; }
+    public DbSet<ModReview> ModReviews { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -115,5 +117,14 @@ public class DataContext(DbContextOptions<DataContext> options)
         // ModVersion
         builder.Entity<ModVersion>()
             .HasIndex(v => v.Id).IsUnique();
+
+        // ModFavourite
+        builder.Entity<ModFavourite>()
+            .HasIndex(mf => mf.Id).IsUnique();
+        builder.Entity<ModFavourite>()
+            .HasIndex(mf => new { mf.ModId, mf.UserId }).IsUnique();
+        // ModReview
+        builder.Entity<ModReview>()
+            .HasIndex(r => new { r.ModId, r.UserId }).IsUnique();
     }
 }

@@ -9,8 +9,8 @@ public class BaseEntity
 
     public required Guid CreatedBy { get; set; }
 
-    public required DateTime CreatedAt { get; set; }
+    public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public required DateTime LastUpdatedAt { get; set; }
+    public required DateTime LastUpdatedAt { get; set; } = DateTime.UtcNow;
 }
 
