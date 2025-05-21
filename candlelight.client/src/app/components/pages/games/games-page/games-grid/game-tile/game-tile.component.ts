@@ -14,12 +14,14 @@ export class GameTileComponent {
 
   public openMods(): void {
     this.router.navigate(['/mods'], {
-      queryParams: { gameId: this.game.appId },
+      queryParams: { appId: this.game.appId },
     });
   }
 
   public openDetails(event: MouseEvent): void {
     event.stopPropagation();
-    this.router.navigate(['/games', this.game.appId]);
+    this.router.navigate(['/games'], {
+      queryParams: { id: this.game.appId },
+    });
   }
 }

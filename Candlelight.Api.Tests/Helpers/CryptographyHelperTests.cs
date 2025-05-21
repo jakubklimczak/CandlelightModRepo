@@ -9,12 +9,12 @@ public class CryptographyHelperTests
 
     readonly AppUser _appUser = new()
     {
-        Id = Guid.NewGuid().ToString(),
+        Id = Guid.NewGuid(),
         Email = "email@candlelight.com",
         UserName = "testUser",
         PasswordHash = "",
-        Created = DateTime.Now,
-        LastUpdated = DateTime.Now
+        Created = DateTime.UtcNow,
+        LastUpdated = DateTime.UtcNow
     };
 
     [Test]

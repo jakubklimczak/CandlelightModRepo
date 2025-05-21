@@ -4,8 +4,8 @@
     <p>Explore the latest mods for your favorite games or upload your own creations.</p>
     <nav>
       <div class="button-group">
-        <button mat-raised-button>Browse Games</button>
-        <button mat-raised-button>Upload Mod</button>
+        <button mat-raised-button routerLink="/games"><mat-icon fontIcon="games"></mat-icon>Browse Games</button>
+        <button mat-raised-button><mat-icon fontIcon="upload"></mat-icon>Upload Mod</button>
       </div>
     </nav>
   </section>
@@ -53,14 +53,14 @@
       <mat-card-header>
         <mat-card-title>Ready to get started?</mat-card-title>
       </mat-card-header>
-      <button mat-raised-button routerLink="/register">Sign Up</button>
+      <button mat-raised-button routerLink="/register"><mat-icon fontIcon="person_add"></mat-icon>Register</button>
     </mat-card>
 
     <mat-card class="feature-card mat-elevation-z4">
       <mat-card-header>
         <mat-card-title>Already have an account?</mat-card-title>
       </mat-card-header>
-      <button mat-raised-button routerLink="/login">Login</button>
+      <button mat-raised-button routerLink="/login"><mat-icon fontIcon="login"></mat-icon>Login</button>
 </mat-card>
   </section>
 </div>

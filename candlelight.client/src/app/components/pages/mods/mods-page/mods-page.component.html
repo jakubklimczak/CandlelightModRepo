@@ -1,0 +1,10 @@
+<ng-container *appSkeletonLoader="response === null">
+    <div class="mods-page" *ngIf="response">
+        <app-mods-list [mods]="response.items" />
+        <app-paginator
+            [length]="response.totalItems"
+            [pageSize]="query.pageSize"
+            [pageIndex]="query.page - 1"
+            (pageChange)="onPageChanged($event)" />
+    </div>
+</ng-container>

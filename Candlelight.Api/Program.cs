@@ -35,6 +35,7 @@ builder.Services.Configure<SteamSettings>(builder.Configuration);
 builder.Services.AddHttpClient<SteamService>();
 
 builder.Services.AddScoped<GameService>();
+builder.Services.AddScoped<ModService>();
 
 builder.Services.AddControllers();
 
@@ -56,7 +57,7 @@ builder.Services.AddCors(options =>
 });
 
 
-builder.Services.AddIdentity<AppUser, IdentityRole>()
+builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
 
@@ -84,8 +85,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-// app.UseStaticFiles();
+//app.UseDefaultFiles();
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -106,6 +107,6 @@ app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
 
-Task task = app.RunAsync();
+var task = app.RunAsync();
 
 await task;

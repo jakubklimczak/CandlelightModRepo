@@ -11,7 +11,7 @@ import { PaginatedQuery } from '../../../../shared/models/paginated-query.model'
 })
 export class GamesPageComponent implements OnInit {
   response?: PaginatedResponse<GameListItem>;
-  query: PaginatedQuery = { page: 1, pageSize: 10 };
+  query: PaginatedQuery = { page: 1, pageSize: 50 };
 
   constructor(private gameService: GameService) {}
 

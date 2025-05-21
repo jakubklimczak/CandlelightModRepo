@@ -54,12 +54,12 @@ public class UserAccessControllerTests
 
         AppUser expectedAppUser = new()
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.NewGuid(),
             UserName = form.UserName,
             Email = form.UserEmail,
             PasswordHash = "47yxds290",
-            Created = DateTime.Now,
-            LastUpdated = DateTime.Now
+            Created = DateTime.UtcNow,
+            LastUpdated = DateTime.UtcNow
         };
 
         _mockAuthenticationService.Setup(x => AuthenticationService.IsRegistrationFormValid(form)).Returns(true);

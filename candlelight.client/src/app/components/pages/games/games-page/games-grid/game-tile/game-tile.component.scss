@@ -14,12 +14,14 @@
     align-items: center;
     font-weight: bold;
     padding: 0.5rem;
+    color: #ff8c00;
   }
 
   .details-icon {
     font-size: 2rem;
     opacity: 0.6;
     transition: opacity 0.2s;
+    padding: 0.5rem;
   }
 
   &:hover .details-icon {

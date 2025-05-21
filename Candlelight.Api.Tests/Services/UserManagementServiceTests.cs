@@ -12,7 +12,7 @@ public class UserManagementServiceTests
 {
     private DataContext _context;
     private UserManagementService _userManagementService;
-    private readonly AppUser _appUserToAdd = new() { Id = Guid.NewGuid().ToString(), UserName = "username", Email = "email@email.com", PasswordHash = "unhashedPassword;)", Created = DateTime.Now, LastUpdated = DateTime.Now };
+    private readonly AppUser _appUserToAdd = new() { Id = Guid.NewGuid(), UserName = "username", Email = "email@email.com", PasswordHash = "unhashedPassword;)", Created = DateTime.UtcNow, LastUpdated = DateTime.UtcNow };
     
     [SetUp]
     public void Setup()

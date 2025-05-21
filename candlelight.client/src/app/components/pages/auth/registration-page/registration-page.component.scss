@@ -7,18 +7,19 @@
     padding: 0;
     overflow-y: hidden;
     height: 100%;
-    background-color: #640037;
+    background-color: #232323;
 
     .container {
         text-align: center;
         margin: 2.5rem;
         padding: 2.5rem;
         border-radius: 0.625rem;
-        background-color: #890f50;
+        background-color: #363636;
         overflow-y: hidden;
 
         .title {
             font-size: 3rem;
+            color: #ff8c00;
         }
 
         .form {
