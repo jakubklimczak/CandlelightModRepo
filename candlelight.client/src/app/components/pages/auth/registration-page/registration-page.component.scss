@@ -31,9 +31,18 @@
             .form-row {
                 padding: 1rem;
                 width: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;    
                 
                 button {
-                    width: 30%;
+                    width: 15%;
+                    margin: 1.5rem;
+                }
+
+                .steam-login {
+                    width: auto;
+                    height: auto;
                     margin: 1.5rem;
                 }
             }

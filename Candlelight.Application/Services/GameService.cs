@@ -24,7 +24,7 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
         return game;
     }
 
-    public async Task<SteamGameDetails?> GetOrFetchSteamGameDetailsByIdAsync(int appId)
+    public async Task<SteamGameDetails?> GetOrFetchSteamGameDetailsByIdAsync(int appId, Guid currentUserId)
     {
         var steamGameDetails = await _dataContext.SteamGameDetails
             .Include(d => d.Genres)
@@ -37,7 +37,7 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
             return steamGameDetails;
         }
 
-        steamGameDetails = await _steamApiService.FetchGameDetailsAsync(appId);
+        steamGameDetails = await _steamApiService.FetchGameDetailsAsync(appId, currentUserId);
         if (steamGameDetails == null)
         {
             return null;
@@ -53,7 +53,7 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.Now,
             LastUpdatedAt = DateTime.Now,
-            CreatedBy = Guid.Empty, // TODO: Set the CreatedBy field to the appropriate user ID
+            CreatedBy = currentUserId,
             SteamGameDetails = steamGameDetails
         };
 

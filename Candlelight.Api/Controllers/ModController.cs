@@ -1,8 +1,10 @@
-﻿using Candlelight.Application.Services;
+﻿using Candlelight.Api.Attributes;
+using Candlelight.Application.Services;
 using Candlelight.Core.Dtos.Mod;
 using Candlelight.Core.Dtos.Query;
 using Candlelight.Core.Entities;
 using Candlelight.Core.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,16 +43,17 @@ public class ModController(
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPost("UploadNewMod")]
     [RequestSizeLimit(500_000_000)] // 500 MB max TODO: adjust as needed. make endpoint for bigger mods
     public async Task<IActionResult> UploadNewMod(
-        [FromForm] ModUploadForm dto)
+        [FromForm] ModUploadForm dto, [CurrentUser] AppUser user)
     {
         if (dto.File.Length == 0)
             return BadRequest("No file uploaded.");
 
         var now = DateTime.UtcNow;
-        var userId = /* TODO: get from auth */ Guid.Empty;
+        var userId = user.Id;
 
         var mod = new Mod
         {
@@ -106,17 +109,17 @@ public class ModController(
         });
     }
 
-
+    [Authorize]
     [HttpPost("UploadNewModVersion")]
     [RequestSizeLimit(500_000_000)] // 500 MB max TODO: adjust as needed. make endpoint for bigger mods
     public async Task<IActionResult> UploadNewModVersion(
-        [FromForm] ModVersionUploadForm dto)
+        [FromForm] ModVersionUploadForm dto, [CurrentUser] AppUser user)
     {
         if (dto.File.Length == 0)
             return BadRequest("No file uploaded.");
 
         var now = DateTime.UtcNow;
-        var userId = /* TODO: get from auth */ Guid.Empty;
+        var userId = user.Id;
 
         var mod = await modService.GetModByIdAsync(dto.ModId);
 

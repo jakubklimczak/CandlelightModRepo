@@ -1,7 +1,10 @@
+using Candlelight.Api.Attributes;
 using Candlelight.Application.Services;
 using Candlelight.Core.Dtos.Game;
 using Candlelight.Core.Dtos.Query;
+using Candlelight.Core.Entities;
 using Candlelight.Core.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Candlelight.Api.Controllers;
@@ -41,9 +44,10 @@ public class GameController(GameService gameService) : ControllerBase
 
     [HttpGet("GetGame/{appId:int}")]
     [ActionName("GetGame")]
-    public async Task<IActionResult> GetGame(int appId)
+    [Authorize]
+    public async Task<IActionResult> GetGame(int appId, [CurrentUser] AppUser user)
     {
-        var game = await _gameService.GetOrFetchSteamGameDetailsByIdAsync(appId);
+        var game = await _gameService.GetOrFetchSteamGameDetailsByIdAsync(appId, user.Id);
         if (game == null)
         {
             return NotFound($"Game with AppId {appId} not found.");

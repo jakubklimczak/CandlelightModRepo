@@ -51,4 +51,9 @@
 	<ProjectReference Include="..\Candlelight.Infrastructure\Candlelight.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Attributes\" />
+    <Folder Include="ModelBinders\" />
+  </ItemGroup>
+
 </Project>

@@ -15,19 +15,16 @@
 
       <!-- Logged-in user options -->
       <ng-container *ngIf="isLoggedIn">
-        <!-- TODO: Add userId to the link -->
-        <button mat-raised-button routerLink="/favourite-games">
+        <button mat-raised-button routerLink="/profile/{{ this.currentUserId }}/favourite-games">
           <mat-icon fontIcon="favorite_border"></mat-icon> Favourite Games
         </button>
-        <!-- TODO: Add userId to the link -->
-        <button mat-raised-button routerLink="/favourite-mods">
+        <button mat-raised-button routerLink="/profile/{{ this.currentUserId }}/favourite-mods">
           <mat-icon fontIcon="favorite_border"></mat-icon> Favourite Mods
         </button>
         <button mat-raised-button routerLink="/upload">
           <mat-icon fontIcon="file_upload"></mat-icon> Upload Mod
         </button>
-        <!-- TODO: Add userId to the link -->
-        <button mat-icon-button [routerLink]="'/profile'" class="profile-button" matTooltip="Profile">
+        <button mat-icon-button [routerLink]="'/profile/{{ this.currentUserId }}'" class="profile-button" matTooltip="Profile">
           <img [src]="userProfilePictureLink" alt="Profile" class="profile-icon" />
         </button>
       </ng-container>

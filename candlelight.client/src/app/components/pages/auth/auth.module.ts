@@ -6,15 +6,24 @@ import { RegistrationPageComponent } from './registration-page/registration-page
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { RouterModule } from '@angular/router';
+import { SteamLoginPageComponent } from './steam-login-page/steam-login-page.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 
 @NgModule({
-  declarations: [LoginPageComponent, RegistrationPageComponent],
+  declarations: [
+    LoginPageComponent, 
+    RegistrationPageComponent, 
+    SteamLoginPageComponent
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    RouterModule,
+    MatProgressSpinnerModule
   ],
 })
 export class AuthModule {}

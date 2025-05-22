@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -15,6 +16,7 @@ export class LoginPageComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
+    private readonly router: Router
   ) {
     this.loginForm = this.fb.group({
       userEmail: ['', [Validators.required, Validators.email]],
@@ -22,18 +24,18 @@ export class LoginPageComponent {
     });
   }
 
-  //TODO: error snackbar and handle login
-  onSubmit(): void {
+  public onSubmit(): void {
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe(
-        (response) => {
-          console.log('Login successful:', response);
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (response: { token: string }) => {
+          localStorage.setItem('authToken', response.token);
+          this.router.navigate(['/']);
         },
-        (error: Error) => {
-          this.errorMessage =
-            'Login failed. Please check your credentials. Error: ' + error.name;
-        },
-      );
+        error: (error) => {
+          this.errorMessage = 'Login failed. Please check your credentials.';
+          console.error('Login error:', error);
+        }
+      });
     }
   }
 }

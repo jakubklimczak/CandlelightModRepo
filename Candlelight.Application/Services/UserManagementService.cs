@@ -44,6 +44,12 @@ public class UserManagementService(DataContext context)
         return newAppUser;
     }
 
+    public async Task<AppUser> CreateUserAsync(AppUser appUser)
+    { 
+        await _context.Users.AddAsync(appUser);
+        return appUser;
+    }
+
     public async Task<AppUser?> UpdateUserAsync(AppUser updatedUser)
     {
         var user = await GetUserByIdAsync(updatedUser.Id);

@@ -1,4 +1,7 @@
+using Candlelight.Api.Attributes;
 using Candlelight.Application.Services;
+using Candlelight.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Candlelight.Api.Controllers;
@@ -16,11 +19,21 @@ public class SteamController(SteamService steamService) : ControllerBase
         return Ok(new { ApiKey = apiKey });
     }
 
+    [Authorize]
     [HttpPost("FetchAndSaveTopGames")]
     [ActionName("FetchAndSaveTopGamesAsync")]
-    public async Task<IActionResult> FetchAndSaveTopGamesAsync()
+    public async Task<IActionResult> FetchAndSaveTopGamesAsync([CurrentUser] AppUser user)
     {
-        await _steamService.FetchAndSaveTopGamesAsync();
+        await _steamService.FetchAndSaveTopGamesAsync(user.Id);
         return Ok("Fetching and saving top games started.");
+    }
+
+    [HttpGet("SteamUser/{steamId}")]
+    public async Task<IActionResult> GetSteamUser(string steamId)
+    {
+        var userInfo = await _steamService.GetPlayerSummaryAsync(steamId);
+        if (userInfo == null) return NotFound();
+
+        return Ok(userInfo);
     }
 }
