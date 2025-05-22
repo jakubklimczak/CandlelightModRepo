@@ -4,21 +4,32 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
 import { CommonModule } from '@angular/common';
 import { SkeletonLoaderDirective } from './directives/skeleton-loader.directive';
 import { ImageSkeletonLoaderDirective } from './directives/image-skeleton-loader.directive';
+import { FiltersAndOptionsBarComponent } from './components/filters-and-options-bar/filters-and-options-bar.component';
+import { EnumSelectComponent } from './components/enum-select/enum-select.component';
+import { MatSelectModule } from '@angular/material/select';
+import { CamelCaseSpacerPipe } from './pipes/camel-case-spacer.pipe';
 
 @NgModule({
   declarations: [
     PaginatorComponent, 
     SkeletonLoaderDirective, 
-    ImageSkeletonLoaderDirective
+    ImageSkeletonLoaderDirective, 
+    FiltersAndOptionsBarComponent, 
+    EnumSelectComponent,
+    CamelCaseSpacerPipe,
   ],
   imports: [
     CommonModule, 
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSelectModule,
   ],
   exports: [
     PaginatorComponent, 
     SkeletonLoaderDirective, 
-    ImageSkeletonLoaderDirective
+    ImageSkeletonLoaderDirective,
+    FiltersAndOptionsBarComponent,
+    EnumSelectComponent,
+    CamelCaseSpacerPipe,
   ],
 })
 export class SharedModule {}

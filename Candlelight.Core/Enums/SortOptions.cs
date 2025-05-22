@@ -14,12 +14,11 @@ public enum ModsSortingOptions
 
 public enum GamesSortingOptions
 {
-    Newest,
-    Oldest,
-    HighestRated,
-    LowestRated,
     Alphabetical,
-    ReverseAlphabetical
+    ReverseAlphabetical,
+    MostMods,
+    MostFavourited,
+    LeastMods,
 }
 
 public enum ReviewsSortingOptions

@@ -27,6 +27,7 @@ public class DataContext(DbContextOptions<DataContext> options)
     public DbSet<SteamGameDetails> SteamGameDetails { get; set; }
     public DbSet<ModFavourite> ModFavourites { get; set; }
     public DbSet<ModReview> ModReviews { get; set; }
+    public DbSet<GameFavourite> GameFavourites { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -123,8 +124,17 @@ public class DataContext(DbContextOptions<DataContext> options)
             .HasIndex(mf => mf.Id).IsUnique();
         builder.Entity<ModFavourite>()
             .HasIndex(mf => new { mf.ModId, mf.UserId }).IsUnique();
+
         // ModReview
         builder.Entity<ModReview>()
+            .HasIndex(r => r.Id).IsUnique();
+        builder.Entity<ModReview>()
             .HasIndex(r => new { r.ModId, r.UserId }).IsUnique();
+
+        // GameFavourite
+        builder.Entity<GameFavourite>()
+            .HasIndex(gf => gf.Id).IsUnique();
+        builder.Entity<GameFavourite>()
+            .HasIndex(gf => new { gf.GameId, gf.UserId }).IsUnique();
     }
 }

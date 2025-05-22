@@ -1,6 +1,32 @@
 <ng-container *appSkeletonLoader="response === null">
+    <app-filters-and-options-bar class="filters-and-options-bar">
+        <mat-form-field class="search">
+            <input
+            matInput
+            placeholder="Search mods: e.g. BetterHUD"
+            [formControl]="searchControl"
+            />
+        </mat-form-field>
+        <div class="filters">
+            <app-enum-select
+            class="filters-item"
+            [enumType]="ModsSortingOption"
+            [label]="'Sort by:'"
+            [selectedValue]="selectedSortOption"
+            (selectionChange)="onSortOptionChange($event)" />
+            <button class="filters-item" mat-raised-button (click)="resetFilters()">Reset filters</button>
+        </div>
+        <mat-slide-toggle
+            [checked]="showOnlyFavourites"
+            (change)="onFavouritesToggle($event)"
+            class="custom-orange"
+            labelPosition="after">
+            Show favourites only
+        </mat-slide-toggle>
+        <button mat-raised-button routerLink="/mods/upload">Upload your mod!</button>
+    </app-filters-and-options-bar>
     <div class="mods-page" *ngIf="response">
-        <app-mods-list [mods]="response.items" />
+        <app-mods-list class="page-content" [mods]="response.items" />
         <app-paginator
             [length]="response.totalItems"
             [pageSize]="query.pageSize"

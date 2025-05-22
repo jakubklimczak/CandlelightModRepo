@@ -164,24 +164,29 @@ public class ModController(
 
 
     [HttpGet("GetModsBySteamAppId")]
-    public async Task<IActionResult> GetModsBySteamAppId([FromQuery] int appId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetModsBySteamAppId([FromQuery] int appId, [FromQuery] PaginatedQuery query, [FromQuery] bool showOnlyFavourites, [FromQuery] ModsSortingOptions sortBy, [FromQuery] string? searchTerm = null)
     {
-        var (mods, totalCount) = await modService.GetModsBySteamAppIdAsync(appId, page, pageSize);
+        //TODO: implement favourite mods
+        var (mods, totalCount) = await modService.GetModsBySteamAppIdAsync(appId, query.Page, query.PageSize, sortBy, searchTerm);
 
         var result = new PaginatedResponse<ModListItemDto>
         {
-            Page = page,
-            PageSize = pageSize,
+            Page = query.Page,
+            PageSize = query.PageSize,
             TotalItems = totalCount,
             Items = mods.Select(mod => new ModListItemDto
             {
                 Id = mod.Id,
                 Name = mod.Name,
-                DescriptionSnippet = mod.Description,
+                DescriptionSnippet = mod.DescriptionSnippet,
                 ThumbnailUrl = mod.ThumbnailUrl,
                 Author = mod.AuthorUsername,
                 AuthorId = mod.CreatedBy,
-                LastUpdatedDate = mod.LastUpdatedAt
+                LastUpdatedDate = mod.LastUpdatedAt,
+                TotalDownloads = mod.Versions.Sum(v => v.DownloadCount),
+                TotalFavourited = mod.Favourites.Count,
+                TotalReviews = mod.Reviews.Count,
+                AverageRating = mod.Reviews.Average(r => r.Rating)
             }).ToList()
         };
 

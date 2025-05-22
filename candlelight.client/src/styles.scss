@@ -216,3 +216,13 @@ button {
 label {
   color: #ff8c00 !important;
 }
+
+.mat-mdc-slide-toggle.custom-orange .mdc-switch--selected .mdc-switch__handle {
+  background-color: #ff8c00 !important;
+}
+
+.mat-mdc-slide-toggle.custom-orange .mdc-switch--selected .mdc-switch__track::before {
+  background-color: rgba(255, 140, 0, 0.4) !important;
+}
+
+

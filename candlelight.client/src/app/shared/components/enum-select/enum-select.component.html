@@ -1,0 +1,8 @@
+<mat-form-field appearance="fill" class="enum-select">
+  <mat-label>{{ label }}</mat-label>
+  <mat-select [value]="selectedValue" (selectionChange)="onChange($event.value)">
+    <mat-option *ngFor="let option of options" [value]="option">
+      {{ option | camelCaseSpacer }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

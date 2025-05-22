@@ -1,5 +1,31 @@
 <ng-container *appSkeletonLoader="response === null">
     <div class="page-container" *ngIf="response">
+        <app-filters-and-options-bar class="filters-and-options-bar">
+            <mat-form-field class="search">
+                <input
+                matInput
+                placeholder="Search games: e.g. Skyrim"
+                [formControl]="searchControl"
+                />
+            </mat-form-field>
+            <div class="filters">
+                <app-enum-select
+                class="filters-item"
+                [enumType]="GamesSortingOption"
+                [label]="'Sort by:'"
+                [selectedValue]="selectedSortOption"
+                (selectionChange)="onSortOptionChange($event)" />
+                <button class="filters-item" mat-raised-button (click)="resetFilters()">Reset filters</button>
+            </div>
+            <mat-slide-toggle
+                [checked]="showOnlyFavourites"
+                (change)="onFavouritesToggle($event)"
+                class="custom-orange"
+                labelPosition="after">
+                Show favourites only
+            </mat-slide-toggle>
+            <button mat-raised-button routerLink="/games/add">Game not here? Add it!</button>
+        </app-filters-and-options-bar>
         <main class="page-content">
             <app-games-grid [games]="response!.items" />
         </main>

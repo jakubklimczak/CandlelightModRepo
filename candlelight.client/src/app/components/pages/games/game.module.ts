@@ -7,9 +7,38 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../shared/shared.module';
 import { GameDetailsPageComponent } from './game-details-page/game-details-page.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AddNewGamePageComponent } from './add-new-game-page/add-new-game-page.component';
+import { MatTabsModule } from '@angular/material/tabs'
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [GamesPageComponent, GamesGridComponent, GameTileComponent, GameDetailsPageComponent],
-  imports: [MatCardModule, MatIconModule, CommonModule, SharedModule],
+  declarations: [
+    GamesPageComponent, 
+    GamesGridComponent, 
+    GameTileComponent, 
+    GameDetailsPageComponent, 
+    AddNewGamePageComponent,
+  ],
+  imports: [
+    MatCardModule, 
+    MatIconModule, 
+    CommonModule, 
+    SharedModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatButtonModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    RouterModule
+  ],
 })
 export class GamesModule {}

@@ -1,8 +1,10 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using Candlelight.Core.Entities;
 using Candlelight.Core.Entities.Steam;
+using Candlelight.Core.Enums;
 using Candlelight.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Candlelight.Application.Services;
 
@@ -64,21 +66,37 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
         return steamGameDetails;
     }
 
-    public async Task<(List<SteamGameDetails> Games, int TotalCount)> GetSteamGameDetailsFromDbAsync(int page, int pageSize)
+    public async Task<(List<SteamGameDetails> Games, int TotalCount)> GetSteamGameDetailsFromDbAsync(int page, int pageSize, GamesSortingOptions sortBy, string? searchTerm)
     {
         if (page < 1) page = 1;
         if (pageSize < 1) pageSize = 10;
 
-        var totalGames = await _dataContext.SteamGameDetails.CountAsync();
-        var games = await _dataContext.SteamGameDetails
+        var query = _dataContext.SteamGameDetails
             .Include(d => d.Genres)
             .Include(d => d.Categories)
             .Include(d => d.Platforms)
-            .OrderBy(g => g.Name)
+            .AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(g => g.Name.Contains(searchTerm));
+        }
+
+        var sortedQuery = sortBy switch
+        {
+            GamesSortingOptions.Alphabetical => query.OrderBy(g => g.Name),
+            GamesSortingOptions.ReverseAlphabetical => query.OrderByDescending(g => g.Name),
+            GamesSortingOptions.MostMods => query.OrderByDescending(g => g.Game.Mods.Count),
+            GamesSortingOptions.LeastMods => query.OrderBy(g => g.Game.Mods.Count),
+            GamesSortingOptions.MostFavourited => query.OrderByDescending(g => g.Game.Favourites.Count),
+            _ => query.OrderByDescending(g => g.Game.Favourites.Count)
+        };
+
+        var totalGames = await sortedQuery.CountAsync();
+        var games = await sortedQuery
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
-
 
         return (games, totalGames);
     }
