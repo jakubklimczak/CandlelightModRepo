@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthService } from '../pages/auth/services/auth.service';
 import { UserProfileDto } from '../pages/auth/models/user-profile-dto.interface';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-topbar',
@@ -13,13 +15,22 @@ export class TopbarComponent implements OnInit {
   currentUserId = '';
   userProfilePictureLink = '/src/public/android-chrome-512x512.png';
 
-  constructor(private readonly authService: AuthService){};
+  constructor(
+    private readonly authService: AuthService,
+    private router: Router
+  ){};
 
   ngOnInit(): void {
-    this.getCurrentUser();
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.checkAuthState();
+      });
+
+    this.checkAuthState(); 
   }
-  
-  public getCurrentUser(): void {
+
+  private checkAuthState(): void {
     const token = localStorage.getItem('authToken');
     if (!token) {
       this.isLoggedIn = false;
@@ -37,8 +48,8 @@ export class TopbarComponent implements OnInit {
               ? `/assets/avatars/${profile.avatarFilename}`
               : '/src/public/android-chrome-512x512.png';
           },
-          error: () => {
-            console.warn('Could not load user profile');
+          error: (e) => {
+            console.warn(e);
           }
         });
       },

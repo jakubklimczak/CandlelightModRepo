@@ -11,6 +11,7 @@ import { UserProfileDto } from '../models/user-profile-dto.interface';
 })
 export class AuthService {
   public authApiUrl = `${environment.apiUrl}/UserAccess`;
+  public socialApiUrl = `${environment.apiUrl}/UserSocial`;
   constructor(private http: HttpClient) {}
 
   public login(credentials: LoginForm): Observable<{ token: string }> {
@@ -30,6 +31,6 @@ export class AuthService {
   }
 
   public getUserProfile(userId: string): Observable<UserProfileDto> {
-    return this.http.get<UserProfileDto>(`UserProfile/${userId}`);
+    return this.http.get<UserProfileDto>(`${this.socialApiUrl}/UserProfile/${userId}`);
   }
 }

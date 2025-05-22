@@ -47,6 +47,7 @@ public class UserManagementService(DataContext context)
     public async Task<AppUser> CreateUserAsync(AppUser appUser)
     { 
         await _context.Users.AddAsync(appUser);
+        await _context.SaveChangesAsync();
         return appUser;
     }
 

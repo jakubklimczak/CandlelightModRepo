@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -13,10 +12,10 @@ import { AuthService } from '../services/auth.service';
   styleUrl: './steam-login-page.component.scss'
 })
 export class SteamLoginPageComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   ngOnInit(): void {
-    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
+    const returnUrl = `${window.location.origin}/steam-login/callback`;
     const steamLoginUrl = `${this.authService.authApiUrl}/SteamLogin?returnUrl=${encodeURIComponent(returnUrl)}`;
     window.location.href = steamLoginUrl;
   }

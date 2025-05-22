@@ -9,12 +9,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterModule } from '@angular/router';
 import { SteamLoginPageComponent } from './steam-login-page/steam-login-page.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { SteamLoginCallbackComponent } from './steam-login-page/steam-login-callback/steam-login-callback.component';
 
 @NgModule({
   declarations: [
     LoginPageComponent, 
     RegistrationPageComponent, 
-    SteamLoginPageComponent
+    SteamLoginPageComponent,
+    SteamLoginCallbackComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
     MatInputModule,
     MatFormFieldModule,
     RouterModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
 })
 export class AuthModule {}

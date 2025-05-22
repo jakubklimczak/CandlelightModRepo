@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
@@ -18,6 +18,7 @@ import { AboutPageComponent } from './components/pages/about-page/about-page.com
 import { SharedModule } from './shared/shared.module';
 import { ModsModule } from './components/pages/mods/mods.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { authInterceptor } from './components/pages/auth/services/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatSnackBarModule,
     ModsModule,
   ],
-  providers: [provideHttpClient(), provideAnimationsAsync()],
+  providers: [
+    provideHttpClient(withInterceptors([authInterceptor])), 
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

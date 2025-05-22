@@ -25,7 +25,7 @@
           <mat-icon fontIcon="file_upload"></mat-icon> Upload Mod
         </button>
         <button mat-icon-button [routerLink]="'/profile/{{ this.currentUserId }}'" class="profile-button" matTooltip="Profile">
-          <img [src]="userProfilePictureLink" alt="Profile" class="profile-icon" />
+          <img crossorigin="anonymous" [src]="userProfilePictureLink" alt="Profile" class="profile-icon" />
         </button>
       </ng-container>
 

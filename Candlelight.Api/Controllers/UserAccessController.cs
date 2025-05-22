@@ -10,12 +10,10 @@ using Candlelight.Core.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.WebUtilities;
 using AuthenticationService = Candlelight.Application.Services.AuthenticationService;
+using Candlelight.Core.Helpers;
 
 namespace Candlelight.Api.Controllers;
 
-/*
- * Handles registration process.
- */
 [ApiController]
 [Route("api/[controller]")]
 public class UserAccessController(AuthenticationService authenticationService, UserManagementService userManagementService, SteamService steamService) : ControllerBase
@@ -175,6 +173,11 @@ public class UserAccessController(AuthenticationService authenticationService, U
                 return BadRequest("Steam user not found");
             var newUserId = Guid.NewGuid();
 
+            if (steamId.StartsWith("https://steamcommunity.com/openid/id/"))
+            {
+                steamId = steamId.Replace("https://steamcommunity.com/openid/id/", "");
+            }
+
             user = new AppUser
             {
                 Id = newUserId,
@@ -195,6 +198,10 @@ public class UserAccessController(AuthenticationService authenticationService, U
                 }
             };
 
+            var randomPassword = GenerateSecureRandomPassword();
+            var hashedPassword = CryptographyHelper.HashPassword(user, randomPassword);
+            user.PasswordHash = hashedPassword;
+
             await _userManagementService.CreateUserAsync(user);
         }
 
@@ -204,7 +211,7 @@ public class UserAccessController(AuthenticationService authenticationService, U
         return Redirect(redirectUrlWithToken);
     }
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("GetCurrentUserId")]
     public async Task<IActionResult> GetCurrentUserId([FromServices] UserContextResolver resolver)
     {
@@ -212,4 +219,10 @@ public class UserAccessController(AuthenticationService authenticationService, U
         if (user == null) return Unauthorized();
         return Ok(new { id = user.Id });
     }
+
+    private static string GenerateSecureRandomPassword()
+    {
+        return Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N");
+    }
+
 }

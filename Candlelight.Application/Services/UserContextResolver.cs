@@ -10,18 +10,17 @@ public class UserContextResolver(UserManagementService userService)
 
     public async Task<AppUser?> ResolveUserAsync(ClaimsPrincipal principal)
     {
-        // Try JWT-based login
-        var jwtUserId = principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
-        if (Guid.TryParse(jwtUserId, out var userId))
+        var userId = principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        if (Guid.TryParse(userId, out var id))
         {
-            return await _userService.GetUserByIdAsync(userId);
+            return await _userService.GetUserByIdAsync(id);
         }
 
-        // Try Steam-based login
         var steamId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!string.IsNullOrEmpty(steamId))
         {
-            return await _userService.GetUserBySteamIdAsync(steamId);
+            Console.WriteLine(Guid.Parse(steamId));
+            return await _userService.GetUserByIdAsync(Guid.Parse(steamId));
         }
 
         return null;

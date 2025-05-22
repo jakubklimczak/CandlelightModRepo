@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Candlelight.Core.Dtos.User;
+﻿using Candlelight.Core.Dtos.User;
 
 namespace Candlelight.Application.Services;
 
@@ -14,10 +9,9 @@ public class UserSocialService(UserManagementService userManagementService)
     public async Task<UserProfileDto?> GetUserProfileByIdAsync(Guid userId)
     {
         var user = await _userManagementService.GetUserByIdAsync(userId);
-        if (user == null) return null;
+        if (user?.UserProfile == null) return null;
 
         var profile = user.UserProfile;
-
         return new UserProfileDto
         {
             UserId = user.Id,

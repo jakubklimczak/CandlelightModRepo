@@ -11,6 +11,7 @@ import { GameDetailsPageComponent } from './components/pages/games/game-details-
 import { AddNewGamePageComponent } from './components/pages/games/add-new-game-page/add-new-game-page.component';
 import { UploadModPageComponent } from './components/pages/mods/upload-mod-page/upload-mod-page.component';
 import { SteamLoginPageComponent } from './components/pages/auth/steam-login-page/steam-login-page.component';
+import { SteamLoginCallbackComponent } from './components/pages/auth/steam-login-page/steam-login-callback/steam-login-callback.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'about', component: AboutPageComponent },
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegistrationPageComponent },
-  { path: 'steam-login', component: SteamLoginPageComponent },
+  { path: 'steam-login', component: SteamLoginPageComponent },  
+  { path: 'steam-login/callback', component: SteamLoginCallbackComponent },
   { path: 'games', component: GamesPageComponent },  
   { path: 'games/add', component: AddNewGamePageComponent },
   { path: 'games/:id', component: GameDetailsPageComponent },
