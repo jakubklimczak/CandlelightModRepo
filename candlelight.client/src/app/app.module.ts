@@ -17,6 +17,7 @@ import { GamesModule } from './components/pages/games/game.module';
 import { AboutPageComponent } from './components/pages/about-page/about-page.component';
 import { SharedModule } from './shared/shared.module';
 import { ModsModule } from './components/pages/mods/mods.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ModsModule } from './components/pages/mods/mods.module';
     MatButtonModule,
     MatIconModule,
     BrowserModule,
+    BrowserAnimationsModule, 
     AppRoutingModule,
     HomepageModule,
     ReactiveFormsModule,

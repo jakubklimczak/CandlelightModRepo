@@ -1,0 +1,36 @@
+.filters-and-options-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.search {
+    width: 20rem;
+}
+
+.filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .filters-item {
+        padding-right: 1rem;
+    }
+}
+
+.mods-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.page-content {
+    flex: 1 0 auto;
+    padding-bottom: 1rem;
+}
+
+.paginator {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    padding: 0.5rem 1rem;
+}

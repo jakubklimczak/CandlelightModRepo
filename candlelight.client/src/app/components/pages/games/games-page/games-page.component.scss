@@ -15,3 +15,22 @@
     z-index: 10;
     padding: 0.5rem 1rem;
 }
+
+.filters-and-options-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.search {
+    width: 20rem;
+}
+
+.filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .filters-item {
+        padding-right: 1rem;
+    }
+}

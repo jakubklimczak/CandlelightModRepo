@@ -9,4 +9,8 @@ public class ModListItemDto
     public Guid AuthorId { get; set; } = default!;
     public string Author { get; set; } = default!;
     public DateTime LastUpdatedDate { get; set; }
+    public int TotalDownloads { get; set; } = default!;
+    public double AverageRating { get; set; } = default!;
+    public int TotalFavourited { get; set; } = default!;
+    public int TotalReviews { get; set; } = default!;
 }

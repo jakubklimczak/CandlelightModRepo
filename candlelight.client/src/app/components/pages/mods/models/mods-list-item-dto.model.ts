@@ -6,4 +6,8 @@ export interface ModsListItemDto {
   authorId: string;
   author: string;
   lastUpdatedDate: Date;
+  totalDownloads: number;
+  averageRating: number;
+  totalFavourited: number;
+  totalReviews: number;
 }

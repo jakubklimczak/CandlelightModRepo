@@ -4,7 +4,6 @@ using Candlelight.Core.Entities;
 using Candlelight.Core.Enums;
 using Candlelight.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 
 namespace Candlelight.Application.Services;
 
@@ -65,17 +64,37 @@ public class ModService(DataContext context)
         return (mods, totalCount);
     }
 
-    public async Task<(List<Mod> Mods, int TotalCount)> GetModsBySteamAppIdAsync(int appId, int page, int pageSize)
+    public async Task<(List<Mod> Mods, int TotalCount)> GetModsBySteamAppIdAsync(int appId, int page, int pageSize, ModsSortingOptions sortBy, string? searchTerm)
     {
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+
         var query = _context.Mods
             .Include(m => m.Game)
                 .ThenInclude(g => g.SteamGameDetails)
-            .Where(m => m.Game.SteamGameDetails != null && m.Game.SteamGameDetails.AppId == appId)
-            .OrderByDescending(m => m.CreatedAt);
+            .Include(m => m.Versions)
+            .Where(m => m.Game.SteamGameDetails != null && m.Game.SteamGameDetails.AppId == appId);
 
-        var totalCount = await query.CountAsync();
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(m => m.Name.Contains(searchTerm));
+        }
 
-        var mods = await query
+        IQueryable<Mod> sortedQuery = sortBy switch
+        {
+            ModsSortingOptions.Newest => query.OrderByDescending(m => m.CreatedAt),
+            ModsSortingOptions.Oldest => query.OrderBy(m => m.CreatedAt),
+            ModsSortingOptions.HighestRated => query.OrderByDescending(m => m.Reviews.Average(r => (double?)r.Rating) ?? 0),
+            ModsSortingOptions.LowestRated => query.OrderBy(m => m.Reviews.Average(r => (double?)r.Rating) ?? 0),
+            ModsSortingOptions.MostDownloaded => query.OrderByDescending(m => m.Versions.Sum(v => v.DownloadCount)),
+            ModsSortingOptions.MostFavourited => query.OrderByDescending(m => m.Favourites.Count),
+            ModsSortingOptions.Alphabetical => query.OrderBy(m => m.Name),
+            ModsSortingOptions.ReverseAlphabetical => query.OrderByDescending(m => m.Name),
+            _ => query.OrderByDescending(m => m.Reviews.Average(r => (double?)r.Rating) ?? 0)
+        };
+
+        var totalCount = await sortedQuery.CountAsync();
+        var mods = await sortedQuery
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();

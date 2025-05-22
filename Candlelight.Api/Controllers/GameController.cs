@@ -1,6 +1,7 @@
 using Candlelight.Application.Services;
 using Candlelight.Core.Dtos.Game;
 using Candlelight.Core.Dtos.Query;
+using Candlelight.Core.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Candlelight.Api.Controllers;
@@ -10,15 +11,13 @@ namespace Candlelight.Api.Controllers;
 public class GameController(GameService gameService) : ControllerBase
 {
     private readonly GameService _gameService = gameService;
-    /// <summary>
-    /// Get a paginated list of games.
-    /// Example: GET /api/GetGamesFromDbPaginatedQuery?page=1&pageSize=10
-    /// </summary>
+
     [HttpGet("GetGamesFromDbPaginatedQuery")]
     [ActionName("GetPaginatedSteamGameDetailsFromDb")]
-    public async Task<IActionResult> GetPaginatedSteamGameDetailsFromDb([FromQuery] PaginatedQuery query)
+    public async Task<IActionResult> GetPaginatedSteamGameDetailsFromDb([FromQuery] PaginatedQuery query, [FromQuery] bool showOnlyFavourites, [FromQuery] GamesSortingOptions sortBy, [FromQuery] string? searchTerm = null)
     {
-        var (games, totalGames) = await _gameService.GetSteamGameDetailsFromDbAsync(query.Page, query.PageSize);
+        // todo: Implement favourite games
+        var (games, totalGames) = await _gameService.GetSteamGameDetailsFromDbAsync(query.Page, query.PageSize, sortBy, searchTerm);
 
         var mappedGameResults = games.Select(game => new GameListItemDto()
         {
