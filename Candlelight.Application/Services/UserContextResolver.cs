@@ -10,17 +10,18 @@ public class UserContextResolver(UserManagementService userService)
 
     public async Task<AppUser?> ResolveUserAsync(ClaimsPrincipal principal)
     {
+        // Default: JWT token based approach
         var userId = principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
         if (Guid.TryParse(userId, out var id))
         {
             return await _userService.GetUserByIdAsync(id);
         }
 
-        var steamId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (!string.IsNullOrEmpty(steamId))
+        // Fallback only for Steam cookie-authenticated users
+        var steamUserId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (Guid.TryParse(steamUserId, out var steamGuid))
         {
-            Console.WriteLine(Guid.Parse(steamId));
-            return await _userService.GetUserByIdAsync(Guid.Parse(steamId));
+            return await _userService.GetUserByIdAsync(steamGuid);
         }
 
         return null;

@@ -10,6 +10,7 @@ const PROXY_CONFIG = [
     context: [
       "/weatherforecast",
       "/avatars",
+      "/custom-covers",
     ],
     target,
     secure: false

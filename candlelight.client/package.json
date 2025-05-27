@@ -26,6 +26,7 @@
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
     "jest-editor-support": "*",
+    "jwt-decode": "^4.0.0",
     "lodash-es": "^4.17.21",
     "run-script-os": "*",
     "rxjs": "~7.8.0",

@@ -54,6 +54,10 @@
   <ItemGroup>
     <Folder Include="Attributes\" />
     <Folder Include="ModelBinders\" />
+    <Folder Include="wwwroot\custom-covers\" />
+    <Folder Include="wwwroot\mod-images\" />
+    <Folder Include="wwwroot\avatars\" />
+    <Folder Include="wwwroot\mods\" />
   </ItemGroup>
 
 </Project>

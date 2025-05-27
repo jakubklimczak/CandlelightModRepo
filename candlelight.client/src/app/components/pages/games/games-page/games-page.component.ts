@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GameListItem } from '../models/game-list-item.model';
 import { GameService } from '../services/game.service';
 import { PaginatedResponse } from '../../../../shared/models/paginated-result.model';
 import { PaginatedQuery } from '../../../../shared/models/paginated-query.model';
@@ -7,6 +6,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { GamesSortingOptions } from '../enums/games-sorting-options.enum';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { GameDetailsDto } from '../models/game-details-dto';
 
 @Component({
   selector: 'app-games-page',
@@ -14,10 +14,12 @@ import { FormControl } from '@angular/forms';
   styleUrl: './games-page.component.scss',
 })
 export class GamesPageComponent implements OnInit {
-  response?: PaginatedResponse<GameListItem>;
+  response?: PaginatedResponse<GameDetailsDto>;
   query: PaginatedQuery = { page: 1, pageSize: 50 };
   showOnlyFavourites = false;
   showOnlyOwned = false;
+  showOnlyCustom = false;
+  showOnlySteam = false;
   selectedSortOption = GamesSortingOptions.Alphabetical;
   GamesSortingOption = GamesSortingOptions;
   searchTerm: string | null = '';
@@ -44,7 +46,15 @@ export class GamesPageComponent implements OnInit {
 
   public loadGames(): void {
     this.gameService
-      .getGames(this.query, this.searchTerm ?? '', this.showOnlyFavourites, this.showOnlyOwned, this.selectedSortOption)
+      .getGames(
+        this.query, 
+        this.searchTerm ?? '', 
+        this.showOnlyFavourites, 
+        this.showOnlyOwned, 
+        this.showOnlyCustom, 
+        this.showOnlySteam, 
+        this.selectedSortOption
+      )
       .subscribe((games) => {
         this.response = games;
       });
@@ -68,6 +78,25 @@ export class GamesPageComponent implements OnInit {
     this.showOnlyOwned = event.checked;
     if (event.checked) {
       this.showOnlyFavourites = false;
+      this.showOnlyCustom = false;
+      this.showOnlySteam = true;
+    }
+    this.loadGames();
+  }
+
+  public onSteamOnlyToggle(event: MatSlideToggleChange): void {
+    this.showOnlySteam = event.checked;
+    if (event.checked) {
+      this.showOnlyCustom = false;
+    }
+    this.loadGames();
+  }
+
+  public onCustomOnlyToggle(event: MatSlideToggleChange): void {
+    this.showOnlyOwned = event.checked;
+    if (event.checked) {
+      this.showOnlySteam = false;
+      this.showOnlyOwned = false;
     }
     this.loadGames();
   }
@@ -76,6 +105,8 @@ export class GamesPageComponent implements OnInit {
     this.selectedSortOption = GamesSortingOptions.Alphabetical;
     this.showOnlyFavourites = false;
     this.showOnlyOwned = false;
+    this.showOnlyCustom = false;
+    this.showOnlySteam = false;
     this.searchControl.setValue('', { emitEvent: false });
     this.searchTerm = '';
     this.query.page = 1;

@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #ff8c00;
+}
+
+.form-card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background: #1e1e1e;
+    border-radius: 1rem;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form {
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.form-field {
+    width: 100%;
+}
+
+.file-input {
+    display: none;
+}
+
+
+::ng-deep .mat-mdc-tab-body-content {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  padding: 4rem;
+  box-sizing: border-box;
+}

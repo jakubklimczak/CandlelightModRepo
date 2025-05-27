@@ -1,6 +1,7 @@
 using Candlelight.Api.Attributes;
 using Candlelight.Application.Services;
 using Candlelight.Core.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ public class SteamController(SteamService steamService) : ControllerBase
         return Ok(new { ApiKey = apiKey });
     }
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("FetchAndSaveTopGames")]
     [ActionName("FetchAndSaveTopGamesAsync")]
     public async Task<IActionResult> FetchAndSaveTopGamesAsync([CurrentUser] AppUser user)

@@ -1,0 +1,12 @@
+<ng-container class="container">
+    <mat-card class="mat-card">
+        <h2 class="title">Add a new Steam Game</h2>
+        <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+            <mat-form-field class="form-field">
+                <input matInput placeholder="Steam AppId" formControlName="appId" required>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" type="submit" class="form-field">Add Game</button>
+        </form>
+    </mat-card>
+</ng-container>

@@ -1,8 +1,11 @@
 ﻿using System.Reflection.Metadata.Ecma335;
+using System.Security.AccessControl;
+using Candlelight.Core.Dtos.Game;
 using Candlelight.Core.Entities;
 using Candlelight.Core.Entities.Steam;
 using Candlelight.Core.Enums;
 using Candlelight.Infrastructure.Persistence.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
@@ -75,6 +78,8 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
             .Include(d => d.Genres)
             .Include(d => d.Categories)
             .Include(d => d.Platforms)
+            .Include(d => d.Game)
+                .ThenInclude(g => g.Favourites)
             .AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -100,6 +105,90 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
 
         return (games, totalGames);
     }
+
+    public async Task<(List<Game> Games, int TotalCount)> GetAllGamesFromDbAsync(
+        int page, int pageSize, GamesSortingOptions sortBy, string? searchTerm)
+    {
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+
+        var query = _dataContext.Games
+            .Include(g => g.SteamGameDetails)
+            .Include(g => g.CustomGameDetails)
+            .Include(g => g.Mods)
+            .Include(g => g.Favourites)
+            .AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(g =>
+                (g.SteamGameDetails != null && g.SteamGameDetails.Name.Contains(searchTerm)) ||
+                (g.CustomGameDetails != null && g.CustomGameDetails.Name.Contains(searchTerm))
+            );
+        }
+
+        var sortedQuery = sortBy switch
+        {
+            GamesSortingOptions.Alphabetical => query.OrderBy(g =>
+                g.SteamGameDetails != null ? g.SteamGameDetails.Name :
+                g.CustomGameDetails != null ? g.CustomGameDetails.Name : string.Empty),
+
+            GamesSortingOptions.ReverseAlphabetical => query.OrderByDescending(g =>
+                g.SteamGameDetails != null ? g.SteamGameDetails.Name :
+                g.CustomGameDetails != null ? g.CustomGameDetails.Name : string.Empty),
+
+            GamesSortingOptions.MostMods => query.OrderByDescending(g => g.Mods.Count),
+            GamesSortingOptions.LeastMods => query.OrderBy(g => g.Mods.Count),
+            GamesSortingOptions.MostFavourited => query.OrderByDescending(g => g.Favourites.Count),
+            _ => query.OrderByDescending(g => g.Favourites.Count)
+        };
+
+        var totalGames = await sortedQuery.CountAsync();
+        var games = await sortedQuery
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (games, totalGames);
+    }
+
+    public async Task<(List<CustomGameDetails> Games, int TotalCount)> GetCustomGameDetailsFromDbAsync(
+        int page, int pageSize, GamesSortingOptions sortBy, string? searchTerm)
+    {
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+
+        var query = _dataContext.CustomGameDetails
+            .Include(d => d.Game)
+            .ThenInclude(g => g.Mods)
+            .Include(d => d.Game)
+            .ThenInclude(g => g.Favourites)
+            .AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(g => g.Name.Contains(searchTerm));
+        }
+
+        var sortedQuery = sortBy switch
+        {
+            GamesSortingOptions.Alphabetical => query.OrderBy(g => g.Name),
+            GamesSortingOptions.ReverseAlphabetical => query.OrderByDescending(g => g.Name),
+            GamesSortingOptions.MostMods => query.OrderByDescending(g => g.Game.Mods.Count),
+            GamesSortingOptions.LeastMods => query.OrderBy(g => g.Game.Mods.Count),
+            GamesSortingOptions.MostFavourited => query.OrderByDescending(g => g.Game.Favourites.Count),
+            _ => query.OrderByDescending(g => g.Game.Favourites.Count)
+        };
+
+        var totalGames = await sortedQuery.CountAsync();
+        var games = await sortedQuery
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (games, totalGames);
+    }
+
 
     public async Task<bool> MarkGameAsFavourite(Guid gameId, Guid userId)
     {
@@ -149,4 +238,59 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
     {
         return await _dataContext.GameFavourites.Where(f => f.UserId == userId).ToListAsync();
     }
+
+    public async Task<CustomGameDetails> AddCustomGameAsync(CustomGameDto dto, Guid userId, IFormFile? coverImage)
+    {
+        string? savedImageFilename = null;
+        var gameId = Guid.NewGuid();
+
+        if (coverImage is { Length: > 0 })
+        {
+            var extension = Path.GetExtension(coverImage.FileName);
+            if (!_allowedImageExtensions.Contains(extension))
+            {
+                throw new InvalidDataException("Invalid file type. Only JPG, PNG, WEBP, and GIF are allowed.");
+            }
+
+            var filename = $"{gameId}{Path.GetExtension(coverImage.FileName)}";
+            var path = Path.Combine("wwwroot/custom-covers", filename);
+
+            await using var stream = System.IO.File.Create(path);
+            await coverImage.CopyToAsync(stream);
+
+            savedImageFilename = filename;
+        }
+
+        var customGameDetails = new CustomGameDetails
+        {
+            Id = gameId,
+            CreatedAt = DateTime.UtcNow,
+            LastUpdatedAt = DateTime.UtcNow,
+            Name = dto.Name,
+            Description = dto.Description,
+            CoverImage = savedImageFilename,
+            CreatedBy = userId
+        };
+
+        var game = new Game()
+        {
+            Id = Guid.NewGuid(),
+            CustomGameDetails = customGameDetails,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId,
+            LastUpdatedAt = DateTime.UtcNow
+        };
+
+        customGameDetails.GameId = game.Id;
+
+        await _dataContext.Games.AddAsync(game);
+        await _dataContext.CustomGameDetails.AddAsync(customGameDetails);
+        await _dataContext.SaveChangesAsync();
+        return customGameDetails;
+    }
+
+    private static readonly HashSet<string> _allowedImageExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ".jpg", ".jpeg", ".png", ".webp", ".gif"
+    };
 }

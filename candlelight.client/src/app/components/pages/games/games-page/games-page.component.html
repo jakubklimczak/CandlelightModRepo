@@ -31,6 +31,20 @@
                 labelPosition="after">
                 Show owned games only (Steam)
             </mat-slide-toggle>
+            <mat-slide-toggle
+                [checked]="showOnlyCustom"
+                (change)="onCustomOnlyToggle($event)"
+                class="custom-orange"
+                labelPosition="after">
+                Show non-Steam only
+            </mat-slide-toggle>
+            <mat-slide-toggle
+                [checked]="showOnlySteam"
+                (change)="onSteamOnlyToggle($event)"
+                class="custom-orange"
+                labelPosition="after">
+                Show Steam only
+            </mat-slide-toggle>
             <button mat-raised-button routerLink="/games/add">Game not here? Add it!</button>
         </app-filters-and-options-bar>
         <main class="page-content">

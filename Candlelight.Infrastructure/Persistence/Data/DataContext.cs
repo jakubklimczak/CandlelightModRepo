@@ -28,6 +28,7 @@ public class DataContext(DbContextOptions<DataContext> options)
     public DbSet<ModFavourite> ModFavourites { get; set; }
     public DbSet<ModReview> ModReviews { get; set; }
     public DbSet<GameFavourite> GameFavourites { get; set; }
+    public DbSet<CustomGameDetails> CustomGameDetails { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -70,7 +71,8 @@ public class DataContext(DbContextOptions<DataContext> options)
             .HasOne(u => u.UserProfile)
             .WithOne(p => p.User)
             .HasForeignKey<UserProfile>(p => p.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired(false);
 
         // UserProfile
         builder.Entity<UserProfile>()
@@ -101,6 +103,11 @@ public class DataContext(DbContextOptions<DataContext> options)
             .HasOne(g => g.SteamGameDetails)
             .WithOne(d => d.Game)
             .HasForeignKey<SteamGameDetails>(d => d.GameId)
+            .OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<Game>()
+            .HasOne(g => g.CustomGameDetails)
+            .WithOne(c => c.Game)
+            .HasForeignKey<CustomGameDetails>(c => c.GameId)
             .OnDelete(DeleteBehavior.Cascade);
         builder.Entity<Game>()
             .HasMany(g => g.Mods)
@@ -136,5 +143,9 @@ public class DataContext(DbContextOptions<DataContext> options)
             .HasIndex(gf => gf.Id).IsUnique();
         builder.Entity<GameFavourite>()
             .HasIndex(gf => new { gf.GameId, gf.UserId }).IsUnique();
+
+        // CustomGameDetails
+        builder.Entity<CustomGameDetails>()
+            .HasIndex(cg => cg.Id).IsUnique();
     }
 }
