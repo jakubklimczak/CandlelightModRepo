@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Json;
+using System.Text.Json;
+using Candlelight.Core.Dtos.Steam;
 using Candlelight.Core.Entities;
 using Candlelight.Core.Entities.Steam;
 using Candlelight.Infrastructure.Persistence.Data;
@@ -25,7 +27,7 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
         return _steamApiKey;
     }
 
-    public async Task<SteamGameDetails?> FetchGameDetailsAsync(int appId)
+    public async Task<SteamGameDetails?> FetchGameDetailsAsync(int appId, Guid userId)
     {
         var url = $"{SteamStoreApiUrl}{appId}";
         try
@@ -51,7 +53,7 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
                 LastUpdatedAt = DateTime.Now,
-                CreatedBy = Guid.Empty, // TODO: Set the CreatedBy field to the appropriate user ID
+                CreatedBy = userId,
                 AppId = appId,
                 Name = data.TryGetProperty("name", out var name) ? name.GetString() ?? "Unknown" : "Unknown",
                 ShortDescription = data.TryGetProperty("short_description", out var shortDesc) ? shortDesc.GetString() : null,
@@ -102,7 +104,7 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
     }
 
 
-    public async Task FetchAndSaveTopGamesAsync()
+    public async Task FetchAndSaveTopGamesAsync(Guid userId)
     {
         try
         {
@@ -131,7 +133,7 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
                 if (await _dataContext.SteamGameDetails.AnyAsync(gd => gd.AppId == appId))
                     continue;
 
-                var gameDetails = await FetchGameDetailsAsync(appId);
+                var gameDetails = await FetchGameDetailsAsync(appId, userId);
                 if (gameDetails == null) continue;
 
                 var gameId = Guid.NewGuid();
@@ -142,7 +144,7 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
                 {
                     Id = gameId,
                     CreatedAt = DateTime.UtcNow,
-                    CreatedBy = Guid.Empty, // TODO: Set the CreatedBy field to the appropriate user ID
+                    CreatedBy = userId,
                     LastUpdatedAt = DateTime.UtcNow,
                     SteamGameDetails = gameDetails,
                     Mods = []
@@ -162,5 +164,20 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
         {
             Console.WriteLine($"Error fetching top games: {ex.Message}");
         }
+    }
+
+    public async Task<SteamPlayerSummary?> GetPlayerSummaryAsync(string steamId)
+    {
+        var url = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/" +
+                  $"?key={_steamApiKey}&steamids={steamId}";
+
+        var response = await _httpClient.GetFromJsonAsync<SteamPlayerSummariesResponse>(url);
+        return response?.Response.Players.FirstOrDefault();
+    }
+
+
+    public async Task<HttpResponseMessage> GetAvatarPhotoFromLinkAsync(string avatarUrl)
+    {
+        return await _httpClient.GetAsync(avatarUrl);
     }
 }

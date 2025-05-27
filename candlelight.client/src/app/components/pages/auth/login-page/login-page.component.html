@@ -36,6 +36,9 @@
       >
         Login
       </button>
+      <a [routerLink]="'/steam-login'" [queryParams]="{ returnUrl: '/' }">
+        <img [src]="'https://community.fastly.steamstatic.com/public/images/signinthroughsteam/sits_01.png'" alt="Steam Login" class="steam-login"/>
+      </a>
     </div>
     <div class="form-row">
       <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>

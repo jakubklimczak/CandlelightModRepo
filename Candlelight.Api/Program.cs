@@ -1,12 +1,15 @@
+using Candlelight.Api.ModelBinders;
 using Candlelight.Application.Services;
 using Candlelight.Core.Entities;
 using Candlelight.Core.Entities.Steam;
 using Candlelight.Infrastructure.Persistence.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +39,10 @@ builder.Services.AddHttpClient<SteamService>();
 
 builder.Services.AddScoped<GameService>();
 builder.Services.AddScoped<ModService>();
+builder.Services.AddScoped<CurrentUserModelBinder>();
+builder.Services.AddScoped<UserContextResolver>();
+builder.Services.AddScoped<UserSocialService>();
+
 
 builder.Services.AddControllers();
 
@@ -62,30 +69,57 @@ builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>()
     .AddDefaultTokenProviders();
 
 // JWT Authentication
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
+builder.Services
+    .AddAuthentication()
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"] ?? string.Empty)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                builder.Configuration["JWT:Key"] ?? string.Empty)),
             ValidateIssuer = false,
             ValidateAudience = false
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("JWT auth failed: " + context.Exception.Message);
+                return Task.CompletedTask;
+            },
+            OnTokenValidated = context =>
+            {
+                Console.WriteLine("JWT token successfully validated.");
+                return Task.CompletedTask;
+            }
+        };
     })
-    .AddSteam()
-    .AddCookie();
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddSteam(options =>
+    {
+        options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.ApplicationKey = builder.Configuration["SteamApiKey"] ?? string.Empty;
+    });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// hybrid authorization
+builder.Services.AddAuthorization(options =>
+{
+    options.DefaultPolicy = new AuthorizationPolicyBuilder(
+            JwtBearerDefaults.AuthenticationScheme,
+            CookieAuthenticationDefaults.AuthenticationScheme
+        )
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
 var app = builder.Build();
 
-//app.UseDefaultFiles();
 app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.

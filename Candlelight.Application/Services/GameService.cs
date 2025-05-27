@@ -24,7 +24,7 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
         return game;
     }
 
-    public async Task<SteamGameDetails?> GetOrFetchSteamGameDetailsByIdAsync(int appId)
+    public async Task<SteamGameDetails?> GetOrFetchSteamGameDetailsByIdAsync(int appId, Guid currentUserId)
     {
         var steamGameDetails = await _dataContext.SteamGameDetails
             .Include(d => d.Genres)
@@ -37,7 +37,7 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
             return steamGameDetails;
         }
 
-        steamGameDetails = await _steamApiService.FetchGameDetailsAsync(appId);
+        steamGameDetails = await _steamApiService.FetchGameDetailsAsync(appId, currentUserId);
         if (steamGameDetails == null)
         {
             return null;
@@ -53,7 +53,7 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.Now,
             LastUpdatedAt = DateTime.Now,
-            CreatedBy = Guid.Empty, // TODO: Set the CreatedBy field to the appropriate user ID
+            CreatedBy = currentUserId,
             SteamGameDetails = steamGameDetails
         };
 
@@ -99,5 +99,54 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
             .ToListAsync();
 
         return (games, totalGames);
+    }
+
+    public async Task<bool> MarkGameAsFavourite(Guid gameId, Guid userId)
+    {
+        try
+        {
+            if (await _dataContext.GameFavourites.AnyAsync(f => f.GameId == gameId && f.UserId == userId))
+                return false;
+
+            _dataContext.GameFavourites.Add(new GameFavourite
+            {
+                Id = Guid.NewGuid(),
+                GameId = gameId,
+                UserId = userId,
+                CreatedBy = userId,
+                CreatedAt = DateTime.UtcNow,
+                LastUpdatedAt = DateTime.UtcNow
+            });
+            await _dataContext.SaveChangesAsync();
+        }
+        catch
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<bool> RemoveGameFromFavourites(Guid gameId, Guid userId)
+    {
+        try
+        {
+            var fav = await _dataContext.GameFavourites.FindAsync(gameId, userId);
+            if (fav == null) return false;
+
+            _dataContext.GameFavourites.Remove(fav);
+            await _dataContext.SaveChangesAsync();
+        }
+        catch
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<List<GameFavourite>> GetUserFavouriteGamesAsync(Guid userId)
+    {
+        return await _dataContext.GameFavourites.Where(f => f.UserId == userId).ToListAsync();
     }
 }

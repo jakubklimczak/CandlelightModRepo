@@ -37,7 +37,7 @@ public class UserAccessControllerTests
 
         _userManagementService = new Mock<UserManagementService>(_context);
         _mockAuthenticationService = new Mock<AuthenticationService>(_userManagementService.Object);
-        _controller = new UserAccessController(_mockAuthenticationService.Object, new UserManagementService(_context));
+        //_controller = new UserAccessController(_mockAuthenticationService.Object, new UserManagementService(_context));
     }
 
     [Test]

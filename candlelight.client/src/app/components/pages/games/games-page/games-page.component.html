@@ -24,6 +24,13 @@
                 labelPosition="after">
                 Show favourites only
             </mat-slide-toggle>
+            <mat-slide-toggle
+                [checked]="showOnlyOwned"
+                (change)="onOwnedToggle($event)"
+                class="custom-orange"
+                labelPosition="after">
+                Show owned games only (Steam)
+            </mat-slide-toggle>
             <button mat-raised-button routerLink="/games/add">Game not here? Add it!</button>
         </app-filters-and-options-bar>
         <main class="page-content">

@@ -18,12 +18,20 @@ export class GameService {
     pagination: PaginatedQuery,
     searchTerm: string,
     showOnlyFavourites: boolean,
+    showOnlyOwned: boolean,
     sortBy: GamesSortingOptions, 
   ): Observable<PaginatedResponse<GameListItem>> {
     return this.http.get<PaginatedResponse<GameListItem>>(
       this.apiUrl + 'GetGamesFromDbPaginatedQuery',
       {
-        params: { page: pagination.page, pageSize: pagination.pageSize, searchTerm: searchTerm, showOnlyFavourites: showOnlyFavourites, sortBy: sortBy },
+        params: { 
+          page: pagination.page, 
+          pageSize: pagination.pageSize, 
+          searchTerm: searchTerm, 
+          showOnlyFavourites: showOnlyFavourites, 
+          showOnlyOwned: showOnlyOwned, 
+          sortBy: sortBy 
+        },
       },
     );
   }

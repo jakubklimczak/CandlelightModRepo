@@ -41,9 +41,18 @@
                 padding: 1rem;
                 width: 50%;
                 margin-top: 1rem;
-                                
+                display: flex;
+                justify-content: center;
+                align-items: center;     
+
                 button {
-                    width: 30%;
+                    width: 15%;
+                    margin: 1.5rem;
+                }
+
+                .steam-login {
+                    width: auto;
+                    height: auto;
                     margin: 1.5rem;
                 }
             }
@@ -59,4 +68,9 @@
 .snackbar-error {
     background-color: #f44336;
     color: white;
+}
+
+::ng-deep .mat-button.custom-button:hover {
+  background-color: transparent !important;
+  box-shadow: none !important;
 }

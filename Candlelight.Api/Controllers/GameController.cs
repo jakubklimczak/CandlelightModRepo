@@ -1,7 +1,10 @@
+using Candlelight.Api.Attributes;
 using Candlelight.Application.Services;
 using Candlelight.Core.Dtos.Game;
 using Candlelight.Core.Dtos.Query;
+using Candlelight.Core.Entities;
 using Candlelight.Core.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Candlelight.Api.Controllers;
@@ -14,9 +17,15 @@ public class GameController(GameService gameService) : ControllerBase
 
     [HttpGet("GetGamesFromDbPaginatedQuery")]
     [ActionName("GetPaginatedSteamGameDetailsFromDb")]
-    public async Task<IActionResult> GetPaginatedSteamGameDetailsFromDb([FromQuery] PaginatedQuery query, [FromQuery] bool showOnlyFavourites, [FromQuery] GamesSortingOptions sortBy, [FromQuery] string? searchTerm = null)
+    public async Task<IActionResult> GetPaginatedSteamGameDetailsFromDb(
+        [FromQuery] PaginatedQuery query, 
+        [FromQuery] bool showOnlyFavourites,
+        [FromQuery] bool showOnlyOwned,
+        [FromQuery] GamesSortingOptions sortBy, 
+        [FromQuery] string? searchTerm = null
+        )
     {
-        // todo: Implement favourite games
+        // TODO: Implement favourite games and owned games
         var (games, totalGames) = await _gameService.GetSteamGameDetailsFromDbAsync(query.Page, query.PageSize, sortBy, searchTerm);
 
         var mappedGameResults = games.Select(game => new GameListItemDto()
@@ -41,9 +50,10 @@ public class GameController(GameService gameService) : ControllerBase
 
     [HttpGet("GetGame/{appId:int}")]
     [ActionName("GetGame")]
-    public async Task<IActionResult> GetGame(int appId)
+    [Authorize]
+    public async Task<IActionResult> GetGame(int appId, [CurrentUser] AppUser user)
     {
-        var game = await _gameService.GetOrFetchSteamGameDetailsByIdAsync(appId);
+        var game = await _gameService.GetOrFetchSteamGameDetailsByIdAsync(appId, user.Id);
         if (game == null)
         {
             return NotFound($"Game with AppId {appId} not found.");
@@ -63,5 +73,25 @@ public class GameController(GameService gameService) : ControllerBase
         }
 
         return Ok(game);
+    }
+
+    [HttpPost("{gameId}/favourite")]
+    [Authorize]
+    public async Task<IActionResult> AddFavourite(Guid gameId, [CurrentUser] AppUser user)
+    {
+        var userId = user.Id;
+        if (!await _gameService.MarkGameAsFavourite(gameId, userId))
+            return BadRequest("This game is already in favourites!");
+        return Ok();
+    }
+
+    [HttpDelete("{gameId}/favourite")]
+    [Authorize]
+    public async Task<IActionResult> RemoveFavourite(Guid gameId, [CurrentUser] AppUser user)
+    {
+        var userId = user.Id;
+        if (!await _gameService.RemoveGameFromFavourites(gameId, userId))
+            return BadRequest("This game is not in your favourites!");
+        return Ok();
     }
 }

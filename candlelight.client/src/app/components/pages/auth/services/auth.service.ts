@@ -1,45 +1,36 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../../environment';
+import { RegisterForm } from '../models/register-form.interface';
+import { LoginForm } from '../models/login-form.interface';
+import { UserProfileDto } from '../models/user-profile-dto.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/UserAccess`;
+  public authApiUrl = `${environment.apiUrl}/UserAccess`;
+  public socialApiUrl = `${environment.apiUrl}/UserSocial`;
   constructor(private http: HttpClient) {}
 
-  //TODO: replace any w dto
-  public login(credentials: {
-    userEmail: string;
-    passwordString: string;
-  }): Observable<unknown> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-    return this.http.post(`${this.apiUrl}/SendLoginForm`, credentials, {
-      headers,
-    });
+  public login(credentials: LoginForm): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.authApiUrl}/SendLoginForm`, credentials);
   }
 
-  //TODO: replace any w dto
-  public register(user: {
-    username: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-  }): Observable<unknown> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  public register(form: RegisterForm): Observable<{ id: string }> {
+    return this.http.post<{ id: string }>(`${this.authApiUrl}/SendRegistrationForm`, form);
+  }
 
-    const requestBody = {
-      userName: user.username,
-      userEmail: user.email,
-      passwordString: user.password,
-      confirmPasswordString: user.confirmPassword,
-    };
+  public steamLogin(returnUrl: string) {
+    return this.http.post(`${this.authApiUrl}/SteamSteamLogin?returnUrl=${encodeURIComponent(returnUrl)}`, null)
+  }
 
-    return this.http.post(`${this.apiUrl}/SendRegistrationForm`, requestBody, {
-      headers,
-    });
+  public getCurrentUserId(): Observable<{ id: string }> {
+    return this.http.get<{ id: string }>(`${this.authApiUrl}/GetCurrentUserId`);
+  }
+
+  public getUserProfile(userId: string): Observable<UserProfileDto> {
+    return this.http.get<UserProfileDto>(`${this.socialApiUrl}/UserProfile/${userId}`);
   }
 }
