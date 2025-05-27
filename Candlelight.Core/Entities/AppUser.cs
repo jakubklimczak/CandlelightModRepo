@@ -10,5 +10,5 @@ public class AppUser : IdentityUser<Guid>
 
     public required DateTime LastUpdated { get; set; }
 
-    public UserProfile UserProfile { get; set; } = default!;
+    public UserProfile? UserProfile { get; set; }
 }

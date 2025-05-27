@@ -21,31 +21,107 @@ public class GameController(GameService gameService) : ControllerBase
         [FromQuery] PaginatedQuery query, 
         [FromQuery] bool showOnlyFavourites,
         [FromQuery] bool showOnlyOwned,
+        [FromQuery] bool showOnlySteam,
+        [FromQuery] bool showOnlyCustom,
         [FromQuery] GamesSortingOptions sortBy, 
         [FromQuery] string? searchTerm = null
         )
     {
         // TODO: Implement favourite games and owned games
-        var (games, totalGames) = await _gameService.GetSteamGameDetailsFromDbAsync(query.Page, query.PageSize, sortBy, searchTerm);
-
-        var mappedGameResults = games.Select(game => new GameListItemDto()
+        if (showOnlySteam)
         {
-            AppId = game.AppId,
-            Name = game.Name,
-            HeaderImage = game.HeaderImage,
-            Developer = game.Developer,
-            Publisher = game.Publisher
-        });
+            var (games, totalGames) =
+                await _gameService.GetSteamGameDetailsFromDbAsync(query.Page, query.PageSize, sortBy, searchTerm);
 
-        var response = new PaginatedResponse<GameListItemDto>()
+            var mappedGameResults = games.Select(game => new GameListItemDto
+            {
+                Id = game.GameId,
+                AppId = game.AppId,
+                Name = game.Name,
+                HeaderImage = game.HeaderImage,
+                Developer = game.Developer,
+                Publisher = game.Publisher,
+                IsCustom = false
+            });
+
+            return Ok(new PaginatedResponse<GameListItemDto>
+            {
+                TotalItems = totalGames,
+                Page = query.Page,
+                PageSize = query.PageSize,
+                Items = mappedGameResults.ToList(),
+            });
+        }
+        else if (showOnlyCustom)
         {
-            TotalItems = totalGames,
-            Page = query.Page,
-            PageSize = query.PageSize,
-            Items = mappedGameResults.ToList(),
-        };
+            var (games, totalGames) =
+                await _gameService.GetCustomGameDetailsFromDbAsync(query.Page, query.PageSize, sortBy, searchTerm);
 
-        return Ok(response);
+            var mappedGameResults = games.Select(game => new GameListItemDto
+            {
+                Id = game.GameId,
+                Name = game.Name,
+                Description = game.Description,
+                HeaderImage = string.IsNullOrEmpty(game.CoverImage) ? null : $"{game.CoverImage}",
+                Developer = game.Developer,
+                Publisher = game.Publisher,
+                IsCustom = true
+            });
+
+            return Ok(new PaginatedResponse<GameListItemDto>
+            {
+                TotalItems = totalGames,
+                Page = query.Page,
+                PageSize = query.PageSize,
+                Items = mappedGameResults.ToList(),
+            });
+        }
+        else
+        {
+            var (games, totalGames) =
+                await _gameService.GetAllGamesFromDbAsync(query.Page, query.PageSize, sortBy, searchTerm);
+
+            var mappedGameResults = games.Select(game =>
+            {
+                if (game.SteamGameDetails is not null)
+                {
+                    return new GameListItemDto
+                    {
+                        Id = game.Id,
+                        AppId = game.SteamAppId,
+                        Name = game.SteamGameDetails.Name,
+                        HeaderImage = game.SteamGameDetails.HeaderImage,
+                        Developer = game.SteamGameDetails.Developer,
+                        Publisher = game.SteamGameDetails.Publisher,
+                        IsCustom = false
+                    };
+                }
+                else if (game.CustomGameDetails is not null)
+                {
+                    return new GameListItemDto
+                    {
+                        Id = game.Id,
+                        Name = game.CustomGameDetails.Name,
+                        Description = game.CustomGameDetails.Description,
+                        HeaderImage = string.IsNullOrEmpty(game.CustomGameDetails.CoverImage) ? null : $"{game.CustomGameDetails.CoverImage}",
+                        Developer = game.CustomGameDetails.Developer,
+                        Publisher = game.CustomGameDetails.Publisher,
+                        IsCustom = true
+                    };
+                }
+
+                return null!;
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            }).Where(g => g is not null).ToList();
+
+            return Ok(new PaginatedResponse<GameListItemDto>
+            {
+                TotalItems = totalGames,
+                Page = query.Page,
+                PageSize = query.PageSize,
+                Items = mappedGameResults
+            });
+        }
     }
 
     [HttpGet("GetGame/{appId:int}")]
@@ -75,7 +151,7 @@ public class GameController(GameService gameService) : ControllerBase
         return Ok(game);
     }
 
-    [HttpPost("{gameId}/favourite")]
+    [HttpPost("{gameId}/Favourite")]
     [Authorize]
     public async Task<IActionResult> AddFavourite(Guid gameId, [CurrentUser] AppUser user)
     {
@@ -85,7 +161,7 @@ public class GameController(GameService gameService) : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("{gameId}/favourite")]
+    [HttpDelete("{gameId}/Favourite")]
     [Authorize]
     public async Task<IActionResult> RemoveFavourite(Guid gameId, [CurrentUser] AppUser user)
     {
@@ -94,4 +170,21 @@ public class GameController(GameService gameService) : ControllerBase
             return BadRequest("This game is not in your favourites!");
         return Ok();
     }
+
+    [HttpPost("AddCustom")]
+    [Authorize]
+    public async Task<IActionResult> AddCustomGame([FromForm] CustomGameDto dto, [CurrentUser] AppUser user, IFormFile? coverImage)
+    {
+        if (coverImage != null && !coverImage.ContentType.StartsWith("image/"))
+        {
+            return BadRequest("Only image files are allowed.");
+        }
+
+        var userId = user.Id;
+
+        var game = await _gameService.AddCustomGameAsync(dto, userId, coverImage);
+
+        return Ok(game.Id);
+    }
+
 }

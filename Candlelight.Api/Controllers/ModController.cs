@@ -237,7 +237,7 @@ public class ModController(
         return Ok(result);
     }
 
-    [HttpPost("{modId}/favourite")]
+    [HttpPost("{modId}/Favourite")]
     [Authorize]
     public async Task<IActionResult> AddFavourite(Guid modId, [CurrentUser] AppUser user)
     {
@@ -248,7 +248,7 @@ public class ModController(
         return Ok();
     }
 
-    [HttpDelete("{modId}/favourite")]
+    [HttpDelete("{modId}/Favourite")]
     [Authorize]
     public async Task<IActionResult> RemoveFavourite(Guid modId, [CurrentUser] AppUser user)
     {
@@ -258,7 +258,7 @@ public class ModController(
         return Ok();
     }
 
-    [HttpGet("{modId}/reviews")]
+    [HttpGet("{modId}/Reviews")]
     public async Task<IActionResult> GetReviewsPaginatedQuery(Guid modId, ReviewsSortingOptions? sortBy = ReviewsSortingOptions.HighestRated, int page = 1, int pageSize = 10)
     {
         var result = await modService.GetModReviewsPaginatedResponse(modId, page, pageSize, sortBy);

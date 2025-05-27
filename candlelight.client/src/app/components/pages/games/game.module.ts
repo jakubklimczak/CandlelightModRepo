@@ -16,6 +16,9 @@ import { AddNewGamePageComponent } from './add-new-game-page/add-new-game-page.c
 import { MatTabsModule } from '@angular/material/tabs'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterModule } from '@angular/router';
+import { AddSteamGameFormComponent } from './add-new-game-page/add-steam-game-form/add-steam-game-form.component';
+import { AddCustomGameFormComponent } from './add-new-game-page/add-custom-game-form/add-custom-game-form.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,9 @@ import { RouterModule } from '@angular/router';
     GamesGridComponent, 
     GameTileComponent, 
     GameDetailsPageComponent, 
-    AddNewGamePageComponent,
+    AddNewGamePageComponent, 
+    AddSteamGameFormComponent, 
+    AddCustomGameFormComponent,
   ],
   imports: [
     MatCardModule, 
@@ -38,7 +43,8 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     MatTabsModule,
     MatFormFieldModule,
-    RouterModule
+    RouterModule,
+    MatSnackBarModule
   ],
 })
 export class GamesModule {}

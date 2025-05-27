@@ -3,6 +3,7 @@ import { AuthService } from '../pages/auth/services/auth.service';
 import { UserProfileDto } from '../pages/auth/models/user-profile-dto.interface';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { AuthTokenService } from '../../shared/services/auth-token.service';
 
 @Component({
   selector: 'app-topbar',
@@ -17,6 +18,7 @@ export class TopbarComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
+    private readonly authTokenService: AuthTokenService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ){};
@@ -32,37 +34,38 @@ export class TopbarComponent implements OnInit {
   }
 
   private checkAuthState(): void {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
+    const loggedIn = this.authTokenService.isLoggedIn();
+    if (!loggedIn) {
       this.isLoggedIn = false;
       this.cdr.markForCheck();
       return;
     }
+    if (loggedIn) {
+      this.authService.getCurrentUserId().subscribe({
+        next: (response) => {
+          this.isLoggedIn = true;
+          this.cdr.markForCheck();
+          this.currentUserId = response.id;
 
-    this.authService.getCurrentUserId().subscribe({
-      next: (response) => {
-        this.isLoggedIn = true;
-        this.cdr.markForCheck();
-        this.currentUserId = response.id;
-
-        this.authService.getUserProfile(response.id).subscribe({
-          next: (profile: UserProfileDto) => {
-            this.userProfilePictureLink = profile.avatarFilename
-              ? `/avatars/${profile.avatarFilename}`
-              : '/android-chrome-512x512.png';
-            this.cdr.markForCheck();
-          },
-          error: (e) => {
-            console.warn(e);
-          }
-        });
-      },
-      error: () => {
-        this.isLoggedIn = false;
-        this.currentUserId = '';
-        this.cdr.markForCheck();
-      }
-    });
+          this.authService.getUserProfile(response.id).subscribe({
+            next: (profile: UserProfileDto) => {
+              this.userProfilePictureLink = profile.avatarFilename
+                ? `/avatars/${profile.avatarFilename}`
+                : '/android-chrome-512x512.png';
+              this.cdr.markForCheck();
+            },
+            error: (e) => {
+              console.warn(e);
+            }
+          });
+        },
+        error: () => {
+          this.isLoggedIn = false;
+          this.currentUserId = '';
+          this.cdr.markForCheck();
+        }
+      });
+    }
   }
 }
 

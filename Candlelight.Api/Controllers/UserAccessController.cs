@@ -116,7 +116,7 @@ public class UserAccessController(AuthenticationService authenticationService, U
         return Ok(new { SteamId = steamId });
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = "JwtOnly")]
     [HttpGet("CurrentUser")]
     public async Task<IActionResult> GetCurrentUser()
     {
@@ -233,7 +233,7 @@ public class UserAccessController(AuthenticationService authenticationService, U
         return Redirect(redirectUrlWithToken);
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = "JwtOnly")]
     [HttpGet("GetCurrentUserId")]
     public async Task<IActionResult> GetCurrentUserId([FromServices] UserContextResolver resolver)
     {
