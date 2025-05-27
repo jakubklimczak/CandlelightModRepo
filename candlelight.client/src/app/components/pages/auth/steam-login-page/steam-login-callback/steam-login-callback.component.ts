@@ -15,8 +15,8 @@ export class SteamLoginCallbackComponent implements OnInit {
     ngOnInit(): void {
         const token = this.route.snapshot.queryParamMap.get('token');
         if (token) {
-            localStorage.setItem('authToken', token);
-            this.router.navigate(['/']);
+          localStorage.setItem('authToken', token);
+          this.router.navigate(['/']);
         }
     }
 }
