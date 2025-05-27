@@ -13,6 +13,7 @@ public class UserSocialController(UserSocialService userSocialService) : Control
     [HttpGet("UserProfile/{userId}")]
     [ProducesResponseType(typeof(UserProfileDto), 200)]
     [ProducesResponseType(404)]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> GetUserProfile(Guid userId)
     {
         var profile = await _userSocialService.GetUserProfileByIdAsync(userId);

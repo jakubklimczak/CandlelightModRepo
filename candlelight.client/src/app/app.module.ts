@@ -19,6 +19,7 @@ import { SharedModule } from './shared/shared.module';
 import { ModsModule } from './components/pages/mods/mods.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { authInterceptor } from './components/pages/auth/services/auth.interceptor';
+import { UserProfileModule } from './components/pages/user-profile/user-profile.module';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { authInterceptor } from './components/pages/auth/services/auth.intercept
     SharedModule,
     MatSnackBarModule,
     ModsModule,
+    UserProfileModule,
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])), 

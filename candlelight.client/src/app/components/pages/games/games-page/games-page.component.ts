@@ -17,6 +17,7 @@ export class GamesPageComponent implements OnInit {
   response?: PaginatedResponse<GameListItem>;
   query: PaginatedQuery = { page: 1, pageSize: 50 };
   showOnlyFavourites = false;
+  showOnlyOwned = false;
   selectedSortOption = GamesSortingOptions.Alphabetical;
   GamesSortingOption = GamesSortingOptions;
   searchTerm: string | null = '';
@@ -43,7 +44,7 @@ export class GamesPageComponent implements OnInit {
 
   public loadGames(): void {
     this.gameService
-      .getGames(this.query, this.searchTerm ?? '', this.showOnlyFavourites, this.selectedSortOption)
+      .getGames(this.query, this.searchTerm ?? '', this.showOnlyFavourites, this.showOnlyOwned, this.selectedSortOption)
       .subscribe((games) => {
         this.response = games;
       });
@@ -57,12 +58,24 @@ export class GamesPageComponent implements OnInit {
 
   public onFavouritesToggle(event: MatSlideToggleChange): void {
     this.showOnlyFavourites = event.checked;
+    if (event.checked) {
+      this.showOnlyOwned = false;
+    }
+    this.loadGames();
+  }
+
+  public onOwnedToggle(event: MatSlideToggleChange): void {
+    this.showOnlyOwned = event.checked;
+    if (event.checked) {
+      this.showOnlyFavourites = false;
+    }
     this.loadGames();
   }
 
   public resetFilters(): void {
     this.selectedSortOption = GamesSortingOptions.Alphabetical;
     this.showOnlyFavourites = false;
+    this.showOnlyOwned = false;
     this.searchControl.setValue('', { emitEvent: false });
     this.searchTerm = '';
     this.query.page = 1;

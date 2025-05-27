@@ -12,6 +12,9 @@ import { AddNewGamePageComponent } from './components/pages/games/add-new-game-p
 import { UploadModPageComponent } from './components/pages/mods/upload-mod-page/upload-mod-page.component';
 import { SteamLoginPageComponent } from './components/pages/auth/steam-login-page/steam-login-page.component';
 import { SteamLoginCallbackComponent } from './components/pages/auth/steam-login-page/steam-login-callback/steam-login-callback.component';
+import { UserProfilePageComponent } from './components/pages/user-profile/user-profile-page/user-profile-page.component';
+import { FavouriteGamesPageComponent } from './components/pages/user-profile/favourite-games-page/favourite-games-page.component';
+import { FavouriteModsPageComponent } from './components/pages/user-profile/favourite-mods-page/favourite-mods-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -27,6 +30,9 @@ const routes: Routes = [
   { path: 'mods', component: ModsPageComponent },  
   { path: 'mods/upload', component: UploadModPageComponent },
   { path: 'mods/:id', component: ModDetailsPageComponent },  
+  { path: 'profile/:id', component: UserProfilePageComponent },  
+  { path: 'profile/:id/favourite-games', component: FavouriteGamesPageComponent },  
+  { path: 'profile/:id/favourite-mods', component: FavouriteModsPageComponent },  
 ];
 
 @NgModule({

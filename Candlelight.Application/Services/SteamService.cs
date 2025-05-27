@@ -174,4 +174,10 @@ public class SteamService(IOptions<SteamSettings> options, HttpClient httpClient
         var response = await _httpClient.GetFromJsonAsync<SteamPlayerSummariesResponse>(url);
         return response?.Response.Players.FirstOrDefault();
     }
+
+
+    public async Task<HttpResponseMessage> GetAvatarPhotoFromLinkAsync(string avatarUrl)
+    {
+        return await _httpClient.GetAsync(avatarUrl);
+    }
 }

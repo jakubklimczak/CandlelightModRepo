@@ -211,4 +211,9 @@ public class ModService(DataContext context)
             Items =  reviews
         };
     }
+
+    public async Task<List<ModFavourite>> GetUserFavouriteModsAsync(Guid userId)
+    {
+        return await _context.ModFavourites.Where(f => f.UserId == userId).ToListAsync();
+    }
 }

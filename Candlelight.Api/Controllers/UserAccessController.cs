@@ -160,22 +160,44 @@ public class UserAccessController(AuthenticationService authenticationService, U
             return BadRequest(new { error });
         }
 
-        var steamId = result.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (steamId == null)
+        var steamIdUrl = result.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (steamIdUrl == null)
             return BadRequest("Steam ID not found");
 
+        var steamId = steamIdUrl;
+        if (steamIdUrl.StartsWith("https://steamcommunity.com/openid/id/"))
+        {
+            steamId = steamId.Replace("https://steamcommunity.com/openid/id/", "");
+        }
         var user = await _userManagementService.GetUserBySteamIdAsync(steamId);
 
         if (user == null)
         {
-            var steamUser = await _steamService.GetPlayerSummaryAsync(steamId); 
+            var steamUser = await _steamService.GetPlayerSummaryAsync(steamIdUrl); 
             if (steamUser == null)
                 return BadRequest("Steam user not found");
             var newUserId = Guid.NewGuid();
 
-            if (steamId.StartsWith("https://steamcommunity.com/openid/id/"))
+            var avatarUrl = steamUser.AvatarFull;
+            var avatarFilename = $"{newUserId}.jpg";
+            var avatarsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "avatars");
+
+            if (!Directory.Exists(avatarsFolder))
+                Directory.CreateDirectory(avatarsFolder);
+
+            var avatarFilePath = Path.Combine(avatarsFolder, avatarFilename);
+
+            try
             {
-                steamId = steamId.Replace("https://steamcommunity.com/openid/id/", "");
+                using var avatarResponse = await _steamService.GetAvatarPhotoFromLinkAsync(avatarUrl);
+                avatarResponse.EnsureSuccessStatusCode();
+
+                var avatarBytes = await avatarResponse.Content.ReadAsByteArrayAsync();
+                await System.IO.File.WriteAllBytesAsync(avatarFilePath, avatarBytes);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to download avatar image: {ex.Message}");
             }
 
             user = new AppUser
@@ -194,7 +216,7 @@ public class UserAccessController(AuthenticationService authenticationService, U
                     CreatedAt = DateTime.UtcNow,
                     LastUpdatedAt = DateTime.UtcNow,
                     CreatedBy = newUserId,
-                    AvatarFilename = steamUser.AvatarFull,
+                    AvatarFilename = avatarFilename,
                 }
             };
 
@@ -224,5 +246,4 @@ public class UserAccessController(AuthenticationService authenticationService, U
     {
         return Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N");
     }
-
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AuthService } from '../pages/auth/services/auth.service';
 import { UserProfileDto } from '../pages/auth/models/user-profile-dto.interface';
 import { NavigationEnd, Router } from '@angular/router';
@@ -13,11 +13,12 @@ import { filter } from 'rxjs';
 export class TopbarComponent implements OnInit {
   isLoggedIn = false;
   currentUserId = '';
-  userProfilePictureLink = '/src/public/android-chrome-512x512.png';
+  userProfilePictureLink = '/android-chrome-512x512.png';
 
   constructor(
     private readonly authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ){};
 
   ngOnInit(): void {
@@ -34,19 +35,22 @@ export class TopbarComponent implements OnInit {
     const token = localStorage.getItem('authToken');
     if (!token) {
       this.isLoggedIn = false;
+      this.cdr.markForCheck();
       return;
     }
 
     this.authService.getCurrentUserId().subscribe({
       next: (response) => {
         this.isLoggedIn = true;
+        this.cdr.markForCheck();
         this.currentUserId = response.id;
 
         this.authService.getUserProfile(response.id).subscribe({
           next: (profile: UserProfileDto) => {
             this.userProfilePictureLink = profile.avatarFilename
-              ? `/assets/avatars/${profile.avatarFilename}`
-              : '/src/public/android-chrome-512x512.png';
+              ? `/avatars/${profile.avatarFilename}`
+              : '/android-chrome-512x512.png';
+            this.cdr.markForCheck();
           },
           error: (e) => {
             console.warn(e);
@@ -56,6 +60,7 @@ export class TopbarComponent implements OnInit {
       error: () => {
         this.isLoggedIn = false;
         this.currentUserId = '';
+        this.cdr.markForCheck();
       }
     });
   }

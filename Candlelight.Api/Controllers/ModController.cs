@@ -238,10 +238,10 @@ public class ModController(
     }
 
     [HttpPost("{modId}/favourite")]
-    public async Task<IActionResult> AddFavourite(Guid modId)
+    [Authorize]
+    public async Task<IActionResult> AddFavourite(Guid modId, [CurrentUser] AppUser user)
     {
-        //TODO: implement
-        var userId = Guid.Empty;
+        var userId = user.Id;
 
         if (!await modService.MarkModAsFavourite(modId, userId))
             return BadRequest("This mod is already in favourites!");
@@ -249,10 +249,10 @@ public class ModController(
     }
 
     [HttpDelete("{modId}/favourite")]
-    public async Task<IActionResult> RemoveFavourite(Guid modId)
+    [Authorize]
+    public async Task<IActionResult> RemoveFavourite(Guid modId, [CurrentUser] AppUser user)
     {
-        //TODO: implement
-        var userId = Guid.Empty;
+        var userId = user.Id;
         if (!await modService.RemoveModFromFavourites(modId, userId))
             return BadRequest("This mod is not in your favourites!");
         return Ok();

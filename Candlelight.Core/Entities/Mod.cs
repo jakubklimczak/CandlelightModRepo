@@ -11,7 +11,7 @@ public class Mod : BaseEntity
 
     public Game Game { get; set; } = default!;
     public List<ModVersion> Versions { get; set; } = default!;
-    public List<ModReview> Reviews { get; set; } = default!;
-    public List<ModFavourite> Favourites { get; set; } = default!;
+    public List<ModReview> Reviews { get; set; } = [];
+    public List<ModFavourite> Favourites { get; set; } = [];
 
 }

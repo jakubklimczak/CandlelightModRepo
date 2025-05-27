@@ -20,8 +20,6 @@ export class GameTileComponent {
 
   public openDetails(event: MouseEvent): void {
     event.stopPropagation();
-    this.router.navigate(['/games'], {
-      queryParams: { id: this.game.appId },
-    });
+    this.router.navigate(['/games/' + this.game.appId]);
   }
 }
