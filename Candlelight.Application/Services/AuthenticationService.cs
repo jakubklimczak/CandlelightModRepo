@@ -18,12 +18,12 @@ public class AuthenticationService(UserManagementService userService, IConfigura
 
     public static bool IsRegistrationFormValid(RegistrationForm form)
     {
-        if (form.Equals(null) || form.UserEmail.Equals(null) || form.UserName.Equals(null) || form.PasswordString.Equals(null) || form.ConfirmPasswordString.Equals(null))
+        if (form.Equals(null) || form.Email.Equals(null) || form.UserName.Equals(null) || form.Password.Equals(null) || form.ConfirmPassword.Equals(null))
         {
             return false;
         }
 
-        if (!form.PasswordString.Equals(form.ConfirmPasswordString))
+        if (!form.Password.Equals(form.ConfirmPassword))
         {
             return false;
         }
@@ -33,12 +33,12 @@ public class AuthenticationService(UserManagementService userService, IConfigura
             return false;
         }
 
-        if (form.PasswordString.Length < 8)
+        if (form.Password.Length < 8)
         {
             return false;
         }
 
-        if (!EmailValidationHelper.IsEmailValid(form.UserEmail))
+        if (!EmailValidationHelper.IsEmailValid(form.Email))
         {
             return false;
         }
@@ -63,7 +63,7 @@ public class AuthenticationService(UserManagementService userService, IConfigura
 
     public async Task<AppUser> RegisterUser(RegistrationForm form)
     {
-        var result = await _userService.CreateUserAsync(form.UserName, form.UserEmail, form.PasswordString);
+        var result = await _userService.CreateUserAsync(form.UserName, form.Email, form.Password);
         return result;
     }
 

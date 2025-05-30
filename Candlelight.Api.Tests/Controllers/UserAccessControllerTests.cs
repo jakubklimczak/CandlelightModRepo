@@ -46,17 +46,17 @@ public class UserAccessControllerTests
         // Arrange
         var form = new RegistrationForm
         {
-            UserEmail = "email@candlelight.com",
+            Email = "email@candlelight.com",
             UserName = "testUser",
-            PasswordString = "notasecurepassword",
-            ConfirmPasswordString = "notasecurepassword"
+            Password = "notasecurepassword",
+            ConfirmPassword = "notasecurepassword"
         };
 
         AppUser expectedAppUser = new()
         {
             Id = Guid.NewGuid(),
             UserName = form.UserName,
-            Email = form.UserEmail,
+            Email = form.Email,
             PasswordHash = "47yxds290",
             Created = DateTime.UtcNow,
             LastUpdated = DateTime.UtcNow

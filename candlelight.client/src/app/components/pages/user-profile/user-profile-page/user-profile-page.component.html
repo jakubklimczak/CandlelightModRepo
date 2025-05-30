@@ -1,1 +1,7 @@
-<p>user-profile-page works!</p>
+<div class="profile-view" [ngStyle]="{'background-color': profile.backgroundColour}">
+  <img [src]="profile.avatarUrl" alt="Avatar" class="avatar">
+  <h2>{{ profile.displayName }}</h2>
+  <p class="bio">{{ profile.bio }}</p>
+  <p *ngIf="profile.steamId">🎮 Steam ID: {{ profile.steamId }}</p>
+  <p>📅 Account created: {{ profile.created | date }}</p>
+</div>
