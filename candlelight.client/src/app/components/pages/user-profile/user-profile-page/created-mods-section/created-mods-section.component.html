@@ -1,0 +1,20 @@
+<div *ngIf="this.createdMods && this.createdMods.length > 0" class="container">
+    <h3 clas="title">Mods created by the user:</h3>
+
+    <div class="mod-grid">
+        <app-created-mods-section-item
+            *ngFor="let mod of visibleMods"
+            [mod]="mod"
+            class="mod-item"
+        ></app-created-mods-section-item>
+    </div>
+
+    <div class="controls">
+        <button mat-stroked-button color="primary" *ngIf="canShowMore" (click)="showMore()">
+            Show More ({{this.createdMods.length - visibleMods.length}})
+        </button>
+        <button mat-stroked-button color="warn" *ngIf="isExpanded" (click)="collapse()">
+            Collapse
+        </button>
+    </div>
+</div>

@@ -30,6 +30,15 @@ export class TopbarComponent implements OnInit {
         this.checkAuthState();
       });
 
+    this.authService.userProfile$.subscribe(profile => {
+      if (profile) {
+        this.userProfilePictureLink = profile.avatarFilename
+          ? `/avatars/${profile.avatarFilename}?t=${Date.now()}`
+          : '/android-chrome-512x512.png';
+        this.cdr.markForCheck();
+      }
+    });
+
     this.checkAuthState(); 
   }
 
@@ -66,6 +75,19 @@ export class TopbarComponent implements OnInit {
         }
       });
     }
+  }
+
+  public logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.authTokenService.clearToken();
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.authTokenService.clearToken();
+        this.router.navigate(['/']);
+      }
+    });
   }
 }
 

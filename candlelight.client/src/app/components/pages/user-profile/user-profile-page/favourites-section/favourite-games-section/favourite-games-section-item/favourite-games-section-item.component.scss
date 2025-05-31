@@ -1,0 +1,34 @@
+.game-tile {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+
+  img {
+    width: 100%;
+    height: 10rem;
+    object-fit: cover;
+  }
+
+  .game-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    padding: 0.5rem;
+    color: #ff8c00;
+  }
+
+  .details-icon {
+    font-size: 2rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    padding: 0.5rem;
+  }
+
+  &:hover .details-icon {
+    opacity: 1;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}

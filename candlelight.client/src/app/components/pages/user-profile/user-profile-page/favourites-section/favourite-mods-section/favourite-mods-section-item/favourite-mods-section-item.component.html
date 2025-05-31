@@ -1,0 +1,22 @@
+<mat-card [routerLink]="['/mods', mod.id]" class="mod-list-item">
+    <div class="mod-item-content">
+      <div class="mod-main">
+        <img [src]="mod.thumbnailUrl" alt="{{ mod.name }}" class="mod-thumb" />
+        <div class="mod-details">
+          <h3 class="title">{{ mod.name }}</h3>
+          <strong class="meta">By {{ mod.author }}</strong>
+          <p class="meta">Last updated: {{ mod.lastUpdatedDate | date }}</p>
+          <p class="meta">Total downloads: {{ mod.totalDownloads }}</p>
+          <p class="desc">{{ mod.descriptionSnippet }}</p>
+        </div>
+      </div>
+      <div class="mod-statistics">
+        <p class="meta">Average rating: {{ mod.averageRating }}</p>
+        <p class="meta">Total reviews: {{ mod.totalReviews }}</p>
+        <div class="favourite">
+          <mat-icon class="favourite-icon">favorite</mat-icon>
+          <span class="meta">{{ mod.totalFavourited }}</span>
+        </div>
+      </div>
+    </div>
+</mat-card>

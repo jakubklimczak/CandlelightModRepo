@@ -28,4 +28,12 @@ export class ModsService {
     public getModDetails(modId: string): Observable<ModDetailsDto> {
         return this.http.get<ModDetailsDto>(this.apiUrl + `GetModDetailsById`, { params: { modId } });
     }
+
+    public getCurrentUserCreatedMods(): Observable<ModsListItemDto[]> {
+        return this.http.get<ModsListItemDto[]>(`${this.apiUrl}CurrentUserCreatedMods`);
+    }
+
+    public getUserCreatedMods(userId: string): Observable<ModsListItemDto[]> {
+        return this.http.get<ModsListItemDto[]>(`${this.apiUrl}UserCreatedMods/${userId}`);
+    }
 }

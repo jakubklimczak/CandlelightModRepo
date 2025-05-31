@@ -10,4 +10,5 @@ public class UserProfileDto
     public DateTime CreatedAt { get; set; }
     public DateTime LastUpdatedAt { get; set; }
     public string? BackgroundColour { get; set; }
+    public bool FavouritesVisible { get; set; }
 }

@@ -1,0 +1,7 @@
+<mat-card class="game-tile" (click)="openMods()">
+    <img [src]="this.getGameImage(game)" alt="{{ this.getGameName(game) }}" />
+    <div class="game-title">
+        {{  this.getGameName(game) }}
+        <mat-icon class="details-icon" (click)="openDetails($event)">help_outline</mat-icon>
+    </div>
+</mat-card>

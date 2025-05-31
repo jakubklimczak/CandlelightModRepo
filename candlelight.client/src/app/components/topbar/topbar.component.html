@@ -21,8 +21,11 @@
         <button mat-raised-button routerLink="/profile/{{ this.currentUserId }}/favourite-mods">
           <mat-icon fontIcon="favorite_border"></mat-icon> Favourite Mods
         </button>
-        <button mat-raised-button routerLink="/upload">
+        <button mat-raised-button routerLink="/mods/upload">
           <mat-icon fontIcon="file_upload"></mat-icon> Upload Mod
+        </button>
+        <button mat-raised-button (click)="logout()">
+          <mat-icon fontIcon="logout"></mat-icon> Logout
         </button>
         <button mat-icon-button [disableRipple]="true" [routerLink]="['/profile', currentUserId]" class="profile-button" matTooltip="Profile">
           <img crossorigin="anonymous" [src]="userProfilePictureLink" alt="Profile" class="profile-icon" />

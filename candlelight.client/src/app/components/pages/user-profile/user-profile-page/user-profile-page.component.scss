@@ -1,0 +1,44 @@
+:host {
+    max-width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+    height: 100%;
+    background-color: #232323;
+}
+
+.container {
+    text-align: center;
+    align-items: center;
+    margin: 2.5rem;
+    padding: 2.5rem;
+    border-radius: 0.625rem;
+    background-color: #363636;
+    overflow-y: hidden;
+
+    .section, .title, .bio {
+        color: #ff8c00;
+        text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+        margin-bottom: 2rem;
+    }
+
+    .title {
+        font-size: 3rem;
+        color: #ff8c00;
+    }
+
+    .avatar {
+        height: 12rem;
+        width: 12rem;
+        border-radius: 50%;
+        object-fit: cover; 
+        margin: 3rem;
+    }
+}

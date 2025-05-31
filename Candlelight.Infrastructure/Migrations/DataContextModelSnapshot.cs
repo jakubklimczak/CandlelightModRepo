@@ -520,6 +520,9 @@ namespace Candlelight.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
+                    b.Property<bool>("FavouritesVisible")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
