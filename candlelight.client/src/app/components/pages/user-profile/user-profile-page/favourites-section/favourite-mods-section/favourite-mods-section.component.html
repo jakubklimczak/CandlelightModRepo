@@ -1,1 +1,18 @@
-<p>favourite-mods-section works!</p>
+<div class="favourites-container">
+  <div class="favourite-grid">
+    <app-favourite-mods-section-item
+      *ngFor="let mod of visibleMods"
+      [mod]="mod"
+      class="favourite-item"
+    ></app-favourite-mods-section-item>
+  </div>
+
+  <div class="controls">
+    <button mat-stroked-button color="primary" *ngIf="canShowMore" (click)="showMore()">
+      Show More
+    </button>
+    <button mat-stroked-button color="warn" *ngIf="isExpanded" (click)="collapse()">
+      Collapse
+    </button>
+  </div>
+</div>

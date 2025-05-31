@@ -11,9 +11,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.WebUtilities;
 using AuthenticationService = Candlelight.Application.Services.AuthenticationService;
 using Candlelight.Core.Helpers;
+using Candlelight.Api.Attributes;
 
 namespace Candlelight.Api.Controllers;
 
+/// <summary>
+/// Controller handling user creation and authorisation.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class UserAccessController(AuthenticationService authenticationService, UserManagementService userManagementService, SteamService steamService) : ControllerBase
@@ -22,6 +26,10 @@ public class UserAccessController(AuthenticationService authenticationService, U
     private readonly UserManagementService _userManagementService = userManagementService;
     private readonly SteamService _steamService = steamService;
 
+    //TODO: check if needed
+    /// <summary>
+    /// Preflight.
+    /// </summary>
     [HttpOptions]
     [Route("SendRegistrationForm")]
     [Route("SendLoginForm")]
@@ -36,6 +44,9 @@ public class UserAccessController(AuthenticationService authenticationService, U
         return Ok();
     }
 
+    /// <summary>
+    /// Registers a user with a Candlelight account.
+    /// </summary>
     [HttpPost]
     [ActionName("SendRegisterForm")]
     [Route("SendRegistrationForm")]
@@ -58,6 +69,9 @@ public class UserAccessController(AuthenticationService authenticationService, U
         }
     }
 
+    /// <summary>
+    /// Logs in the user with their Candlelight account.
+    /// </summary>
     [HttpPost]
     [Route("SendLoginForm")]
     [ActionName("SendLoginForm")]
@@ -84,6 +98,9 @@ public class UserAccessController(AuthenticationService authenticationService, U
         }
     }
 
+    /// <summary>
+    /// Returns all users with their info.
+    /// </summary>
     [HttpGet]
     [Route("GetUsersList")]
     [ActionName("GetUsersList")]
@@ -100,22 +117,77 @@ public class UserAccessController(AuthenticationService authenticationService, U
         }
     }
 
-    [HttpPost("LinkSteam")]
-    public async Task<IActionResult> LinkSteam([FromBody] LinkSteamRequest model)
+    /// <summary>
+    /// Used to link Candlelight account to Steam account.
+    /// </summary>
+    [HttpGet("LinkSteam")]
+    [Authorize(Policy = "JwtOnly")]
+    public IActionResult LinkSteam([FromQuery] string? returnUrl = "/profile")
     {
-        var user = await _userManagementService.GetUserByIdAsync(model.UserId);
-        if (user == null) return NotFound("User not found");
-
-        var steamId = model.SteamId;
-        var existingUser = await _userManagementService.GetUserBySteamIdAsync(steamId);
-        if (existingUser != null) return BadRequest("Steam account already linked to another user");
-
-        user.SteamId = steamId;
-        await _userManagementService.UpdateUserAsync(user);
-
-        return Ok(new { SteamId = steamId });
+        var redirectUri = Url.Action("LinkSteamCallback", "UserAccess", new { returnUrl = returnUrl }, Request.Scheme);
+        var steamLoginUrl = Url.Action("SteamLogin", "UserAccess", new { returnUrl = redirectUri }, Request.Scheme);
+        return Ok(new { url = steamLoginUrl });
     }
 
+    /// <summary>
+    /// Callback after linking Candlelight account with Steam.
+    /// </summary>
+    [HttpGet("LinkSteamCallback")]
+    [Authorize]
+    public async Task<IActionResult> LinkSteamCallback([CurrentUser] AppUser user, [FromQuery] string? returnUrl = "/profile")
+    {
+        var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        if (!result.Succeeded)
+            return BadRequest(new { error = "Steam authentication failed." });
+
+        var steamIdUrl = result.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(steamIdUrl))
+            return BadRequest(new { error = "Steam ID not found." });
+
+        var steamId = steamIdUrl.Replace("https://steamcommunity.com/openid/id/", "");
+
+        // Ensure the Steam ID isn't already linked to another account
+        var existingUser = await _userManagementService.GetUserBySteamIdAsync(steamId);
+        if (existingUser != null && existingUser.Id != user.Id)
+            return BadRequest(new { error = "Steam account is already linked to another user." });
+
+        var steamUser = await _steamService.GetPlayerSummaryAsync(steamIdUrl);
+        if (steamUser != null && !string.IsNullOrWhiteSpace(steamUser.AvatarFull))
+        {
+            var avatarFilename = $"{user.Id}.jpg";
+            var avatarsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "avatars");
+            Directory.CreateDirectory(avatarsFolder);
+            var avatarFilePath = Path.Combine(avatarsFolder, avatarFilename);
+
+            try
+            {
+                using var avatarResponse = await _steamService.GetAvatarPhotoFromLinkAsync(steamUser.AvatarFull);
+                avatarResponse.EnsureSuccessStatusCode();
+                var avatarBytes = await avatarResponse.Content.ReadAsByteArrayAsync();
+                await System.IO.File.WriteAllBytesAsync(avatarFilePath, avatarBytes);
+
+                user.UserProfile!.AvatarFilename = avatarFilename;
+            }
+            catch
+            {
+                Console.WriteLine("Failed to fetch new avatar.");
+            }
+            user.UserProfile!.DisplayName = steamUser.PersonaName;
+        }
+
+        user.SteamId = steamId;
+        user.LastUpdated = DateTime.UtcNow;
+        user.UserProfile!.LastUpdatedAt = DateTime.UtcNow;
+
+        await _userManagementService.UpdateUserAsync(user);
+
+        return Redirect(returnUrl ?? "/profile");
+    }
+
+
+    /// <summary>
+    /// Returns info about currently logged-in user.
+    /// </summary>
     [Authorize(Policy = "JwtOnly")]
     [HttpGet("CurrentUser")]
     public async Task<IActionResult> GetCurrentUser()
@@ -136,13 +208,18 @@ public class UserAccessController(AuthenticationService authenticationService, U
         });
     }
 
-
+    /// <summary>
+    /// Used for debugging JWT.
+    /// </summary>
     [HttpGet("DebugToken")]
     public IActionResult DebugToken([FromHeader(Name = "Authorization")] string token)
     {
         return Ok(new { token });
     }
 
+    /// <summary>
+    /// Used to log in using Steam.
+    /// </summary>
     [HttpGet("SteamLogin")]
     public IActionResult SteamLogin([FromQuery] string? returnUrl = "/")
     {
@@ -150,6 +227,9 @@ public class UserAccessController(AuthenticationService authenticationService, U
         return Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, "Steam");
     }
 
+    /// <summary>
+    /// Callback used when logging in by Steam. Do not use manually unless debugging.
+    /// </summary>
     [HttpGet("SteamCallback")]
     public async Task<IActionResult> SteamCallback([FromQuery] string? returnUrl = "/")
     {
@@ -217,6 +297,7 @@ public class UserAccessController(AuthenticationService authenticationService, U
                     LastUpdatedAt = DateTime.UtcNow,
                     CreatedBy = newUserId,
                     AvatarFilename = avatarFilename,
+                    FavouritesVisible = true,
                 }
             };
 
@@ -233,6 +314,9 @@ public class UserAccessController(AuthenticationService authenticationService, U
         return Redirect(redirectUrlWithToken);
     }
 
+    /// <summary>
+    /// Returns the ID of the currently logged-in user.
+    /// </summary>
     [Authorize(Policy = "JwtOnly")]
     [HttpGet("GetCurrentUserId")]
     public async Task<IActionResult> GetCurrentUserId([FromServices] UserContextResolver resolver)
@@ -245,5 +329,19 @@ public class UserAccessController(AuthenticationService authenticationService, U
     private static string GenerateSecureRandomPassword()
     {
         return Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N");
+    }
+
+    /// <summary>
+    /// Logs out the currently authenticated Steam user (cookie-based). JWT users are handled on the frontend.
+    /// </summary>
+    [HttpPost("Logout")]
+    [Authorize]
+    public async Task<IActionResult> Logout()
+    {
+        if (User.Identity?.AuthenticationType == CookieAuthenticationDefaults.AuthenticationScheme)
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+        return Ok(new { message = "Successfully logged out." });
     }
 }

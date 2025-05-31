@@ -17,6 +17,7 @@ import { FavouriteGamesPageComponent } from './components/pages/user-profile/fav
 import { FavouriteModsPageComponent } from './components/pages/user-profile/favourite-mods-page/favourite-mods-page.component';
 import { NonLoggedGuard } from './shared/guards/non-logged.guard';
 import { LoggedGuard } from './shared/guards/logged.guard';
+import { EditUserProfilePageComponent } from './components/pages/user-profile/edit-user-profile-page/edit-user-profile-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'profile/:id', component: UserProfilePageComponent },  
   { path: 'profile/:id/favourite-games', component: FavouriteGamesPageComponent, canActivate: [LoggedGuard] },  
   { path: 'profile/:id/favourite-mods', component: FavouriteModsPageComponent, canActivate: [LoggedGuard] },  
+  { path: 'edit-profile/:id', component: EditUserProfilePageComponent, canActivate: [LoggedGuard] },  
 ];
 
 @NgModule({

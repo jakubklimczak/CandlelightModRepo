@@ -1,1 +1,18 @@
-<p>favourite-games-section works!</p>
+<div class="favourites-container">
+  <div class="favourite-grid">
+    <app-favourite-games-section-item
+      *ngFor="let game of visibleGames"
+      [game]="game"
+      class="favourite-item"
+    ></app-favourite-games-section-item>
+  </div>
+
+  <div class="controls">
+    <button mat-stroked-button color="primary" *ngIf="canShowMore" (click)="showMore()">
+      Show More
+    </button>
+    <button mat-stroked-button color="warn" *ngIf="isExpanded" (click)="collapse()">
+      Collapse
+    </button>
+  </div>
+</div>

@@ -35,6 +35,7 @@ public class UserManagementService(DataContext context)
             CreatedAt = DateTime.Now,
             LastUpdatedAt = DateTime.Now,
             CreatedBy = newAppUser.Id,
+            FavouritesVisible = true,
         };
 
         await _context.Users.AddAsync(newAppUser);

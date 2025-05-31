@@ -18,6 +18,7 @@ public class UserProfile : BaseEntity
     [MaxLength(30)]
     public string? BackgroundColour { get; set; }
 
+    public required bool FavouritesVisible { get; set; } = true;
     public required Guid UserId { get; set; }
 
     [ForeignKey(nameof(AppUser))]

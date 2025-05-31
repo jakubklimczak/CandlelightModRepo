@@ -1,7 +1,12 @@
-<div class="profile-view" [ngStyle]="{'background-color': profile.backgroundColour}">
-  <img [src]="profile.avatarUrl" alt="Avatar" class="avatar">
-  <h2>{{ profile.displayName }}</h2>
-  <p class="bio">{{ profile.bio }}</p>
-  <p *ngIf="profile.steamId">🎮 Steam ID: {{ profile.steamId }}</p>
-  <p>📅 Account created: {{ profile.created | date }}</p>
-</div>
+<mat-card *ngIf="this.profile" class="container" [ngStyle]="{'background-color': profile.backgroundColour ?? '#363636'}">
+  <h1 class="title">Profile: {{ profile.displayName }}</h1>
+  <img [src]="this.profilePictureLink" alt="Avatar" class="avatar">
+  <p *ngIf="profile.bio" class="bio section">Bio: {{ profile.bio }}</p>
+  <p *ngIf="profile.steamId" class="section">🎮 Steam ID: {{ profile.steamId }}</p>
+  <p class="section">📅 Account created: {{ profile.createdAt | date }}</p>
+  <button class="section" mat-raised-button *ngIf="this.profileOwnerId === this.currentUserId" [routerLink]="['/edit-profile', currentUserId]">Edit profile</button>
+
+  <app-created-mods-section [userId]="profileOwnerId" class="section" />
+
+  <app-favourites-section *ngIf="profile.favouritesVisible || this.profileOwnerId === this.currentUserId" [userId]="profileOwnerId" class="section" />
+</mat-card>

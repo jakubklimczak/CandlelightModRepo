@@ -1,1 +1,51 @@
-<p>edit-user-profile-page works!</p>
+<ng-container *appSkeletonLoader="profileForm === null">
+  <mat-card class="container" [ngStyle]="{'background-color': profileForm.value.backgroundColour || '#363636'}" *ngIf="profileForm">
+    <h2 class="title">Edit Profile</h2>
+    <img [src]="this.profilePictureLink" alt="Avatar" class="avatar">
+    <form class="form" [formGroup]="profileForm" (ngSubmit)="submit()">
+      <mat-form-field class="form-field">
+        <mat-label>Display Name</mat-label>
+        <input matInput formControlName="displayName" />
+      </mat-form-field>
+
+      <mat-form-field class="form-field">
+        <mat-label>Bio</mat-label>
+        <textarea matInput formControlName="bio"></textarea>
+      </mat-form-field>
+
+      <div class="form-field colour-picker">
+        <mat-label>Background Colour:</mat-label>
+        <input
+          matInput
+          [cpOutputFormat]="'hex'"
+          [cpFallbackColor]="'#363636'"
+          [cpPresetColors]="[]"
+          [cpPosition]="'right'"
+          [placeholder]="profileForm.get('backgroundColour')?.value"
+          [colorPicker]="profileForm.get('backgroundColour')?.value"
+          (colorPickerChange)="profileForm.get('backgroundColour')?.setValue($event)"
+        />
+      </div>
+
+      <mat-form-field class="form-field">
+        <mat-label>Avatar:</mat-label>
+        <input type="text" matInput [value]="selectedFile?.name" placeholder="Choose a file" disabled>
+        <button matSuffix mat-icon-button type="button" (click)="fileInput.click()" aria-label="Upload file">
+          <mat-icon>attach_file</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <input
+        #fileInput
+        type="file"
+        hidden
+        (change)="onFileSelected($event)"
+      />
+
+      <div class="buttons">
+        <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid">Save Changes</button>
+        <button *ngIf="!hasSteamId" type="button" mat-stroked-button color="accent" (click)="linkSteam()">Link Steam</button>
+      </div>
+    </form>
+  </mat-card>
+</ng-container>

@@ -9,12 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Candlelight.Api.Controllers;
 
+/// <summary>
+/// Controller which handles games in the application.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class GameController(GameService gameService) : ControllerBase
 {
     private readonly GameService _gameService = gameService;
 
+    /// <summary>
+    /// Returns paginated list of games from the database.
+    /// </summary>
     [HttpGet("GetGamesFromDbPaginatedQuery")]
     [ActionName("GetPaginatedSteamGameDetailsFromDb")]
     public async Task<IActionResult> GetPaginatedSteamGameDetailsFromDb(
@@ -124,6 +130,9 @@ public class GameController(GameService gameService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Returns Steam game details by Steam app ID. If it doesn't exist in the database, it attempts to fetch it from Steam and add it.
+    /// </summary>
     [HttpGet("GetGame/{appId:int}")]
     [ActionName("GetGame")]
     [Authorize]
@@ -138,6 +147,9 @@ public class GameController(GameService gameService) : ControllerBase
         return Ok(game);
     }
 
+    /// <summary>
+    /// Returns Steam game details by Steam app ID.
+    /// </summary>
     [HttpGet("GetGameFromDb/{appId:int}")]
     [ActionName("GetGameFromDb")]
     public async Task<IActionResult> GetGameFromDb(int appId)
@@ -151,6 +163,9 @@ public class GameController(GameService gameService) : ControllerBase
         return Ok(game);
     }
 
+    /// <summary>
+    /// Endpoint that adds a game to current user's favourites.
+    /// </summary>
     [HttpPost("{gameId}/Favourite")]
     [Authorize]
     public async Task<IActionResult> AddFavourite(Guid gameId, [CurrentUser] AppUser user)
@@ -161,6 +176,9 @@ public class GameController(GameService gameService) : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Endpoint that removes a game from current user's favourites.
+    /// </summary>
     [HttpDelete("{gameId}/Favourite")]
     [Authorize]
     public async Task<IActionResult> RemoveFavourite(Guid gameId, [CurrentUser] AppUser user)
@@ -171,6 +189,9 @@ public class GameController(GameService gameService) : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Endpoint for adding custom games to the database.
+    /// </summary>
     [HttpPost("AddCustom")]
     [Authorize]
     public async Task<IActionResult> AddCustomGame([FromForm] CustomGameDto dto, [CurrentUser] AppUser user, IFormFile? coverImage)

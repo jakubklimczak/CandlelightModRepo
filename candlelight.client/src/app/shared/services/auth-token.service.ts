@@ -18,6 +18,12 @@ export class AuthTokenService {
     return !!localStorage.getItem('authToken');
   }
 
+  /*
+  public getToken(): string | null {
+    return localStorage.getItem('authToken');
+  }
+  */
+
   public isLoggedIn(): boolean {
     const token = localStorage.getItem('authToken');
     if (!token) return false;
