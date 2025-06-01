@@ -14,6 +14,10 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { UploadModPageComponent } from './upload-mod-page/upload-mod-page.component';
+import { UploadNewModTabComponent } from './upload-mod-page/upload-new-mod-tab/upload-new-mod-tab.component';
+import { UploadNewVersionTabComponent } from './upload-mod-page/upload-new-version-tab/upload-new-version-tab.component';
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -21,7 +25,9 @@ import { UploadModPageComponent } from './upload-mod-page/upload-mod-page.compon
     ModsListComponent,
     ModsListItemComponent,
     ModDetailsPageComponent,
-    UploadModPageComponent
+    UploadModPageComponent,
+    UploadNewModTabComponent,
+    UploadNewVersionTabComponent
   ],
   imports: [
     MatCardModule,
@@ -35,6 +41,8 @@ import { UploadModPageComponent } from './upload-mod-page/upload-mod-page.compon
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
+    MatTabsModule,
+    MatProgressSpinner,
   ],
 })
 export class ModsModule {}

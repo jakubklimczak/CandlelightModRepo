@@ -15,6 +15,6 @@ export class SteamService {
     constructor(private http: HttpClient){}
 
     public getGameByAppId(appId: number): Observable<GameDetailsDto> {
-        return this.http.get<GameDetailsDto>(`${this.gamesApiUrl}GetGame/${appId}`);
+      return this.http.get<GameDetailsDto>(`${this.gamesApiUrl}GetGame/${appId}`);
     }
 }

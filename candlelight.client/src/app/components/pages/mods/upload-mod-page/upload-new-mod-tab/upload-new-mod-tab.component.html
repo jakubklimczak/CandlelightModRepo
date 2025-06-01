@@ -1,0 +1,159 @@
+<form [formGroup]="newModForm" (ngSubmit)="onSubmitNewMod()" enctype="multipart/form-data" class="upload-form">
+    <mat-form-field appearance="fill">
+        <mat-label>Mod Name</mat-label>
+        <input matInput formControlName="name" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Short Description</mat-label>
+        <textarea matInput formControlName="descriptionSnippet"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Full Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Version</mat-label>
+        <input matInput formControlName="version" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Changelog</mat-label>
+        <textarea matInput formControlName="changelog"></textarea>
+    </mat-form-field>
+
+    <div class="game-id-section">
+        <mat-form-field appearance="fill" class="id-field">
+            <mat-label>Game ID</mat-label>
+            <input matInput formControlName="gameId" [disabled]="true" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="search-box">
+            <mat-label>Select Game <span class="required-asterisk">*</span></mat-label>
+            <input matInput [formControl]="gameSearchControl" placeholder="Search games...">
+        </mat-form-field>
+    </div>
+
+    <div class="game-suggestions" *ngIf="gameSuggestions.length > 0">
+        <div
+        *ngFor="let game of gameSuggestions"
+        class="game-suggestion"
+        role="button"
+        tabindex="0"
+        (click)="selectGame(game)"
+        (keyup.enter)="selectGame(game)"
+        (keyup.space)="selectGame(game)" >
+            <img class="thumbnail" src="{{ game.headerImage }}" alt="{{ game.name }}"/>
+            <mat-label class="game-name">{{ game.name }}</mat-label>
+        </div>
+    </div>
+
+    <div *ngIf="selectedGame" class="selected-game">
+        <strong>Selected Game:  {{ selectedGame.name }}</strong>
+        <img [src]="selectedGame.headerImage" alt="Selected Game" />
+    </div>
+    <mat-form-field appearance="fill">
+        <mat-label>Supported Game Versions (comma-separated)</mat-label>
+        <input matInput (blur)="onSupportedVersionsBlur($event)" />
+    </mat-form-field>
+
+    <mat-form-field *ngIf="selectedGame" appearance="fill">
+        <mat-label>Search Mod Dependencies</mat-label>
+        <input
+            matInput
+            [formControl]="dependencySearchControl"
+            placeholder="Search for mods to add as dependencies"
+        />
+        </mat-form-field>
+
+        <div class="dependency-suggestions" *ngIf="dependencySuggestions.length > 0">
+            <div
+                *ngFor="let mod of dependencySuggestions"
+                class="mod-suggestion"
+                role="button"
+                tabindex="0"
+                (click)="addDependency(mod)"
+                (keyup.enter)="addDependency(mod)"
+                (keyup.space)="addDependency(mod)"
+            >
+                <img class="thumbnail" [src]="mod.thumbnailUrl" alt="{{ mod.name }}" />
+                <mat-label class="mod-name">{{ mod.name }}</mat-label>
+            </div>
+        </div>
+
+    <div class="dependency-list" *ngIf="selectedDependencies.length > 0">
+        <p><strong>Selected Dependencies:</strong></p>
+        <ul>
+            <li *ngFor="let dep of selectedDependencies">
+            {{ dep.name }}
+            <button mat-icon-button type="button" (click)="removeDependency(dep.id)">
+                <mat-icon>close</mat-icon>
+            </button>
+            </li>
+        </ul>
+    </div>
+
+    <mat-form-field class="form-field">
+        <mat-label>Mod Images (up to 10):</mat-label>
+        <input
+            type="text"
+            matInput
+            [value]="selectedImageFileNames"
+            placeholder="Choose images"
+            disabled
+        />
+        <button matSuffix mat-icon-button type="button" (click)="imageInput.click()" aria-label="Upload images">
+            <mat-icon>photo_library</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <input
+    #imageInput
+    type="file"
+    (change)="onImagesSelected($event)"
+    multiple
+    accept="image/*"
+    hidden
+    />
+
+    <div>
+        <mat-label>Select thumbnail for your mod</mat-label>
+        <div class="image-preview-grid" *ngIf="previewImages.length > 0">
+            <div
+                *ngFor="let img of previewImages; let i = index"
+                class="preview-tile"
+                [class.selected]="selectedThumbnail === img.name"
+                (click)="selectThumbnail(img.name)"
+                tabindex="0"
+                role="button"
+                (keyup.enter)="selectThumbnail(img.name)"
+                (keyup.space)="selectThumbnail(img.name)"
+            >
+                <img class="mod-image" [src]="img.preview" [alt]="'Image ' + (i + 1)" />
+            </div>
+        </div>
+    </div>
+
+
+    <mat-form-field class="form-field">
+        <mat-label>Mod File (500MB max):</mat-label>
+        <input type="text" matInput [value]="selectedFile?.name" placeholder="Choose a file" disabled>
+        <button matSuffix mat-icon-button type="button" (click)="fileInput.click()" aria-label="Upload file">
+            <mat-icon>attach_file</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <input
+    #fileInput
+    type="file"
+    required
+    hidden
+    (change)="onFileSelected($event)"
+    />
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="newModForm.invalid || !selectedFile">
+    Upload Mod
+    </button>
+</form>

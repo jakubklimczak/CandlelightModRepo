@@ -150,14 +150,30 @@ public class GameController(GameService gameService) : ControllerBase
     /// <summary>
     /// Returns Steam game details by Steam app ID.
     /// </summary>
-    [HttpGet("GetGameFromDb/{appId:int}")]
-    [ActionName("GetGameFromDb")]
-    public async Task<IActionResult> GetGameFromDb(int appId)
+    [HttpGet("GetSteamGameFromDb/{appId:int}")]
+    [ActionName("GetSteamGameFromDb")]
+    public async Task<IActionResult> GetSteamGameFromDb(int appId)
     {
         var game = await _gameService.GetSteamGameDetailsByIdAsync(appId);
         if (game == null)
         {
             return NotFound($"Game with AppId {appId} not found.");
+        }
+
+        return Ok(game);
+    }
+
+    /// <summary>
+    /// Returns Steam game details by Steam app ID.
+    /// </summary>
+    [HttpGet("GetGameFromDb/{id:Guid}")]
+    [ActionName("GetGameFromDb")]
+    public async Task<IActionResult> GetGameFromDb(Guid id)
+    {
+        var game = await _gameService.GetGameByIdAsync(id);
+        if (game == null)
+        {
+            return NotFound($"Game with Id {id} not found.");
         }
 
         return Ok(game);

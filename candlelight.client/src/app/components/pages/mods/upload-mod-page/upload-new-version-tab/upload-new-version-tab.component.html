@@ -1,0 +1,35 @@
+<div class="container">
+    <ng-container *ngIf="createdMods">
+        <div class="mods-and-form">
+            <mat-form-field class="search">
+                <input matInput placeholder="Search your mods..." [formControl]="searchControl" />
+            </mat-form-field>
+            <div class="mods-list">
+                <app-mods-list-item
+                *ngFor="let mod of filteredMods"
+                [mod]="mod"
+                (click)="selectMod(mod)"
+                [class.selected]="selectedMod?.id === mod.id">
+                </app-mods-list-item>
+            </div>
+            <form *ngIf="selectedMod" [formGroup]="newVersionForm" (ngSubmit)="onSubmitNewVersion()" enctype="multipart/form-data" class="upload-version-form">
+                <h3>Upload New Version for: {{ selectedMod.name }}</h3>
+                <mat-form-field appearance="fill">
+                    <mat-label>Version</mat-label>
+                    <input matInput formControlName="version" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Changelog</mat-label>
+                    <textarea matInput formControlName="changelog"></textarea>
+                </mat-form-field>
+                <input type="file" (change)="onFileSelected($event)" required />
+                <button mat-raised-button color="accent" type="submit" [disabled]="newVersionForm.invalid || !versionFile">
+                    Upload Version
+                </button>
+            </form>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="createdMods === null">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </ng-container>
+</div>

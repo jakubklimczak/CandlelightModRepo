@@ -80,7 +80,7 @@ public class UserSocialService(UserManagementService userManagementService, Data
                 Name = f.Mod.Name,
                 DescriptionSnippet = f.Mod.DescriptionSnippet,
                 ThumbnailUrl = f.Mod.ThumbnailUrl,
-                Author = f.Mod.AuthorUsername,
+                Author = f.Mod.CreatedByUser.UserName!,
                 AuthorId = f.CreatedBy,
                 LastUpdatedDate = f.Mod.LastUpdatedAt,
                 TotalDownloads = f.Mod.Versions.Sum(v => v.DownloadCount),

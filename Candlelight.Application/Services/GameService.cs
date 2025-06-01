@@ -16,6 +16,21 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
     private readonly DataContext _dataContext = dataContext;
     private readonly SteamService _steamApiService = steamApiService;
 
+    public async Task<Game?> GetGameByIdAsync(Guid id)
+    {
+        var game = await _dataContext.Games
+            .Include(g => g.SteamGameDetails!)
+                .ThenInclude(d => d.Genres)
+            .Include(g => g.SteamGameDetails!)
+                .ThenInclude(d => d.Categories)
+            .Include(g => g.SteamGameDetails!)
+                .ThenInclude(d => d.Platforms)
+            .Include(g => g.CustomGameDetails)
+            .FirstOrDefaultAsync(g => g.Id == id);
+
+        return game;
+    }
+
     public async Task<SteamGameDetails?> GetSteamGameDetailsByIdAsync(int appId)
     {
         var game = await _dataContext.SteamGameDetails
@@ -84,7 +99,7 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
-            query = query.Where(g => g.Name.Contains(searchTerm));
+            query = query.Where(g => g.Name.ToLower().Contains(searchTerm.ToLower()));
         }
 
         var sortedQuery = sortBy switch

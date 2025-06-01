@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Candlelight.Core.Dtos.Mod;
 
 public class ModUploadForm
 {
-    [FromForm] public Guid GameId { get; set; }
-    [FromForm] public string Name { get; set; } = default!;
-    [FromForm] public string Description { get; set; } = default!;
-    [FromForm] public string DescriptionSnippet { get; set; } = default!;
-    [FromForm] public string AuthorUsername { get; set; } = default!;
-    [FromForm] public string ThumbnailUrl { get; set; } = default!;
-    [FromForm] public string Version { get; set; } = default!;
-    [FromForm] public string Changelog { get; set; } = default!;
-    [FromForm] public IFormFile File { get; set; } = default!;
+    public Guid GameId { get; set; }
+    public string Name { get; set; } = default!;
+    public string Description { get; set; } = default!;
+    public string DescriptionSnippet { get; set; } = default!;
+    public string Version { get; set; } = default!;
+    public string Changelog { get; set; } = default!;
+
+    public List<string>? SupportedVersions { get; set; }
+    public List<Guid>? Dependencies { get; set; }
+
+    public IFormFile File { get; set; } = default!;
+    public List<IFormFile>? Images { get; set; }
+    public string? SelectedThumbnail { get; set; }
 }

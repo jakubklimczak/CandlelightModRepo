@@ -28,7 +28,7 @@ export class ModsPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.gameId = params['appId'];
+      this.gameId = params['id'];
       this.query.page = 1;
       this.loadMods();
     });
@@ -43,7 +43,7 @@ export class ModsPageComponent implements OnInit {
   }
 
   public loadMods(): void {
-    this.modService.getModsForSteamGame(this.gameId, this.query, this.searchTerm ?? '', this.showOnlyFavourites, this.selectedSortOption).subscribe(res => {
+    this.modService.getModsForGame(this.gameId, this.query, this.searchTerm ?? '', this.showOnlyFavourites, this.selectedSortOption).subscribe(res => {
       this.response = res;
     });
   }
