@@ -31,6 +31,13 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
         return game;
     }
 
+    public async Task<Guid> GetGameIdByModIdAsync(Guid id)
+    {
+        var mod = await _dataContext.Mods.SingleOrDefaultAsync(m => m.Id == id);
+
+        return mod?.GameId ?? Guid.Empty;
+    }
+
     public async Task<SteamGameDetails?> GetSteamGameDetailsByIdAsync(int appId)
     {
         var game = await _dataContext.SteamGameDetails
@@ -137,8 +144,8 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             query = query.Where(g =>
-                (g.SteamGameDetails != null && g.SteamGameDetails.Name.Contains(searchTerm)) ||
-                (g.CustomGameDetails != null && g.CustomGameDetails.Name.Contains(searchTerm))
+                (g.SteamGameDetails != null && g.SteamGameDetails.Name.ToLower().Contains(searchTerm.ToLower())) ||
+                (g.CustomGameDetails != null && g.CustomGameDetails.Name.ToLower().Contains(searchTerm.ToLower()))
             );
         }
 
@@ -182,7 +189,7 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
-            query = query.Where(g => g.Name.Contains(searchTerm));
+            query = query.Where(g => g.Name.ToLower().Contains(searchTerm.ToLower()));
         }
 
         var sortedQuery = sortBy switch

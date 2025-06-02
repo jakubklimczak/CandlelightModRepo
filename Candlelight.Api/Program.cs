@@ -173,6 +173,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+//TODO: fix the fallback
 app.MapFallbackToFile("/index.html");
 
 await app.RunAsync();

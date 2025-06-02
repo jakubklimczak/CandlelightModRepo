@@ -109,6 +109,7 @@ public class UserSocialService(UserManagementService userManagementService, Data
         if (form.DisplayName != null) profile.DisplayName = form.DisplayName;
         if (form.Bio != null) profile.Bio = form.Bio;
         if (form.BackgroundColour != null) profile.BackgroundColour = form.BackgroundColour;
+        profile.FavouritesVisible = form.FavouritesVisible ?? profile.FavouritesVisible;
 
         if (form.Avatar != null)
         {

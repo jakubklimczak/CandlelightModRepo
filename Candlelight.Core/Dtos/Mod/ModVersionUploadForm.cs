@@ -9,5 +9,7 @@ public class ModVersionUploadForm
     [FromForm] public string Version { get; set; } = default!;
     [FromForm] public string Changelog { get; set; } = default!;
     [FromForm] public IFormFile File { get; set; } = default!;
+    public List<string>? SupportedVersions { get; set; }
+    public List<Guid>? Dependencies { get; set; }
 }
 

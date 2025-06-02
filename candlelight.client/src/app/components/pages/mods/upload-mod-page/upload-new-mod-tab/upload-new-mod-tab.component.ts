@@ -36,7 +36,7 @@ export class UploadNewModTabComponent implements OnInit {
       descriptionSnippet: [''],
       description: [''],
       version: ['', Validators.required],
-      changelog: [''],
+      changelog: ['', Validators.required],
       gameId: ['', Validators.required],
       thumbnailUrl: [''],
       supportedVersions: [[]],
@@ -117,7 +117,7 @@ export class UploadNewModTabComponent implements OnInit {
         this.selectedDependencies = [];
         this.selectedThumbnail = null;
         this.previewImages = [];
-        
+
         this.router.navigate(['/mods', res.modId]);
       },
       error: () => {

@@ -224,4 +224,14 @@ public class GameController(GameService gameService) : ControllerBase
         return Ok(game.Id);
     }
 
+    /// <summary>
+    /// Returns the id of the Game that the mod with given id is for
+    /// </summary>
+    [HttpGet("GetGameIdByModId/{id}")]
+
+    public async Task<IActionResult> GetGameIdByModId(Guid id)
+    {
+        var gameId = await _gameService.GetGameIdByModIdAsync(id);
+        return Ok(gameId);
+    }
 }

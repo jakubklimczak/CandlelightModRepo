@@ -54,6 +54,7 @@
         <strong>Selected Game:  {{ selectedGame.name }}</strong>
         <img [src]="selectedGame.headerImage" alt="Selected Game" />
     </div>
+    
     <mat-form-field appearance="fill">
         <mat-label>Supported Game Versions (comma-separated)</mat-label>
         <input matInput (blur)="onSupportedVersionsBlur($event)" />
@@ -118,7 +119,7 @@
     hidden
     />
 
-    <div>
+    <div class="select-thumbnail">
         <mat-label>Select thumbnail for your mod</mat-label>
         <div class="image-preview-grid" *ngIf="previewImages.length > 0">
             <div

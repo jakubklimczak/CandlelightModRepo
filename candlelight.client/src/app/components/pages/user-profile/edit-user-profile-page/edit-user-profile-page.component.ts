@@ -36,6 +36,7 @@ export class EditUserProfilePageComponent implements OnInit {
         displayName: [profile.displayName, [Validators.minLength(6)]],
         bio: [profile.bio, [Validators.maxLength(200)]],
         backgroundColour: [profile.backgroundColour || '#363636', [Validators.maxLength(30)]],
+        favouritesVisible: [profile.favouritesVisible ?? false],
       });
       this.authService.updateUserProfile(profile); 
     });
@@ -54,6 +55,7 @@ export class EditUserProfilePageComponent implements OnInit {
     formData.append('displayName', this.profileForm.value.displayName);
     formData.append('bio', this.profileForm.value.bio);
     formData.append('backgroundColour', this.profileForm.value.backgroundColour);
+    formData.append('favouritesVisible', String(this.profileForm.value.favouritesVisible));
     if (this.selectedFile) {
       formData.append('avatar', this.selectedFile);
     }

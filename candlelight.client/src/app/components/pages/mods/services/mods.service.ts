@@ -10,6 +10,7 @@ import { ModsSortingOptions } from "../enums/mods-sorting-options.enum";
 import { ModUploadResponseDto } from "../models/mod-upload-response-dto.model";
 import { GameDetailsDto } from "../../games/models/game-details-dto";
 import { GamesSortingOptions } from "../../games/enums/games-sorting-options.enum";
+import { ModVersion } from "../models/mod-version.model";
 
 @Injectable({ providedIn: 'root' })
 export class ModsService {
@@ -64,6 +65,10 @@ export class ModsService {
         return this.http.get<GameDetailsDto>(`${this.gameApiUrl}GetGameFromDb/${id}`);
     }
 
+    public getGameIdByModId(id: string): Observable<string> {
+        return this.http.get<string>(`${this.gameApiUrl}GetGameIdByModId/${id}`);
+    }
+
     public searchModsByGame(gameId: string, searchTerm: string): Observable<PaginatedResponse<ModsListItemDto>> {
         return this.http.get<PaginatedResponse<ModsListItemDto>>(`${this.apiUrl}GetModsByGameId`, {
             params: {
@@ -75,4 +80,9 @@ export class ModsService {
             }
         });
     }
+
+    public getModVersions(modId: string): Observable<ModVersion[]> {
+        return this.http.get<ModVersion[]>(`${this.apiUrl}GetVersionsOfMod/${modId}`);
+    }
+
 }

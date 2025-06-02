@@ -5,24 +5,106 @@
                 <input matInput placeholder="Search your mods..." [formControl]="searchControl" />
             </mat-form-field>
             <div class="mods-list">
-                <app-mods-list-item
+                <app-upload-section-mods-list-item
                 *ngFor="let mod of filteredMods"
                 [mod]="mod"
                 (click)="selectMod(mod)"
                 [class.selected]="selectedMod?.id === mod.id">
-                </app-mods-list-item>
+                </app-upload-section-mods-list-item>
             </div>
-            <form *ngIf="selectedMod" [formGroup]="newVersionForm" (ngSubmit)="onSubmitNewVersion()" enctype="multipart/form-data" class="upload-version-form">
-                <h3>Upload New Version for: {{ selectedMod.name }}</h3>
+
+
+            <form *ngIf="selectedMod" [formGroup]="newVersionForm" (ngSubmit)="onSubmitNewVersion()" enctype="multipart/form-data" class="upload-form">
+                <strong>Upload New Version for: {{ selectedMod.name }}</strong>
+
                 <mat-form-field appearance="fill">
                     <mat-label>Version</mat-label>
                     <input matInput formControlName="version" />
                 </mat-form-field>
+
                 <mat-form-field appearance="fill">
                     <mat-label>Changelog</mat-label>
                     <textarea matInput formControlName="changelog"></textarea>
                 </mat-form-field>
-                <input type="file" (change)="onFileSelected($event)" required />
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Supported Game Versions (comma-separated)</mat-label>
+                    <input matInput (blur)="onSupportedVersionsBlur($event)" />
+                </mat-form-field>
+
+                <mat-form-field *ngIf="selectedMod" appearance="fill">
+                    <mat-label>Search Mod Dependencies</mat-label>
+                    <input
+                        matInput
+                        [formControl]="dependencySearchControl"
+                        placeholder="Search for mods to add as dependencies"
+                    />
+                </mat-form-field>
+
+                <div class="dependency-suggestions" *ngIf="dependencySuggestions.length > 0">
+                    <div *ngFor="let mod of dependencySuggestions" class="mod-suggestion-container">
+                        <mat-card>
+                            <div
+                            class="mod-suggestion"
+                            role="button"
+                            tabindex="0"
+                            (click)="addDependency(mod)"
+                            (keyup.enter)="addDependency(mod)"
+                            (keyup.space)="addDependency(mod)"
+                            >
+                            <img class="thumbnail" [src]="mod.thumbnailUrl" alt="{{ mod.name }}" />
+                            <mat-label class="mod-name">{{ mod.name }}</mat-label>
+                            </div>
+                        </mat-card>
+
+                        <mat-card *ngIf="showVersionSelectForMod === mod.id">
+                            <div class="version-select-list">
+                                <div
+                                    *ngFor="let version of modVersionOptions"
+                                    class="version-option"
+                                    role="button"
+                                    tabindex="0"
+                                    (click)="selectDependencyVersion(version)"
+                                    (keyup.enter)="selectDependencyVersion(version)"
+                                    (keyup.space)="selectDependencyVersion(version)"
+                                >
+                                    <mat-card>
+                                        <mat-label>{{ mod.name }} - version: {{ version.version }}</mat-label>
+                                    </mat-card>
+                                </div>
+                            </div>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <div *ngIf="selectedDependencies && selectedDependencies.length > 0">
+                    <mat-label><strong>Selected dependencies:</strong></mat-label>
+                    <div *ngFor="let dep of selectedDependencies">
+                        <mat-card class="selected-dependencies-list-item">
+                            <mat-label>{{ dep.modName }} - version: {{ dep.version }}</mat-label>
+                            <button mat-icon-button type="button" (click)="removeDependency(dep.id)">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Mod File (500MB max):</mat-label>
+                    <input type="text" matInput [value]="versionFile?.name" placeholder="Choose a file" disabled>
+                    <button matSuffix mat-icon-button type="button" (click)="fileInput.click()" aria-label="Upload file">
+                    <mat-icon>attach_file</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                <input
+                    #fileInput
+                    type="file"
+                    required
+                    hidden
+                    (change)="onFileSelected($event)"
+                />
+
                 <button mat-raised-button color="accent" type="submit" [disabled]="newVersionForm.invalid || !versionFile">
                     Upload Version
                 </button>

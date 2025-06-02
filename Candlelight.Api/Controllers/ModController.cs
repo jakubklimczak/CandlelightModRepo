@@ -24,14 +24,20 @@ public class ModController(
     /// Returns paginated modifications for the specified game.
     /// </summary>
     [HttpGet("GetModsByGameId")]
-    public async Task<IActionResult> GetModsByGameId([FromQuery] Guid gameId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetModsByGameId(
+        [FromQuery] PaginatedQuery query,
+        [FromQuery] bool showOnlyFavourites, 
+        [FromQuery] Guid gameId,
+        [FromQuery] ModsSortingOptions sortBy,
+        [FromQuery] string? searchTerm = null
+        )
     {
-        var (mods, totalCount) = await _modService.GetModsByGameIdAsync(gameId, page, pageSize);
+        var (mods, totalCount) = await _modService.GetModsByGameIdAsync(gameId, query.Page, query.PageSize, sortBy, searchTerm);
 
         var result = new PaginatedResponse<ModListItemDto>
         {
-            Page = page,
-            PageSize = pageSize,
+            Page = query.Page,
+            PageSize = query.PageSize,
             TotalItems = totalCount,
             Items = mods.Select(mod => new ModListItemDto
             {
@@ -101,14 +107,14 @@ public class ModController(
                 await img.CopyToAsync(stream);
 
                 if (dto.SelectedThumbnail == name)
-                    savedThumbnailPath = $"/mod_images/{mod.Id}/{name}";
+                    savedThumbnailPath = $"/mod-images/{mod.Id}/{name}";
             }
 
             if (savedThumbnailPath == null && dto.Images.Count > 0)
             {
                 var first = dto.Images[0];
                 var ext = Path.GetExtension(first.FileName);
-                savedThumbnailPath = $"/mod_images/{mod.Id}/1{ext}";
+                savedThumbnailPath = $"/mod-images/{mod.Id}/1{ext}";
             }
 
             mod.ThumbnailUrl = savedThumbnailPath!;
@@ -175,7 +181,7 @@ public class ModController(
         var now = DateTime.UtcNow;
         var userId = user.Id;
 
-        var mod = await _modService.GetModByIdAsync(dto.ModId);
+        var mod = await _modService.GetModWithVersionsByIdAsync(dto.ModId);
 
         if (mod == null)
         {
@@ -200,17 +206,21 @@ public class ModController(
         {
             Id = Guid.NewGuid(),
             ModId = mod.Id,
+            Mod = mod,
             Version = dto.Version,
             Changelog = dto.Changelog,
             FileUrl = publicUrl,
             CreatedAt = now,
             CreatedBy = userId,
-            LastUpdatedAt = now
+            LastUpdatedAt = now,
+            FileSizeBytes = dto.File.Length,
+            FileType = fileExt.TrimStart('.').ToLowerInvariant(),
+            SupportedVersions = dto.SupportedVersions,
+            Dependencies = dto.Dependencies,
+            DownloadCount = 0,
         };
 
-
-        mod.Versions.Add(version);
-
+        await _modService.AddModVersionAsync(version);
         return Ok(new ModUploadResponseDto()
         {
             ModId = mod.Id,
@@ -279,6 +289,7 @@ public class ModController(
             {
                 Id = v.Id,
                 ModId = v.ModId, 
+                ModName = mod.Name,
                 FileUrl = v.FileUrl, 
                 Changelog = v.Changelog, 
                 Version = v.Version,
@@ -386,5 +397,15 @@ public class ModController(
         });
 
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Returns all versions of a mod with given id.
+    /// </summary>
+    [HttpGet("GetVersionsOfMod/{modId}")]
+    public async Task<IActionResult> GetVersionsOfMod(Guid modId)
+    {
+        var versions = await _modService.GetModVersionsOfModAsync(modId);
+        return Ok(versions);
     }
 }
