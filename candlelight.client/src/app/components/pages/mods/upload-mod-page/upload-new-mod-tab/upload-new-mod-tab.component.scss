@@ -19,7 +19,7 @@
     }
 }
 
-.game-suggestions, .dependency-suggestions {
+.dependency-suggestions {
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -28,8 +28,18 @@
 .game-suggestion, .mod-suggestion {
     display: flex;
     flex-direction: column;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    margin-right: 0.5rem;
+    justify-content: center;
+    align-items: center;
     cursor: pointer 
+    
+    img {
+        width: 10rem;
+        height: 10rem;
+        object-fit: cover;
+        border-radius: 2px;
+    }
 }
 
 .game-name, .mod-name {    
@@ -69,9 +79,10 @@
     display: none;
 }
 
-.image-preview-grid {
+.image-preview-grid, .game-suggestions {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 1rem;
     max-width: 40rem;
     margin-top: 1rem;
@@ -90,4 +101,36 @@
         border-color: #ff8c00;
         box-shadow: 0 0 5px #ff8c00;
     }
+}
+
+::ng-deep mat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+.selected-dependencies-list-item {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.version-select-list .version-option mat-card {
+  background-color: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.version-select-list .version-option mat-card:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.version-select-list .version-option mat-card:hover {
+  border: 1px solid var(--mat-primary);
+  transform: scale(1.01);
 }

@@ -42,13 +42,6 @@ public class ModService(DataContext context)
     public async Task<Mod> AddModAsync(Mod mod)
     {
         await _context.Mods.AddAsync(mod);
-        if (mod.Versions.Count > 0)
-        {
-            foreach (var version in mod.Versions)
-            {
-                await AddModVersionAsync(version);
-            }
-        }
         await _context.SaveChangesAsync();
         return mod;
     }

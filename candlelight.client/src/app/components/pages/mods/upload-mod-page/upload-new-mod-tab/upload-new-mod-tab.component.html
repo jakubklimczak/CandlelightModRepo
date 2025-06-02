@@ -45,17 +45,21 @@
         (click)="selectGame(game)"
         (keyup.enter)="selectGame(game)"
         (keyup.space)="selectGame(game)" >
-            <img class="thumbnail" src="{{ game.headerImage }}" alt="{{ game.name }}"/>
-            <mat-label class="game-name">{{ game.name }}</mat-label>
+            <img class="thumbnail" src="{{ game.isCustom ? 
+                (game.headerImage ? '/custom-covers/' + game.headerImage : 'assets/default.png')
+                : (game.headerImage ? game.headerImage : 'assets/default.png') }}" alt="{{ game.name }}"/>
+            <mat-label class="game-name">{{ game.name | truncate:25 }}</mat-label>
         </div>
     </div>
 
     <div *ngIf="selectedGame" class="selected-game">
         <strong>Selected Game:  {{ selectedGame.name }}</strong>
-        <img [src]="selectedGame.headerImage" alt="Selected Game" />
+        <img [src]="selectedGame.isCustom ? 
+            (selectedGame.headerImage ? '/custom-covers/' + selectedGame.headerImage : 'assets/default.png')
+            : (selectedGame.headerImage ? selectedGame.headerImage : 'assets/default.png')" alt="Selected Game" />
     </div>
-    
-    <mat-form-field appearance="fill">
+
+    <mat-form-field *ngIf="selectedGame" appearance="fill">
         <mat-label>Supported Game Versions (comma-separated)</mat-label>
         <input matInput (blur)="onSupportedVersionsBlur($event)" />
     </mat-form-field>
@@ -67,33 +71,54 @@
             [formControl]="dependencySearchControl"
             placeholder="Search for mods to add as dependencies"
         />
-        </mat-form-field>
+    </mat-form-field>
 
-        <div class="dependency-suggestions" *ngIf="dependencySuggestions.length > 0">
-            <div
-                *ngFor="let mod of dependencySuggestions"
+    <div class="dependency-suggestions" *ngIf="dependencySuggestions.length > 0">
+        <div *ngFor="let mod of dependencySuggestions" class="mod-suggestion-container">
+            <mat-card>
+                <div
                 class="mod-suggestion"
                 role="button"
                 tabindex="0"
                 (click)="addDependency(mod)"
                 (keyup.enter)="addDependency(mod)"
                 (keyup.space)="addDependency(mod)"
-            >
+                >
                 <img class="thumbnail" [src]="mod.thumbnailUrl" alt="{{ mod.name }}" />
                 <mat-label class="mod-name">{{ mod.name }}</mat-label>
-            </div>
-        </div>
+                </div>
+            </mat-card>
 
-    <div class="dependency-list" *ngIf="selectedDependencies.length > 0">
-        <p><strong>Selected Dependencies:</strong></p>
-        <ul>
-            <li *ngFor="let dep of selectedDependencies">
-            {{ dep.name }}
-            <button mat-icon-button type="button" (click)="removeDependency(dep.id)">
-                <mat-icon>close</mat-icon>
-            </button>
-            </li>
-        </ul>
+            <mat-card *ngIf="showVersionSelectForMod === mod.id">
+                <div class="version-select-list">
+                    <div
+                        *ngFor="let version of modVersionOptions"
+                        class="version-option"
+                        role="button"
+                        tabindex="0"
+                        (click)="selectDependencyVersion(version)"
+                        (keyup.enter)="selectDependencyVersion(version)"
+                        (keyup.space)="selectDependencyVersion(version)"
+                    >
+                        <mat-card>
+                            <mat-label>{{ mod.name }} - version: {{ version.version }}</mat-label>
+                        </mat-card>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+
+    <div *ngIf="selectedDependencies && selectedDependencies.length > 0">
+        <mat-label><strong>Selected dependencies:</strong></mat-label>
+        <div *ngFor="let dep of selectedDependencies">
+            <mat-card class="selected-dependencies-list-item">
+                <mat-label>{{ dep.modName }} - version: {{ dep.version }}</mat-label>
+                <button mat-icon-button type="button" (click)="removeDependency(dep.id)">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-card>
+        </div>
     </div>
 
     <mat-form-field class="form-field">
@@ -119,9 +144,9 @@
     hidden
     />
 
-    <div class="select-thumbnail">
-        <mat-label>Select thumbnail for your mod</mat-label>
-        <div class="image-preview-grid" *ngIf="previewImages.length > 0">
+    <div *ngIf="previewImages.length > 0" class="select-thumbnail">
+        <mat-label>Select thumbnail for your mod:</mat-label>
+        <div class="image-preview-grid">
             <div
                 *ngFor="let img of previewImages; let i = index"
                 class="preview-tile"

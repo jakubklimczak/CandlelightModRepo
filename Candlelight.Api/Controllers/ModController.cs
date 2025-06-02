@@ -155,8 +155,8 @@ public class ModController(
             LastUpdatedAt = now
         };
 
-        mod.Versions.Add(version);
         await _modService.AddModAsync(mod);
+        await _modService.AddModVersionAsync(version);
 
         return Ok(new ModUploadResponseDto
         {

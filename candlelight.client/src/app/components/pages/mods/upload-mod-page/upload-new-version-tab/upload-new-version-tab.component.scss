@@ -77,11 +77,6 @@ mat-progress-spinner {
   1px 1px 0 #000;
 }
 
-::ng-deep mat-card {
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-}
-
 ::ng-deep mat-label {
   color: #ff8c00;
 }
@@ -90,6 +85,8 @@ mat-progress-spinner {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
 }
 
 .selected-dependencies-list-item {

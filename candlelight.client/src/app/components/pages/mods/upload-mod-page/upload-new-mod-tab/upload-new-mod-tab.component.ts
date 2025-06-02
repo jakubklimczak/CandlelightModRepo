@@ -6,6 +6,7 @@ import { GameDetailsDto } from '../../../games/models/game-details-dto';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ModsListItemDto } from '../../models/mods-list-item-dto.model';
 import { Router } from '@angular/router';
+import { ModVersion } from '../../models/mod-version.model';
 
 @Component({
   selector: 'app-upload-new-mod-tab',
@@ -20,7 +21,10 @@ export class UploadNewModTabComponent implements OnInit {
   selectedGame: GameDetailsDto | null = null;
   dependencySearchControl = new FormControl('');
   dependencySuggestions: ModsListItemDto[] = [];
-  selectedDependencies: ModsListItemDto[] = [];
+  selectedDependencies: ModVersion[] = [];
+  modVersionOptions: ModVersion[] = [];
+  selectedMod: ModsListItemDto | null = null;
+  showVersionSelectForMod: string | null = null;
   previewImages: { name: string; preview: string }[] = [];
   selectedThumbnail: string | null = null;
   selectedImageFiles: File[] = [];
@@ -154,24 +158,28 @@ export class UploadNewModTabComponent implements OnInit {
   }
 
 
-  public addDependency(mod: { id: string; name: string }): void {
-    if (!this.selectedDependencies.some(d => d.id === mod.id)) {
-      this.selectedDependencies.push({
-        id: mod.id, 
-        name: mod.name,
-        descriptionSnippet: '',
-        thumbnailUrl: '',
-        authorId: '',
-        author: '',
-        lastUpdatedDate: new Date(),
-        totalDownloads: 0,
-        averageRating: 0,
-        totalFavourited: 0,
-        totalReviews: 0
-      });
+  public addDependency(mod: ModsListItemDto): void {
+    this.modVersionOptions = [];
+    this.showVersionSelectForMod = mod.id;
+    this.modsService.getModVersions(mod.id).subscribe({
+      next: versions => {
+        this.modVersionOptions = versions;
+      },
+      error: () => {
+        this.snackBar.open('Failed to load versions.', 'Close', { duration: 3000 });
+        this.showVersionSelectForMod = null;
+      }
+    });
+  }
+
+
+  public selectDependencyVersion(version: ModVersion): void {
+    if (!this.selectedDependencies.some(d => d.id === version.id)) {
+      this.selectedDependencies.push(version);
       this.updateDependencyFormValue();
     }
-    this.dependencySuggestions = [];
+    this.showVersionSelectForMod = null;
+    this.modVersionOptions = [];
     this.dependencySearchControl.setValue('');
   }
 
