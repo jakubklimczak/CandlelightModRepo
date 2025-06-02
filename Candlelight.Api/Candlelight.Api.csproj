@@ -14,12 +14,16 @@
   <ItemGroup>
     <Compile Remove="Entities\**" />
     <Compile Remove="Helpers\**" />
+    <Compile Remove="wwwroot\dist\**" />
     <Content Remove="Entities\**" />
     <Content Remove="Helpers\**" />
+    <Content Remove="wwwroot\dist\**" />
     <EmbeddedResource Remove="Entities\**" />
     <EmbeddedResource Remove="Helpers\**" />
+    <EmbeddedResource Remove="wwwroot\dist\**" />
     <None Remove="Entities\**" />
     <None Remove="Helpers\**" />
+    <None Remove="wwwroot\dist\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,9 +60,9 @@
     <Folder Include="Attributes\" />
     <Folder Include="ModelBinders\" />
     <Folder Include="wwwroot\custom-covers\" />
-    <Folder Include="wwwroot\mod-images\" />
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\mods\" />
+    <Folder Include="wwwroot\mod-images\" />
   </ItemGroup>
 
 </Project>

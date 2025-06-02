@@ -3,7 +3,7 @@
       <div class="mod-main">
         <img [src]="mod.thumbnailUrl" alt="{{ mod.name }}" class="mod-thumb" />
         <div class="mod-details">
-          <h3 class="title">{{ mod.name }}</h3>
+          <h3 class="title">{{ mod.name | truncate:25 }}</h3>
           <strong class="meta">By {{ mod.author }}</strong>
           <p class="meta">Last updated: {{ mod.lastUpdatedDate | date }}</p>
           <p class="meta">Total downloads: {{ mod.totalDownloads }}</p>

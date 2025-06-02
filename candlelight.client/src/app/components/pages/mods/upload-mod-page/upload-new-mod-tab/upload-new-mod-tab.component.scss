@@ -1,0 +1,136 @@
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 40rem;
+    margin: 2rem auto;
+
+    mat-form-field {
+        width: 100%;
+    }
+
+    input[type="file"] {
+        margin-top: 1rem;
+        align-self: center;
+    }
+
+    button {
+        align-self: center;
+    }
+}
+
+.dependency-suggestions {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-suggestion, .mod-suggestion {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    margin-right: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer 
+    
+    img {
+        width: 10rem;
+        height: 10rem;
+        object-fit: cover;
+        border-radius: 2px;
+    }
+}
+
+.game-name, .mod-name {    
+    color: #ff8c00;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.selected-game, .dependency-list, .select-thumbnail {
+    display: flex;
+    flex-direction: column;
+    color: #ff8c00;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.thumbnail {
+    height: 6rem;
+    width: 6rem;
+    border-radius: 0.5rem;
+}
+
+.mod-image {
+    height: 12rem;
+    width: 12rem;
+    border-radius: 0.5rem; 
+    cursor: pointer;
+}
+
+.id-field {
+    display: none;
+}
+
+.image-preview-grid, .game-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    max-width: 40rem;
+    margin-top: 1rem;
+}
+
+.preview-tile {
+    width: 6rem;
+    height: 6rem;
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+
+    &.selected {
+        border-color: #ff8c00;
+        box-shadow: 0 0 5px #ff8c00;
+    }
+}
+
+::ng-deep mat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+.selected-dependencies-list-item {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.version-select-list .version-option mat-card {
+  background-color: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.version-select-list .version-option mat-card:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.version-select-list .version-option mat-card:hover {
+  border: 1px solid var(--mat-primary);
+  transform: scale(1.01);
+}

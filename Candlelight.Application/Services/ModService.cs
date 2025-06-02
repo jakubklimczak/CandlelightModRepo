@@ -15,13 +15,26 @@ public class ModService(DataContext context)
     {
         return await _context.Mods
             .Include(m => m.Game)
+            .Include(m => m.CreatedByUser)
             .FirstOrDefaultAsync(m => m.Id == modId);
     }
+
+
+    public async Task<Mod?> GetModWithVersionsByIdAsync(Guid modId)
+    {
+        return await _context.Mods
+            .Include(m => m.Game)
+            .Include(m => m.CreatedByUser)
+            .Include(m => m.Versions)
+            .FirstOrDefaultAsync(m => m.Id == modId);
+    }
+
 
     public async Task<List<Mod>> GetModsByUserIdAsync(Guid userId)
     {
         return await _context.Mods
             .Include(m => m.Game)
+            .Include(m => m.CreatedByUser)
             .Where(m => m.CreatedBy == userId)
             .ToListAsync();
     }
@@ -29,14 +42,6 @@ public class ModService(DataContext context)
     public async Task<Mod> AddModAsync(Mod mod)
     {
         await _context.Mods.AddAsync(mod);
-        if (mod.Versions.Count > 0)
-        {
-            foreach (var version in mod.Versions)
-            {
-                await AddModVersionAsync(version);
-            }
-            
-        }
         await _context.SaveChangesAsync();
         return mod;
     }
@@ -44,19 +49,47 @@ public class ModService(DataContext context)
     public async Task<ModVersion> AddModVersionAsync(ModVersion modVersion)
     {
         await _context.ModVersions.AddAsync(modVersion);
+        _context.Mods.Update(modVersion.Mod);
         await _context.SaveChangesAsync();
         return modVersion;
     }
 
-    public async Task<(List<Mod> Mods, int TotalCount)> GetModsByGameIdAsync(Guid gameId, int page, int pageSize)
+    public async Task<(List<Mod> Mods, int TotalCount)> GetModsByGameIdAsync(
+        Guid gameId, 
+        int page,
+        int pageSize, 
+        ModsSortingOptions sortBy, 
+        string? searchTerm
+        )
     {
         var query = _context.Mods
+            .Include(m => m.Game)
+            .Include(m => m.CreatedByUser)
             .Where(m => m.GameId == gameId)
-            .OrderByDescending(m => m.CreatedAt);
+            .AsNoTracking();
 
-        var totalCount = await query.CountAsync();
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(m =>
+                m.Name.ToLower().Contains(searchTerm.ToLower()));
+        }
 
-        var mods = await query
+        var sortedQuery = sortBy switch
+        {
+            ModsSortingOptions.Alphabetical => query.OrderBy(m => m.Name),
+            ModsSortingOptions.ReverseAlphabetical => query.OrderByDescending(m => m.Name),
+            ModsSortingOptions.HighestRated => query.OrderByDescending(m => m.Reviews.Average(r => r.Rating)),
+            ModsSortingOptions.LowestRated => query.OrderBy(m => m.Reviews.Average(r => r.Rating)),
+            ModsSortingOptions.MostDownloaded => query.OrderByDescending(m => m.Versions.Sum(v => v.DownloadCount)),
+            ModsSortingOptions.MostFavourited => query.OrderByDescending(m => m.Favourites.Count),
+            ModsSortingOptions.Newest => query.OrderByDescending(m => m.LastUpdatedAt),
+            ModsSortingOptions.Oldest => query.OrderBy(m => m.LastUpdatedAt),
+            _ => query.OrderByDescending(m => m.Reviews.Average(r => r.Rating)),
+        };
+
+        var totalCount = await sortedQuery.CountAsync();
+
+        var mods = await sortedQuery
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -72,6 +105,7 @@ public class ModService(DataContext context)
         var query = _context.Mods
             .Include(m => m.Game)
                 .ThenInclude(g => g.SteamGameDetails)
+            .Include(m => m.CreatedByUser)
             .Include(m => m.Versions)
             .Where(m => m.Game.SteamGameDetails != null && m.Game.SteamGameDetails.AppId == appId);
 
@@ -106,6 +140,7 @@ public class ModService(DataContext context)
     {
         var query = _context.Mods
             .Include(m => m.Versions)
+            .Include(m => m.CreatedByUser)
             .Include(m => m.Game)
                 .ThenInclude(g => g.SteamGameDetails)
             .Include(m => m.Reviews)
@@ -215,5 +250,27 @@ public class ModService(DataContext context)
     public async Task<List<ModFavourite>> GetUserFavouriteModsAsync(Guid userId)
     {
         return await _context.ModFavourites.Where(f => f.UserId == userId).ToListAsync();
+    }
+
+    public async Task<List<ModVersionDto>> GetModVersionsOfModAsync(Guid modId)
+    {
+        var mod = await _context.Mods
+            .Include(m => m.Versions)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(m => m.Id == modId);
+        return mod?.Versions.Select(v => new ModVersionDto
+        {
+            Id = v.Id,
+            ModId = mod.Id,
+            ModName = mod.Name,
+            Version = v.Version,
+            Changelog = v.Changelog,
+            FileUrl = v.FileUrl,
+            CreatedBy = v.CreatedBy,
+            CreatedAt = v.CreatedAt,
+            LastUpdatedAt = v.LastUpdatedAt,
+            SupportedVersions = v.SupportedVersions?.ToList(),
+            Dependencies = v.Dependencies?.ToList()
+        }).ToList() ?? [];
     }
 }

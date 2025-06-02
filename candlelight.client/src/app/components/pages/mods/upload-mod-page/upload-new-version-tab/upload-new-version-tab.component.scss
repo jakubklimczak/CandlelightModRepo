@@ -1,0 +1,114 @@
+.mods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.selected {
+  border: 2px solid var(--accent-color);
+}
+
+.mods-and-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 80rem;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #2e2e2e;
+  border-radius: 0.5rem;
+  margin: auto;
+}
+
+mat-progress-spinner {
+  display: block;
+  margin: 2rem auto;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #2e2e2e;
+  border-radius: 0.5rem;
+  min-width: 60rem;
+  margin: auto;
+  justify-content: center;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  button {
+    align-self: center;
+  }
+}
+
+::ng-deep strong {
+  color: #ff8c00;
+  text-shadow:
+  -1px -1px 0 #000,
+  1px -1px 0 #000,
+  -1px 1px 0 #000,
+  1px 1px 0 #000;
+}
+
+.dependency-suggestions {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.mod-suggestion {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+  cursor: pointer 
+}
+
+.mod-name {    
+  color: #ff8c00;
+  text-shadow:
+  -1px -1px 0 #000,
+  1px -1px 0 #000,
+  -1px 1px 0 #000,
+  1px 1px 0 #000;
+}
+
+::ng-deep mat-label {
+  color: #ff8c00;
+}
+
+::ng-deep mat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+.selected-dependencies-list-item {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.version-select-list .version-option mat-card {
+  background-color: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.version-select-list .version-option mat-card:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.version-select-list .version-option mat-card:hover {
+  border: 1px solid var(--mat-primary);
+  transform: scale(1.01);
+}

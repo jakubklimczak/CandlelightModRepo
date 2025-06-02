@@ -18,11 +18,15 @@ import { FavouriteModsPageComponent } from './components/pages/user-profile/favo
 import { NonLoggedGuard } from './shared/guards/non-logged.guard';
 import { LoggedGuard } from './shared/guards/logged.guard';
 import { EditUserProfilePageComponent } from './components/pages/user-profile/edit-user-profile-page/edit-user-profile-page.component';
+import { TermsOfServicePageComponent } from './components/pages/terms-of-service-page/terms-of-service-page.component';
+import { PrivacyPolicyPageComponent } from './components/pages/privacy-policy-page/privacy-policy-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HeroPageComponent },
   { path: 'about', component: AboutPageComponent },
+  { path: 'terms', component: TermsOfServicePageComponent },
+  { path: 'privacy', component: PrivacyPolicyPageComponent },
   { path: 'login', component: LoginPageComponent, canActivate: [NonLoggedGuard] },
   { path: 'register', component: RegistrationPageComponent, canActivate: [NonLoggedGuard] },
   { path: 'steam-login', component: SteamLoginPageComponent, canActivate: [NonLoggedGuard] },  
@@ -40,7 +44,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: false })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

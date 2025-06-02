@@ -8,6 +8,7 @@ import { FiltersAndOptionsBarComponent } from './components/filters-and-options-
 import { EnumSelectComponent } from './components/enum-select/enum-select.component';
 import { MatSelectModule } from '@angular/material/select';
 import { CamelCaseSpacerPipe } from './pipes/camel-case-spacer.pipe';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { CamelCaseSpacerPipe } from './pipes/camel-case-spacer.pipe';
     FiltersAndOptionsBarComponent, 
     EnumSelectComponent,
     CamelCaseSpacerPipe,
+    TruncatePipe,
   ],
   imports: [
     CommonModule, 
@@ -30,6 +32,7 @@ import { CamelCaseSpacerPipe } from './pipes/camel-case-spacer.pipe';
     FiltersAndOptionsBarComponent,
     EnumSelectComponent,
     CamelCaseSpacerPipe,
+    TruncatePipe,
   ],
 })
 export class SharedModule {}

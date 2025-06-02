@@ -212,10 +212,6 @@ namespace Candlelight.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AuthorUsername")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -245,6 +241,8 @@ namespace Candlelight.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("GameId");
 
@@ -686,11 +684,19 @@ namespace Candlelight.Infrastructure.Migrations
 
             modelBuilder.Entity("Candlelight.Core.Entities.Mod", b =>
                 {
+                    b.HasOne("Candlelight.Core.Entities.AppUser", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Candlelight.Core.Entities.Game", "Game")
                         .WithMany("Mods")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Game");
                 });

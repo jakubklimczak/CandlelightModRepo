@@ -80,7 +80,7 @@ public class UserSocialService(UserManagementService userManagementService, Data
                 Name = f.Mod.Name,
                 DescriptionSnippet = f.Mod.DescriptionSnippet,
                 ThumbnailUrl = f.Mod.ThumbnailUrl,
-                Author = f.Mod.AuthorUsername,
+                Author = f.Mod.CreatedByUser.UserName!,
                 AuthorId = f.CreatedBy,
                 LastUpdatedDate = f.Mod.LastUpdatedAt,
                 TotalDownloads = f.Mod.Versions.Sum(v => v.DownloadCount),
@@ -109,6 +109,7 @@ public class UserSocialService(UserManagementService userManagementService, Data
         if (form.DisplayName != null) profile.DisplayName = form.DisplayName;
         if (form.Bio != null) profile.Bio = form.Bio;
         if (form.BackgroundColour != null) profile.BackgroundColour = form.BackgroundColour;
+        profile.FavouritesVisible = form.FavouritesVisible ?? profile.FavouritesVisible;
 
         if (form.Avatar != null)
         {

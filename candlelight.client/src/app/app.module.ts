@@ -20,6 +20,8 @@ import { ModsModule } from './components/pages/mods/mods.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { authInterceptor } from './shared/services/auth.interceptor';
 import { UserProfileModule } from './components/pages/user-profile/user-profile.module';
+import { PrivacyPolicyPageComponent } from './components/pages/privacy-policy-page/privacy-policy-page.component';
+import { TermsOfServicePageComponent } from './components/pages/terms-of-service-page/terms-of-service-page.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { UserProfileModule } from './components/pages/user-profile/user-profile.
     TopbarComponent,
     FooterComponent,
     AboutPageComponent,
+    PrivacyPolicyPageComponent,
+    TermsOfServicePageComponent,
   ],
   imports: [
     MatToolbarModule,

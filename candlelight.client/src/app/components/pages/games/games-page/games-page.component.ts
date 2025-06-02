@@ -7,6 +7,7 @@ import { GamesSortingOptions } from '../enums/games-sorting-options.enum';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { GameDetailsDto } from '../models/game-details-dto';
+import { AuthTokenService } from '../../../../shared/services/auth-token.service';
 
 @Component({
   selector: 'app-games-page',
@@ -20,15 +21,17 @@ export class GamesPageComponent implements OnInit {
   showOnlyOwned = false;
   showOnlyCustom = false;
   showOnlySteam = false;
+  isLoggedIn = false;
   selectedSortOption = GamesSortingOptions.Alphabetical;
   GamesSortingOption = GamesSortingOptions;
   searchTerm: string | null = '';
   searchControl = new FormControl('');
   
-  constructor(private gameService: GameService) {}
+  constructor(private gameService: GameService, private readonly authTokenService: AuthTokenService) {}
 
   ngOnInit(): void {
     this.loadGames();
+    this.isLoggedIn = this.authTokenService.isLoggedIn();
 
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
@@ -89,11 +92,14 @@ export class GamesPageComponent implements OnInit {
     if (event.checked) {
       this.showOnlyCustom = false;
     }
+    else {
+      this.showOnlyOwned = false;
+    }
     this.loadGames();
   }
 
   public onCustomOnlyToggle(event: MatSlideToggleChange): void {
-    this.showOnlyOwned = event.checked;
+    this.showOnlyCustom = event.checked;
     if (event.checked) {
       this.showOnlySteam = false;
       this.showOnlyOwned = false;

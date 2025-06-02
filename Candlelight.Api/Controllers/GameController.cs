@@ -150,14 +150,30 @@ public class GameController(GameService gameService) : ControllerBase
     /// <summary>
     /// Returns Steam game details by Steam app ID.
     /// </summary>
-    [HttpGet("GetGameFromDb/{appId:int}")]
-    [ActionName("GetGameFromDb")]
-    public async Task<IActionResult> GetGameFromDb(int appId)
+    [HttpGet("GetSteamGameFromDb/{appId:int}")]
+    [ActionName("GetSteamGameFromDb")]
+    public async Task<IActionResult> GetSteamGameFromDb(int appId)
     {
         var game = await _gameService.GetSteamGameDetailsByIdAsync(appId);
         if (game == null)
         {
             return NotFound($"Game with AppId {appId} not found.");
+        }
+
+        return Ok(game);
+    }
+
+    /// <summary>
+    /// Returns Steam game details by Steam app ID.
+    /// </summary>
+    [HttpGet("GetGameFromDb/{id:Guid}")]
+    [ActionName("GetGameFromDb")]
+    public async Task<IActionResult> GetGameFromDb(Guid id)
+    {
+        var game = await _gameService.GetGameByIdAsync(id);
+        if (game == null)
+        {
+            return NotFound($"Game with Id {id} not found.");
         }
 
         return Ok(game);
@@ -208,4 +224,14 @@ public class GameController(GameService gameService) : ControllerBase
         return Ok(game.Id);
     }
 
+    /// <summary>
+    /// Returns the id of the Game that the mod with given id is for
+    /// </summary>
+    [HttpGet("GetGameIdByModId/{id}")]
+
+    public async Task<IActionResult> GetGameIdByModId(Guid id)
+    {
+        var gameId = await _gameService.GetGameIdByModIdAsync(id);
+        return Ok(gameId);
+    }
 }

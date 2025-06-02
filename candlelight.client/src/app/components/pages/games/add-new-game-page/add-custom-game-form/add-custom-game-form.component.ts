@@ -51,7 +51,7 @@ export class AddCustomGameFormComponent {
           duration: 3000,
           panelClass: 'snackbar-success'
         });
-              setTimeout(() => {
+        setTimeout(() => {
         this.router.navigate(['/games', game]);
       }, 1000);
       },

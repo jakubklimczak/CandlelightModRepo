@@ -22,6 +22,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { SharedModule } from '../../../shared/shared.module';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import { SharedModule } from '../../../shared/shared.module';
     MatInputModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatSlideToggleModule,
     ColorPickerModule,
   ],
 })
