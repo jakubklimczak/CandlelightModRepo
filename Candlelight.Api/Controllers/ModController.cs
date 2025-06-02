@@ -296,7 +296,9 @@ public class ModController(
                 CreatedAt = v.CreatedAt,
                 CreatedBy = v.CreatedBy,
                 LastUpdatedAt = v.LastUpdatedAt
-            }).ToList(),
+            })
+                .OrderByDescending(v => v.LastUpdatedAt)
+                .ToList(),
             ThumbnailUrl = mod.ThumbnailUrl,
             CreatedAt = mod.CreatedAt,
             CreatedBy = mod.CreatedBy,
