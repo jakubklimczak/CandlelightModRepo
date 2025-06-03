@@ -16,7 +16,7 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
     private readonly DataContext _dataContext = dataContext;
     private readonly SteamService _steamApiService = steamApiService;
 
-    public async Task<Game?> GetGameByIdAsync(Guid id)
+    public async Task<Game?> GetSteamGameDetailsByIdAsync(Guid id)
     {
         var game = await _dataContext.Games
             .Include(g => g.SteamGameDetails!)
@@ -38,7 +38,7 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
         return mod?.GameId ?? Guid.Empty;
     }
 
-    public async Task<SteamGameDetails?> GetSteamGameDetailsByIdAsync(int appId)
+    public async Task<SteamGameDetails?> GetSteamGameDetailsBySteamAppIdAsync(int appId)
     {
         var game = await _dataContext.SteamGameDetails
             .Include(d => d.Genres)
@@ -242,7 +242,9 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
     {
         try
         {
-            var fav = await _dataContext.GameFavourites.FindAsync(gameId, userId);
+            var fav = await _dataContext.GameFavourites
+                .FirstOrDefaultAsync(f => f.GameId == gameId && f.UserId == userId);
+
             if (fav == null) return false;
 
             _dataContext.GameFavourites.Remove(fav);
@@ -311,8 +313,53 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
         return customGameDetails;
     }
 
-    private static readonly HashSet<string> _allowedImageExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    private static readonly HashSet<string> _allowedImageExtensions =
+        new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ".jpg", ".jpeg", ".png", ".webp", ".gif"
+        };
+
+    public async Task<GameDetailsDto?> GetGameDetailsAsync(Guid id)
     {
-        ".jpg", ".jpeg", ".png", ".webp", ".gif"
-    };
+        var game = await _dataContext.Games
+            .Include(g => g.SteamGameDetails)
+            .Include(g => g.CustomGameDetails)
+            .Include(g => g.Mods)
+            .Include(g => g.Favourites)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(g => g.Id == id);
+
+        if (game == null)
+            return null;
+
+        return new GameDetailsDto
+        {
+            Id = game.Id,
+            Name = game.SteamGameDetails?.Name ?? game.CustomGameDetails?.Name ?? "Unknown",
+            AppId = game.SteamAppId,
+            DescriptionSnippet = game.SteamGameDetails?.ShortDescription ?? game.CustomGameDetails?.Description ?? "",
+            Description = game.SteamGameDetails?.DetailedDescription ?? game.CustomGameDetails?.Description ?? "",
+            HeaderImage = game.SteamGameDetails?.HeaderImage ?? game.CustomGameDetails?.CoverImage ?? "",
+            Developer = game.SteamGameDetails?.Developer ?? game.CustomGameDetails?.Developer ?? "Developer unknown",
+            Publisher = game.SteamGameDetails?.Publisher ?? game.CustomGameDetails?.Publisher ?? "Publisher unknown",
+            IsFree = game.SteamGameDetails?.IsFree,
+            Price = game.SteamGameDetails?.Price,
+            Currency = game.SteamGameDetails?.Currency,
+            MetacriticScore = game.SteamGameDetails?.MetacriticScore,
+            ReleaseDate = game.SteamGameDetails?.ReleaseDate,
+            Website = game.SteamGameDetails?.Website,
+            ModCount = game.Mods.Count,
+            FavouriteCount = game.Favourites.Count,
+            Genres = game.SteamGameDetails?.Genres ?? [],
+            Categories = game.SteamGameDetails?.Categories ?? [],
+            Platforms = game.SteamGameDetails?.Platforms ?? [],
+            IsCustom = game.IsCustom,
+        };
+    }
+
+    public async Task<bool> IsGameFavouritedByUser(Guid gameId, Guid userId)
+    {
+        return await _dataContext.GameFavourites
+            .AnyAsync(f => f.GameId == gameId && f.UserId == userId);
+    }
 }

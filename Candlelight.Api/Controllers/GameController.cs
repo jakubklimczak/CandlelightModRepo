@@ -133,10 +133,10 @@ public class GameController(GameService gameService) : ControllerBase
     /// <summary>
     /// Returns Steam game details by Steam app ID. If it doesn't exist in the database, it attempts to fetch it from Steam and add it.
     /// </summary>
-    [HttpGet("GetGame/{appId:int}")]
+    [HttpGet("GetSteamGameDetailsBySteamAppId/{appId:int}")]
     [ActionName("GetGame")]
-    [Authorize]
-    public async Task<IActionResult> GetGame(int appId, [CurrentUser] AppUser user)
+    [Authorize(Policy = "JwtOnly")]
+    public async Task<IActionResult> GetSteamGameDetailsByAppId(int appId, [CurrentUser] AppUser user)
     {
         var game = await _gameService.GetOrFetchSteamGameDetailsByIdAsync(appId, user.Id);
         if (game == null)
@@ -154,7 +154,7 @@ public class GameController(GameService gameService) : ControllerBase
     [ActionName("GetSteamGameFromDb")]
     public async Task<IActionResult> GetSteamGameFromDb(int appId)
     {
-        var game = await _gameService.GetSteamGameDetailsByIdAsync(appId);
+        var game = await _gameService.GetSteamGameDetailsBySteamAppIdAsync(appId);
         if (game == null)
         {
             return NotFound($"Game with AppId {appId} not found.");
@@ -164,13 +164,13 @@ public class GameController(GameService gameService) : ControllerBase
     }
 
     /// <summary>
-    /// Returns Steam game details by Steam app ID.
+    /// Returns Steam game details by ID.
     /// </summary>
-    [HttpGet("GetGameFromDb/{id:Guid}")]
+    [HttpGet("GetSteamGameDetailsFromDb/{id:Guid}")]
     [ActionName("GetGameFromDb")]
-    public async Task<IActionResult> GetGameFromDb(Guid id)
+    public async Task<IActionResult> GetSteamGameDetailsFromDb(Guid id)
     {
-        var game = await _gameService.GetGameByIdAsync(id);
+        var game = await _gameService.GetSteamGameDetailsByIdAsync(id);
         if (game == null)
         {
             return NotFound($"Game with Id {id} not found.");
@@ -183,7 +183,7 @@ public class GameController(GameService gameService) : ControllerBase
     /// Endpoint that adds a game to current user's favourites.
     /// </summary>
     [HttpPost("{gameId}/Favourite")]
-    [Authorize]
+    [Authorize(Policy = "JwtOnly")]
     public async Task<IActionResult> AddFavourite(Guid gameId, [CurrentUser] AppUser user)
     {
         var userId = user.Id;
@@ -196,7 +196,7 @@ public class GameController(GameService gameService) : ControllerBase
     /// Endpoint that removes a game from current user's favourites.
     /// </summary>
     [HttpDelete("{gameId}/Favourite")]
-    [Authorize]
+    [Authorize(Policy = "JwtOnly")]
     public async Task<IActionResult> RemoveFavourite(Guid gameId, [CurrentUser] AppUser user)
     {
         var userId = user.Id;
@@ -209,7 +209,7 @@ public class GameController(GameService gameService) : ControllerBase
     /// Endpoint for adding custom games to the database.
     /// </summary>
     [HttpPost("AddCustom")]
-    [Authorize]
+    [Authorize(Policy = "JwtOnly")]
     public async Task<IActionResult> AddCustomGame([FromForm] CustomGameDto dto, [CurrentUser] AppUser user, IFormFile? coverImage)
     {
         if (coverImage != null && !coverImage.ContentType.StartsWith("image/"))
@@ -234,4 +234,32 @@ public class GameController(GameService gameService) : ControllerBase
         var gameId = await _gameService.GetGameIdByModIdAsync(id);
         return Ok(gameId);
     }
+
+    /// <summary>
+    /// Returns game details by ID.
+    /// </summary>
+    [HttpGet("GetGameDetails/{id:Guid}")]
+    [ActionName("GetGameDetails")]
+    public async Task<IActionResult> GetGameDetailsFromDb(Guid id)
+    {
+        var game = await _gameService.GetGameDetailsAsync(id);
+        if (game == null)
+        {
+            return NotFound($"Game with Id {id} not found.");
+        }
+
+        return Ok(game);
+    }
+
+    /// <summary>
+    /// Checks if the current user has favourited the game.
+    /// </summary>
+    [HttpGet("{gameId}/IsFavourited")]
+    [Authorize(Policy = "JwtOnly")]
+    public async Task<IActionResult> IsGameFavourited(Guid gameId, [CurrentUser] AppUser user)
+    {
+        var isFavourited = await _gameService.IsGameFavouritedByUser(gameId, user.Id);
+        return Ok(isFavourited);
+    }
+
 }

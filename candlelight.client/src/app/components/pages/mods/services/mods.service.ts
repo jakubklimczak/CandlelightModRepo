@@ -8,7 +8,7 @@ import { ModDetailsDto } from "../models/mod-details-dto.model";
 import { PaginatedQuery } from "../../../../shared/models/paginated-query.model";
 import { ModsSortingOptions } from "../enums/mods-sorting-options.enum";
 import { ModUploadResponseDto } from "../models/mod-upload-response-dto.model";
-import { GameDetailsDto } from "../../games/models/game-details-dto";
+import { GameInfoDto } from "../../games/models/game-info-dto";
 import { GamesSortingOptions } from "../../games/enums/games-sorting-options.enum";
 import { ModVersion } from "../models/mod-version.model";
 
@@ -50,8 +50,8 @@ export class ModsService {
         return this.http.post<ModUploadResponseDto>(`${this.apiUrl}UploadNewModVersion`, formData);
     }
 
-    public searchGames(term: string): Observable<PaginatedResponse<GameDetailsDto>> {
-    return this.http.get<PaginatedResponse<GameDetailsDto>>(`${this.gameApiUrl}GetGamesFromDbPaginatedQuery`, {
+    public searchGames(term: string): Observable<PaginatedResponse<GameInfoDto>> {
+    return this.http.get<PaginatedResponse<GameInfoDto>>(`${this.gameApiUrl}GetGamesFromDbPaginatedQuery`, {
         params: {
             page: 1,
             pageSize: 10,
@@ -61,8 +61,8 @@ export class ModsService {
     });
     }
 
-    public getGameById(id: string): Observable<GameDetailsDto> {
-        return this.http.get<GameDetailsDto>(`${this.gameApiUrl}GetGameFromDb/${id}`);
+    public getGameById(id: string): Observable<GameInfoDto> {
+        return this.http.get<GameInfoDto>(`${this.gameApiUrl}GetGameFromDb/${id}`);
     }
 
     public getGameIdByModId(id: string): Observable<string> {

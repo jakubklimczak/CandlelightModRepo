@@ -1,1 +1,64 @@
-<p>game-details-page works!</p>
+<ng-container *ngIf="!isLoading && game">
+    <h1 class="game-title">
+        <strong>{{ game.name }}</strong>
+        <button
+        *ngIf="showFavouriteButton"
+        mat-icon-button
+        color="warn"
+        aria-label="Favourite"
+        (click)="toggleFavourite()"
+        [disabled]="isFavouriteStatusChanging"
+        >
+            <mat-icon>{{ this.isFavouritedByCurrentUser ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
+    </h1>
+    <img [src]="game.headerImage" alt="{{ game.name }}" class="header-img" />
+
+    <p><strong>Developer:</strong> {{ game.developer }}</p>
+    <p><strong>Publisher:</strong> {{ game.publisher }}</p>
+    <p><strong>Free:</strong> {{ game.isFree ? 'Yes' : 'No' }}</p>
+    <p *ngIf="game.price"><strong>Price:</strong> {{ game.price }} {{ game.currency }}</p>
+    <p *ngIf="game.metacriticScore"><strong>Metacritic:</strong> {{ game.metacriticScore }}</p>
+    <p *ngIf="game.releaseDate"><strong>Release Date:</strong> {{ game.releaseDate | date }}</p>
+    <p><strong>Mods:</strong> {{ game.modCount }}</p>
+    <p><strong>Favourites:</strong> {{ game.favouriteCount }}</p>
+
+    <div *ngIf="game.descriptionSnippet">
+        <h3><strong>Description Snippet</strong></h3>
+        <p>{{ game.descriptionSnippet }}</p>
+    </div>
+
+    <div *ngIf="game.description">
+        <h3><strong>Full Description</strong></h3>
+        <div *ngIf="!game.isCustom" [innerHTML]="game.description" class="game-description"></div>
+        <div *ngIf="game.isCustom" class="game-description">{{game.description}}</div>
+    </div>
+
+    <div *ngIf="game.genres?.length">
+        <strong>Genres:</strong>
+        <span *ngFor="let genre of game.genres; let last = last">
+            {{ genre.name }}<span *ngIf="!last">, </span>
+        </span>
+    </div>
+
+    <div *ngIf="game.categories?.length">
+        <strong>Categories:</strong>
+        <span *ngFor="let cat of game.categories; let last = last">
+            {{ cat.name }}<span *ngIf="!last">, </span>
+        </span>
+    </div>
+
+    <div *ngIf="game.platforms?.length">
+        <strong>Platforms:</strong>
+        <span *ngFor="let platform of game.platforms; let last = last">
+            {{ platform.name }}<span *ngIf="!last">, </span>
+        </span>
+    </div>
+
+    <div *ngIf="game.website">
+        <a [href]="game.website" target="_blank">Official website ({{game.website}})</a>
+        <strong> WARNING: LEADS OUTSIDE. ALWAYS BE CAREFUL WHEN CLICKING LINKS.</strong>
+    </div>
+</ng-container>
+
+<mat-spinner *ngIf="isLoading"></mat-spinner>

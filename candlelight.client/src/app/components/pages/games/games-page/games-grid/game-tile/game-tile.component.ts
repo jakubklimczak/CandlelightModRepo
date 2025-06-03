@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { GameDetailsDto } from '../../../models/game-details-dto';
+import { GameInfoDto } from '../../../models/game-info-dto';
 
 @Component({
   selector: 'app-game-tile',
@@ -8,7 +8,7 @@ import { GameDetailsDto } from '../../../models/game-details-dto';
   styleUrl: './game-tile.component.scss',
 })
 export class GameTileComponent {
-  @Input() game!: GameDetailsDto;
+  @Input() game!: GameInfoDto;
 
   constructor(private router: Router) {}
 
@@ -20,16 +20,14 @@ export class GameTileComponent {
 
   public openDetails(event: MouseEvent): void {
     event.stopPropagation();
-    this.router.navigate(['/games/'], {
-      queryParams: { id: this.game.id }
-    });
+    this.router.navigate(['/games', this.game.id]);
   }
 
-  public getGameName(game: GameDetailsDto): string {
+  public getGameName(game: GameInfoDto): string {
     return game.name ?? 'Name missing!';
   }
 
-  public getGameImage(game: GameDetailsDto): string {
+  public getGameImage(game: GameInfoDto): string {
     return game.isCustom ? 
       (game.headerImage ? '/custom-covers/' + game.headerImage : 'assets/default.png')
       : (game.headerImage ? game.headerImage : 'assets/default.png');

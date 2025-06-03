@@ -6,7 +6,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { GamesSortingOptions } from '../enums/games-sorting-options.enum';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { GameDetailsDto } from '../models/game-details-dto';
+import { GameInfoDto } from '../models/game-info-dto';
 import { AuthTokenService } from '../../../../shared/services/auth-token.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { AuthTokenService } from '../../../../shared/services/auth-token.service
   styleUrl: './games-page.component.scss',
 })
 export class GamesPageComponent implements OnInit {
-  response?: PaginatedResponse<GameDetailsDto>;
+  response?: PaginatedResponse<GameInfoDto>;
   query: PaginatedQuery = { page: 1, pageSize: 50 };
   showOnlyFavourites = false;
   showOnlyOwned = false;
