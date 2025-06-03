@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { GameDetailsDto } from '../../models/game-details-dto';
+import { GameInfoDto } from '../../models/game-info-dto';
 
 @Component({
   selector: 'app-games-grid',
@@ -7,5 +7,5 @@ import { GameDetailsDto } from '../../models/game-details-dto';
   styleUrl: './games-grid.component.scss',
 })
 export class GamesGridComponent {
-  @Input() games: GameDetailsDto[] = [];
+  @Input() games: GameInfoDto[] = [];
 }

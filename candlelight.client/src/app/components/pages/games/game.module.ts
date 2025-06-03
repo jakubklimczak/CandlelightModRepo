@@ -19,6 +19,7 @@ import { RouterModule } from '@angular/router';
 import { AddSteamGameFormComponent } from './add-new-game-page/add-steam-game-form/add-steam-game-form.component';
 import { AddCustomGameFormComponent } from './add-new-game-page/add-custom-game-form/add-custom-game-form.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatTabsModule,
     MatFormFieldModule,
     RouterModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class GamesModule {}

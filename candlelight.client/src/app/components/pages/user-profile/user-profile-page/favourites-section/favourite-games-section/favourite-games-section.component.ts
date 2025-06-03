@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserProfileService } from '../../../services/user-profile.service';
-import { GameDetailsDto } from '../../../../games/models/game-details-dto';
+import { GameInfoDto } from '../../../../games/models/game-info-dto';
 
 @Component({
   selector: 'app-favourite-games-section',
@@ -9,7 +9,7 @@ import { GameDetailsDto } from '../../../../games/models/game-details-dto';
 })
 export class FavouriteGamesSectionComponent implements OnInit {
   @Input() userId!: string;
-  favouriteGames: GameDetailsDto[] = [];
+  favouriteGames: GameInfoDto[] = [];
   visibleRows = 1;
   readonly itemsPerRow = 5;
 
@@ -21,7 +21,7 @@ export class FavouriteGamesSectionComponent implements OnInit {
     });
   }
 
-  get visibleGames(): GameDetailsDto[] {
+  get visibleGames(): GameInfoDto[] {
     return this.favouriteGames.slice(0, this.visibleRows * this.itemsPerRow);
   }
 

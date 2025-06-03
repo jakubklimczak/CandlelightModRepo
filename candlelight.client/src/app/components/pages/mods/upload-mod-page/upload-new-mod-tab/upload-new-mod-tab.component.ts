@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModsService } from '../../services/mods.service';
-import { GameDetailsDto } from '../../../games/models/game-details-dto';
+import { GameInfoDto } from '../../../games/models/game-info-dto';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ModsListItemDto } from '../../models/mods-list-item-dto.model';
 import { Router } from '@angular/router';
@@ -17,8 +17,8 @@ export class UploadNewModTabComponent implements OnInit {
   newModForm: FormGroup;
   selectedFile: File | null = null;
   gameSearchControl = new FormControl('');
-  gameSuggestions: GameDetailsDto[] = [];
-  selectedGame: GameDetailsDto | null = null;
+  gameSuggestions: GameInfoDto[] = [];
+  selectedGame: GameInfoDto | null = null;
   dependencySearchControl = new FormControl('');
   dependencySuggestions: ModsListItemDto[] = [];
   selectedDependencies: ModVersion[] = [];
@@ -130,7 +130,7 @@ export class UploadNewModTabComponent implements OnInit {
     });
   }
 
-  public selectGame(game: GameDetailsDto): void {
+  public selectGame(game: GameInfoDto): void {
     this.newModForm.patchValue({ gameId: game.id });
     this.selectedGame = game;
     this.gameSuggestions = [];

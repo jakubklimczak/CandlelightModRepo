@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { UserProfileDetails } from '../models/user-profile-details.interface';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../../environment';
-import { GameDetailsDto } from '../../games/models/game-details-dto';
+import { GameInfoDto } from '../../games/models/game-info-dto';
 import { ModsListItemDto } from '../../mods/models/mods-list-item-dto.model';
 
 @Injectable({
@@ -26,8 +26,8 @@ export class UserProfileService {
     return this.http.put<void>(`${this.apiUrl}/UserProfile/Update`, formData);
   }
 
-  public getFavouriteGames(userId: string): Observable<GameDetailsDto[]> {
-    return this.http.get<GameDetailsDto[]>(`${this.apiUrl}/FavouriteGames/${userId}`);
+  public getFavouriteGames(userId: string): Observable<GameInfoDto[]> {
+    return this.http.get<GameInfoDto[]>(`${this.apiUrl}/FavouriteGames/${userId}`);
   }
 
   public getFavouriteMods(userId: string): Observable<ModsListItemDto[]> {

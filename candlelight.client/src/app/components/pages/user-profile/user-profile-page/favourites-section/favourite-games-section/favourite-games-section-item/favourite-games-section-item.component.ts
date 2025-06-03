@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { GameDetailsDto } from '../../../../../games/models/game-details-dto';
+import { GameInfoDto } from '../../../../../games/models/game-info-dto';
 
 @Component({
   selector: 'app-favourite-games-section-item',
@@ -8,7 +8,7 @@ import { GameDetailsDto } from '../../../../../games/models/game-details-dto';
   styleUrl: './favourite-games-section-item.component.scss'
 })
 export class FavouriteGamesSectionItemComponent {
-  @Input() game!: GameDetailsDto;
+  @Input() game!: GameInfoDto;
 
   constructor(private router: Router) {}
 
@@ -23,11 +23,11 @@ export class FavouriteGamesSectionItemComponent {
     this.router.navigate(['/games/' + this.game.id]);
   }
 
-  public getGameName(game: GameDetailsDto): string {
+  public getGameName(game: GameInfoDto): string {
     return game.name ?? 'Name missing!';
   }
 
-  public getGameImage(game: GameDetailsDto): string {
+  public getGameImage(game: GameInfoDto): string {
     return game.isCustom ? 
       (game.headerImage ? '/custom-covers/' + game.headerImage : 'assets/default.png')
       : (game.headerImage ? game.headerImage : 'assets/default.png');
