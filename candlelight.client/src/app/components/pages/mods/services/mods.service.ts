@@ -85,4 +85,15 @@ export class ModsService {
         return this.http.get<ModVersion[]>(`${this.apiUrl}GetVersionsOfMod/${modId}`);
     }
 
+    public isModFavourited(modId: string): Observable<boolean> {
+        return this.http.get<boolean>(`${this.apiUrl}${modId}/IsFavourited`);
+    }
+
+    public addModToFavourites(modId: string): Observable<void> {
+        return this.http.post<void>(`${this.apiUrl}${modId}/Favourite`, {});
+    }
+
+    public removeModFromFavourites(modId: string): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}${modId}/Favourite`);
+    }
 }

@@ -7,6 +7,7 @@ public class ModDetailsResponseDto
     public required string AuthorUsername { get; set; }
     public required string Name { get; set; }
     public required string ThumbnailUrl { get; set; }
+    public required List<string> Images { get; set; }
     public required string Description { get; set; }
     public required string GameName { get; set; }
     public required Guid CreatedBy { get; set; }

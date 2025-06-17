@@ -24,7 +24,8 @@ public class GameController(GameService gameService) : ControllerBase
     [HttpGet("GetGamesFromDbPaginatedQuery")]
     [ActionName("GetPaginatedSteamGameDetailsFromDb")]
     public async Task<IActionResult> GetPaginatedSteamGameDetailsFromDb(
-        [FromQuery] PaginatedQuery query, 
+        [FromQuery] PaginatedQuery query,
+        [CurrentUser] AppUser? user,
         [FromQuery] bool showOnlyFavourites,
         [FromQuery] bool showOnlyOwned,
         [FromQuery] bool showOnlySteam,
@@ -33,11 +34,11 @@ public class GameController(GameService gameService) : ControllerBase
         [FromQuery] string? searchTerm = null
         )
     {
-        // TODO: Implement favourite games and owned games
+        // TODO: Implement and owned games
         if (showOnlySteam)
         {
             var (games, totalGames) =
-                await _gameService.GetSteamGameDetailsFromDbAsync(query.Page, query.PageSize, sortBy, searchTerm);
+                await _gameService.GetSteamGameDetailsFromDbAsync(user?.Id, query.Page, query.PageSize, showOnlyFavourites, sortBy, searchTerm);
 
             var mappedGameResults = games.Select(game => new GameListItemDto
             {

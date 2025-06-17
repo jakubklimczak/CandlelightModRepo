@@ -1,0 +1,85 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+
+package "Aplikacja Candlelight" {
+  package "Frontend (Angular)" {
+    package "candlelight.client" {
+      [Pages i Components]
+      [Services]
+      [Akcje użytkownika]
+    }
+  }
+
+  package "Warstwa API (.NET 8)" {
+    package "Candlelight.Api"{
+      [Controllers]
+      [ModelBinders]
+      [Attributes]
+    }
+  }
+
+  package "Logika aplikacji (warstwa aplikacyjna)" {
+    [Candlelight.Application]
+  }
+
+  package "Logika domenowa" {
+    package "Candlelight.Core" {
+      [Entities]
+      [DTOs]
+      [Enums]
+      [Helpers]
+    }
+  }
+
+  package "Infrastruktura i baza danych" {
+    package "Candlelight.Infrastructure" {
+      [Persistence]
+      [EF Core Migrations]
+    }
+
+    package "Baza danych" {
+      [PostgreSQL]
+    }
+  }
+
+  package "Testy" {
+    package "Backend" {
+      [Candlelight.Api.Tests]
+    }
+    package "Frontend" {
+      [pliki \*.spec.ts (candlelight.client)]
+    }
+  }
+}
+
+' Frontend
+[Akcje użytkownika] --> [Pages i Components]
+[Pages i Components] --> [Services]
+[Services] --> [Controllers] : zapytania HTTP (REST)
+
+' API
+[Controllers] --> [Candlelight.Application]
+[Candlelight.Application] --> [DTOs]
+[Candlelight.Application] --> [Entities]
+[Candlelight.Application] --> [Persistence]
+
+' Flow bazodanowy
+[Persistence] --> [EF Core Migrations]
+[EF Core Migrations] --> [PostgreSQL]
+
+' Dodatkowe relacje
+[Controllers] --> [ModelBinders]
+[Controllers] --> [Attributes]
+[Candlelight.Application] --> [Helpers]
+[Entities] --> [Enums]
+
+' Testy
+[Candlelight.Api.Tests] ..> [Controllers] : testy integracyjne
+[Candlelight.Api.Tests] ..> [Candlelight.Application] : testy jednostkowe
+[pliki \*.spec.ts (candlelight.client)] ..> [Pages i Components] : testy jednostkowe
+[Frontend] ..> [Pages i Components] : testy manualne
+[Backend] ..> [Controllers] : testy manualne (Swagger)
+
+
+@enduml

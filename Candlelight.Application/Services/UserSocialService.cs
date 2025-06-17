@@ -1,7 +1,6 @@
 ﻿using Candlelight.Core.Dtos.Game;
 using Candlelight.Core.Dtos.Mod;
 using Candlelight.Core.Dtos.User;
-using Candlelight.Core.Entities;
 using Candlelight.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,6 +54,7 @@ public class UserSocialService(UserManagementService userManagementService, Data
     public async Task<List<GameListItemDto>> GetUserFavouriteGamesAsync(Guid userId)
     {
         return await _context.GameFavourites
+            .Include(f => f.Game)
             .Where(f => f.UserId == userId)
             .Select(f => new GameListItemDto
             {
@@ -73,6 +73,7 @@ public class UserSocialService(UserManagementService userManagementService, Data
     public async Task<List<ModListItemDto>> GetUserFavouriteModsAsync(Guid userId)
     {
         return await _context.ModFavourites
+            .Include(f => f.Mod)
             .Where(f => f.UserId == userId)
             .Select(f => new ModListItemDto
             {

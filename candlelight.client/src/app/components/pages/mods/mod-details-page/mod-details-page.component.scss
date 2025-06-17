@@ -66,3 +66,18 @@ ul {
     }
   }
 }
+
+.mod-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.screenshots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  max-width: 40rem;
+  margin-top: 1rem;
+}

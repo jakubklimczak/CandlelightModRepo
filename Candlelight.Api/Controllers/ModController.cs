@@ -6,6 +6,7 @@ using Candlelight.Core.Entities;
 using Candlelight.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Candlelight.Api.Controllers;
 
@@ -29,10 +30,11 @@ public class ModController(
         [FromQuery] bool showOnlyFavourites, 
         [FromQuery] Guid gameId,
         [FromQuery] ModsSortingOptions sortBy,
+        [CurrentUser] AppUser? user,
         [FromQuery] string? searchTerm = null
         )
     {
-        var (mods, totalCount) = await _modService.GetModsByGameIdAsync(gameId, query.Page, query.PageSize, sortBy, searchTerm);
+        var (mods, totalCount) = await _modService.GetModsByGameIdAsync(gameId, user.Id, query.Page, query.PageSize, sortBy, showOnlyFavourites, searchTerm);
 
         var result = new PaginatedResponse<ModListItemDto>
         {
@@ -263,7 +265,6 @@ public class ModController(
         return Ok(result);
     }
 
-    //TODO: update to new structure
     /// <summary>
     /// Returns details for a specified modification.
     /// </summary>
@@ -277,6 +278,8 @@ public class ModController(
             return BadRequest($"Mod with id {modId} doesn\'t exist.");
         }
 
+        var imagePaths = ModService.GetModImagePaths(modId);
+
         var result = new ModDetailsResponseDto()
         {
             Id = mod.Id,
@@ -284,7 +287,7 @@ public class ModController(
             AuthorUsername = mod.CreatedByUser.UserName!,
             Description = mod.Description,
             Name = mod.Name,
-            GameName = mod.Game.SteamGameDetails != null ? mod.Game.SteamGameDetails.Name : "",
+            GameName = mod.Game.SteamGameDetails?.Name ?? mod.Game.CustomGameDetails?.Name ?? "(No name found)",
             Versions = mod.Versions.Select(v => new ModVersionDto()
             {
                 Id = v.Id,
@@ -300,12 +303,13 @@ public class ModController(
                 .OrderByDescending(v => v.LastUpdatedAt)
                 .ToList(),
             ThumbnailUrl = mod.ThumbnailUrl,
+            Images = imagePaths,
             CreatedAt = mod.CreatedAt,
             CreatedBy = mod.CreatedBy,
             LastUpdatedAt = mod.LastUpdatedAt,
             AverageRating = mod.Reviews?.Any() == true ? mod.Reviews.Average(r => r.Rating) : 0,
             ReviewCount = mod.Reviews?.Count ?? 0,
-            FavouriteCount = mod.Favourites.Count 
+            FavouriteCount = mod.Favourites?.Count ?? 0,
         };
 
         return Ok(result);
@@ -409,5 +413,16 @@ public class ModController(
     {
         var versions = await _modService.GetModVersionsOfModAsync(modId);
         return Ok(versions);
+    }
+
+    /// <summary>
+    /// Checks if the current user has favourited the mod.
+    /// </summary>
+    [HttpGet("{modId}/IsFavourited")]
+    [Authorize(Policy = "JwtOnly")]
+    public async Task<IActionResult> IsModFavourited(Guid modId, [CurrentUser] AppUser user)
+    {
+        var isFavourited = await _modService.IsModFavouritedByUser(modId, user.Id);
+        return Ok(isFavourited);
     }
 }

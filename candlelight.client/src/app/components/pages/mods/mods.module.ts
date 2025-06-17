@@ -17,7 +17,7 @@ import { UploadModPageComponent } from './upload-mod-page/upload-mod-page.compon
 import { UploadNewModTabComponent } from './upload-mod-page/upload-new-mod-tab/upload-new-mod-tab.component';
 import { UploadNewVersionTabComponent } from './upload-mod-page/upload-new-version-tab/upload-new-version-tab.component';
 import { MatTabsModule } from "@angular/material/tabs";
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { UploadSectionModsListItemComponent } from './upload-mod-page/upload-new-version-tab/upload-section-mods-list-item/upload-section-mods-list-item.component';
 
 @NgModule({
@@ -44,7 +44,7 @@ import { UploadSectionModsListItemComponent } from './upload-mod-page/upload-new
     FormsModule,
     ReactiveFormsModule,
     MatTabsModule,
-    MatProgressSpinner,
+    MatProgressSpinnerModule,
   ],
 })
 export class ModsModule {}

@@ -91,7 +91,14 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
         return steamGameDetails;
     }
 
-    public async Task<(List<SteamGameDetails> Games, int TotalCount)> GetSteamGameDetailsFromDbAsync(int page, int pageSize, GamesSortingOptions sortBy, string? searchTerm)
+    public async Task<(List<SteamGameDetails> Games, int TotalCount)> GetSteamGameDetailsFromDbAsync(
+        Guid? userId,
+        int page, 
+        int pageSize, 
+        bool favouriteOnly, 
+        GamesSortingOptions sortBy, 
+        string? searchTerm
+        )
     {
         if (page < 1) page = 1;
         if (pageSize < 1) pageSize = 10;
@@ -103,6 +110,14 @@ public class GameService(DataContext dataContext, SteamService steamApiService)
             .Include(d => d.Game)
                 .ThenInclude(g => g.Favourites)
             .AsNoTracking();
+
+        if (favouriteOnly && userId != null)
+        {
+            var favouriteGames = _dataContext.GameFavourites
+                .Where(f => f.UserId == userId)
+                .Select(f => f.GameId);
+            query = query.Where(m => favouriteGames.Contains(m.Id));
+        }
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {

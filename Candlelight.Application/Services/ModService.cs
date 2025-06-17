@@ -56,9 +56,11 @@ public class ModService(DataContext context)
 
     public async Task<(List<Mod> Mods, int TotalCount)> GetModsByGameIdAsync(
         Guid gameId, 
+        Guid? userId,
         int page,
         int pageSize, 
         ModsSortingOptions sortBy, 
+        bool showOnlyFavourites,
         string? searchTerm
         )
     {
@@ -67,6 +69,15 @@ public class ModService(DataContext context)
             .Include(m => m.CreatedByUser)
             .Where(m => m.GameId == gameId)
             .AsNoTracking();
+
+        if (showOnlyFavourites && userId != null)
+        {
+            var userFavourites = _context.ModFavourites
+                .Where(f => f.UserId == userId)
+                .AsNoTracking()
+                .Select(f => f.ModId);
+            query = query.Where(m => userFavourites.Contains(m.Id));
+        }
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
@@ -143,9 +154,12 @@ public class ModService(DataContext context)
             .Include(m => m.CreatedByUser)
             .Include(m => m.Game)
                 .ThenInclude(g => g.SteamGameDetails)
+            .Include(m => m.Game)
+                .ThenInclude(g => g.CustomGameDetails)
             .Include(m => m.Reviews)
             .Include(m => m.Favourites)
-            .Where(m => m.Id == modId);
+            .Where(m => m.Id == modId)
+            .AsNoTracking();
 
         var mod = await query.FirstOrDefaultAsync();
 
@@ -187,7 +201,10 @@ public class ModService(DataContext context)
     {
         try
         {
-            var fav = await _context.ModFavourites.FindAsync(modId, userId);
+            var fav = await _context.ModFavourites
+                .Where(f => f.ModId == modId && f.UserId == userId)
+                .FirstOrDefaultAsync();
+
             if (fav == null) return false;
 
             _context.ModFavourites.Remove(fav);
@@ -272,5 +289,24 @@ public class ModService(DataContext context)
             SupportedVersions = v.SupportedVersions?.ToList(),
             Dependencies = v.Dependencies?.ToList()
         }).ToList() ?? [];
+    }
+
+    public static List<string> GetModImagePaths(Guid modId)
+    {
+        var dir = Path.Combine("wwwroot", "mod-images", modId.ToString());
+        if (!Directory.Exists(dir))
+            return [];
+
+        var files = Directory.GetFiles(dir)
+            .Select(f => $"/mod-images/{modId}/{Path.GetFileName(f)}")
+            .ToList();
+
+        return files;
+    }
+
+    public async Task<bool> IsModFavouritedByUser(Guid modId, Guid userId)
+    {
+        return await _context.ModFavourites
+            .AnyAsync(f => f.ModId == modId && f.UserId == userId);
     }
 }

@@ -12,4 +12,8 @@ export interface ModDetailsDto {
     createdBy: string;
     lastUpdatedAt: Date;
     createdAt: Date;
+    favouriteCount: number;
+    downloadCount?: number;
+    averageRating: number;
+    images: string[];
 }

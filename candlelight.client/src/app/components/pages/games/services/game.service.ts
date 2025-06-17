@@ -58,6 +58,6 @@ export class GameService {
   }
 
   public isGameFavourited(gameId: string): Observable<boolean> {
-    return this.http.get<boolean>(`/api/Game/${gameId}/IsFavourited`);
+    return this.http.get<boolean>(`${this.apiUrl}${gameId}/IsFavourited`);
   }
 }

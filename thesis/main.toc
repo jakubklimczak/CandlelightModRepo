@@ -1,0 +1,112 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {polish}{}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {1}Wprowadzenie}{3}{chapter.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.1}Przedmowa}{3}{section.1.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.2}Inspiracja}{3}{section.1.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.3}Cel oraz zakres pracy}{4}{section.1.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.4}Konkurencyjne rozwiązania}{4}{section.1.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {2}Podstawy teoretyczne wybranych technologii}{5}{chapter.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.1}Używane IDE oraz ich rozszerzenia}{5}{section.2.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.1.1}Visual Studio 2022}{6}{subsection.2.1.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.1.2}Visual Studio Code}{6}{subsection.2.1.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.2}PostgreSQL}{7}{section.2.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.3}.NET oraz Entity Framework}{7}{section.2.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.3.1}.NET 8}{8}{subsection.2.3.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.3.2}EF Core 8 oraz Npgsql}{8}{subsection.2.3.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.4}Biblioteki backendowe}{9}{section.2.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.4.1}SpaProxy}{9}{subsection.2.4.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.4.2}Steam OpenID}{9}{subsection.2.4.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.5}Typescript i Angular}{9}{section.2.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.5.1}TypeScript}{9}{subsection.2.5.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.5.2}Angular}{10}{subsection.2.5.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.6}Znaczące biblioteki frontendowe}{10}{section.2.6}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.6.1}RxJS}{10}{subsection.2.6.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.6.2}Angular Material}{11}{subsection.2.6.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.7}Linting kodu i zapobieganie code smellowi}{11}{section.2.7}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.7.1}GitHub Actions}{11}{subsection.2.7.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.7.2}ESLint}{11}{subsection.2.7.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.7.3}Prettier}{11}{subsection.2.7.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.7.4}ReSharper}{11}{subsection.2.7.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.7.5}SonarQube}{11}{subsection.2.7.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.8}Biblioteki testowe}{11}{section.2.8}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.8.1}Karma Jasmine}{11}{subsection.2.8.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.8.2}NUnit}{11}{subsection.2.8.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.8.3}Moq}{11}{subsection.2.8.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.8.4}Coverlet}{11}{subsection.2.8.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {3}Architektura projektu}{13}{chapter.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Struktura warstwy API}{14}{section*.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Struktura warstwy aplikacyjnej}{14}{section*.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Warstwa dostępu do danych}{14}{section*.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Warstwa domenowa}{14}{section*.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Frontend}{14}{section*.6}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Testy jednostkowe}{15}{section*.7}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Zarządzanie konfiguracją i CI/CD}{15}{section*.8}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Zasoby statyczne backendu}{15}{section*.9}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {4}Implementacja funkcjonalności aplikacji}{17}{chapter.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.1}Obsługa autoryzacji użytkownika}{17}{section.4.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.2}Zarządzanie profilem użytkownika}{17}{section.4.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.3}Funkcjonalności związane z grami}{17}{section.4.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.4}Funkcjonalności związane z modyfikacjami}{17}{section.4.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.4.1}Przesyłanie modyfikacji oraz ich wersji}{17}{subsection.4.4.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.4.2}Lista modyfikacji dla gry}{17}{subsection.4.4.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.5}Strona główna oraz UX aplikacji}{17}{section.4.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.6}Integracje z zewnętrznymi serwisami}{17}{section.4.6}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {5}Podsumowanie projektu}{19}{chapter.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.1}Trudności i wyzwania}{19}{section.5.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.2}Wnioski z projektu}{19}{section.5.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.3}Potencjalne kierunki rozwoju projektu}{19}{section.5.3}%
