@@ -14,6 +14,7 @@
 \usepackage{fancyhdr}
 \usepackage{listings}
 \usepackage{adjustbox}
+\usepackage{caption}
 
 
 \usepackage[natbib=true,backend=bibtex,maxbibnames=99]{biblatex}
@@ -154,7 +155,7 @@ Wybrałem \textit{Visual Studio Code} do pisania frontendu zamiast pisać wszyst
 
 W projekcie \textit{PostgreSQL} służył jako główna baza danych zarówno dla danych użytkowników, jak i przechowywanych danych dotyczących między innymi modów, gier, ocen. Do zarządzania bazą danych i jej strukturą wykorzystywałem migracje \textit{EF Core}, natomiast w przypadkach wymagających ręcznego podejrzenia danych, edycji czy debugowania — posługiwałem się narzędziem \textit{pgAdmin4}.
 
-\textit{PostgreSQL} został wybrany jako system bazodanowy przede wszystkim dlatego, że należy do najpopularniejszych technologii tego typu, co w świecie IT przekłada się na długowieczność projektu, lepsze wsparcie i dużą dostępność zasobów edukacyjnych. Jego pełna zgodność z \textit{Entity Framework Core} dzięki stabilnemu i rozwijanemu providerowi \textit{Npgsql} \cite{npgsql2025} pozwoliła na płynną integrację z backendem opartym o \textit{.NET 8}. \textit{PostgreSQL} oferuje również wsparcie dla zaawansowanych typów danych, takich jak \textit{uuid} czy tablice, które okazały się przydatne przy modelowaniu struktur takich jak listy wersji, zależności czy metadane modów. Istotnym czynnikiem była także wysoka wydajność zapytań — nawet przy pracy z dużymi kolekcjami danych, jak np. statystyki pobrań, oceny czy liczby ulubionych modyfikacji.
+\textit{PostgreSQL} został wybrany jako system bazodanowy przede wszystkim dlatego, że należy do najpopularniejszych technologii tego typu (według zeszłorocznej ankiety StackOverflow \cite{stackoverflow2024survey} używany przez aż 51.9\% profesjonalnych developerów), co w świecie IT przekłada się na długowieczność projektu, lepsze wsparcie i dużą dostępność zasobów edukacyjnych. Jego pełna zgodność z \textit{Entity Framework Core} dzięki stabilnemu i rozwijanemu providerowi \textit{Npgsql} \cite{npgsql2025} pozwoliła na płynną integrację z backendem opartym o \textit{.NET 8}. \textit{PostgreSQL} oferuje również wsparcie dla zaawansowanych typów danych, takich jak \textit{uuid} czy tablice, które okazały się przydatne przy modelowaniu struktur takich jak listy wersji, zależności czy metadane modów. Istotnym czynnikiem była także wysoka wydajność zapytań — nawet przy pracy z dużymi kolekcjami danych, jak np. statystyki pobrań, oceny czy liczby ulubionych modyfikacji.
 
 \section{.NET oraz Entity Framework}
 
@@ -184,6 +185,11 @@ Zastosowanie \textit{SpaProxy} znacząco usprawniło i przyspieszyło pracę dew
 W celu uwierzytelniania użytkowników za pomocą platformy Steam wykorzystałem protokół \textit{OpenID} w implementacji biblioteki \texttt{AspNet.Security.OpenId.Steam} \cite{steamopenid2025}. Pozwala ona na łatwe zintegrowanie logowania kontem Steam, co w kontekście repozytorium modów gier stanowi bardzo intuicyjne i wygodne rozwiązanie dla użytkowników końcowych.
 
 Biblioteka ta obsługuje cały proces przekierowania do Steam, autoryzacji użytkownika oraz zwrócenia unikalnego identyfikatora konta Steam (SteamID), który może być dalej przechowywany w bazie danych i kojarzony z kontem w aplikacji. Była ona więc idealnym dopasowaniem do moich potrzeb.
+
+\subsection{Swagger i dokumentacja API}
+W projekcie wykorzystałem bibliotekę \texttt{Swashbuckle.AspNetCore}, która integruje framework \textit{Swagger} z aplikacjami opartymi o \textit{ASP.NET Core}. Swagger pozwala na automatyczne generowanie dokumentacji REST API na podstawie atrybutów kontrolerów oraz definicji modeli danych. Wygenerowana dokumentacja dostępna jest w formacie \textit{OpenAPI}\cite{swaggerdocs2025}.Dzięki zastosowaniu Swaggera możliwe było nie tylko wygodne testowanie endpointów podczas pracy deweloperskiej (przy pomocy interaktywnego interfejsu \textit{Swagger UI}), ale również zwiększenie przejrzystości i łatwości w integracji systemu z potencjalnymi zewnętrznymi usługami. Dokumentacja dostępna jest domyślnie pod ścieżką \texttt{/swagger}, a jej struktura aktualizuje się automatycznie wraz z wprowadzaniem zmian w kodzie.
+
+Swagger wspiera dodatkowo opisywanie parametrów, odpowiedzi oraz statusów HTTP za pomocą atrybutów, takich jak \texttt{[ProducesResponseType]}, \texttt{[FromQuery]}, czy \texttt{/// <summary>}. Umożliwia to tworzenie kompletnej, aktualnej i łatwej do utrzymania dokumentacji API bez potrzeby pisania jej ręcznie.
 
 \section{Typescript i Angular}
 
@@ -232,38 +238,61 @@ W projekcie \textit{RxJS} był niezwykle przydatnym narzędziem w takich miejsca
 Zaletą \textit{Angular Material} jest responsywność komponentów oraz ich dobra integracja z tematami kolorystycznymi, co pozwoliło mi na spójny i wygodny UI.
 
 \section{Linting kodu i zapobieganie code smellowi}
+W celu zachowania wysokiej jakości kodu źródłowego oraz unikania powstawania tak zwanemu \textit{code smell}owi (czyli wzorców prowadzących do potencjalnych błędów lub utrudniających rozwój projektu), a także aby zachować branżowe standardy, w projekcie zastosowałem kilka narzędzi wspierających automatyczną analizę kodu oraz jego formatowanie.
 
 \subsection{GitHub Actions}
+Do automatyzacji procesu sprawdzania jakości kodu wykorzystałem mechanizm \textit{GitHub Actions} \cite{githubactions2025}. Pozwala on na definiowanie tak zwanego workflow - zadań uruchamianych automatycznie przy określonych zdarzeniach (na przykład push, pull request). Dzięki temu możliwe było automatyczne uruchamianie analizy lintingu i testów jednostkowych przy każdej zmianie w kodzie, co pomaga w szybkim wykrywaniu błędów oraz zapewnia spójność kodu w całym zespole.
+
+W przypadku Candlelight, automatycznie uruchamiany jest linting frontendu i testy zarówno frontendu jak i backendu przy każdym pushu i pull requeście.
+
+\cite{githubactions2025}
 
 \subsection{ESLint}
 
+\cite{eslintdocs2025}
+
 \subsection{Prettier}
+
+\cite{prettierdocs2025}
 
 \subsection{ReSharper}
 
+\cite{resharper2025}
+
 \subsection{SonarQube}
+
+\cite{sonarqube2025vs}
 
 \section{Biblioteki testowe}
 
 \subsection{Karma Jasmine}
 
+\cite{karmarunner2025}
+
 \subsection{NUnit}
+
+\cite{nunit2025}
 
 \subsection{Moq}
 
+\cite{moqquickstart2025}
+
 \subsection{Coverlet}
+//TODO - consider if not remove
+\cite{}
 
 \chapter{Architektura projektu}
 
 \begin{center}
-  \includegraphics[width=\textwidth, height=0.70\textheight, keepaspectratio]{figures/app-structure.png}  
+    \includegraphics[width=\textwidth, height=0.70\textheight, keepaspectratio]{figures/app-structure.png}  
+    \captionof{figure}{Struktura warstwowa aplikacji Candlelight}
 \end{center}
 
 Struktura projektu została zaprojektowana w duchu architektury wielowarstwowej, umożliwiającej jasny podział odpowiedzialności oraz łatwą skalowalność i utrzymanie kodu. Poniżej przedstawiono główne warstwy i komponenty systemu.
 
 
 \subsubsection{Struktura warstwy API}
-Projekt \texttt{Candlelight.Api} odpowiada za obsługę zapytań HTTP, pełniąc rolę kontrolera dostępowego do logiki aplikacji. Znajdują się tu kontrolery (\texttt{Controllers}), atrybuty do walidacji (\texttt{Attributes}), customowe \texttt{ModelBinders} i pliki statyczne w katalogu \texttt{wwwroot}.
+Projekt \texttt{Candlelight.Api} odpowiada za obsługę zapytań HTTP, pełniąc rolę kontrolera dostępowego do logiki aplikacji. Znajdują się tu kontrolery (\texttt{Controllers}), atrybuty do walidacji (\texttt{Attributes}), customowe \texttt{ModelBinders} i pliki statyczne w katalogu \texttt{wwwroot}. API aplikacji Candlelight korzysta z architektury REST (Representational State Transfer), co oznacza, że komunikacja z klientem odbywa się za pomocą standardowych metod protokołu HTTP (GET, POST, PUT, DELETE), a zasoby aplikacji są identyfikowane poprzez unikalne URI i reprezentowane w formacie JSON, zapewniając czytelność, skalowalność oraz łatwość integracji z frontendem i innymi usługami. Została ona zaimplementowana przy użyciu frameworka ASP.NET Core, który umożliwia tworzenie kontrolerów, routingu oraz automatyczną serializację i deserializację danych JSON
 
 \subsubsection{Struktura warstwy aplikacyjnej}
 Projekt \texttt{Candlelight.Application} zawiera logikę biznesową aplikacji. Moduł \texttt{Services} zawiera serwisy odpowiadające za operacje na grach, modach i użytkownikach. Jest to warstwa pośrednia między API a infrastrukturą.
@@ -288,6 +317,30 @@ Frontend znajduje się w katalogu \texttt{candlelight.client} i został zbudowan
 
 Struktura ta wspiera modularność oraz umożliwia łatwe dodawanie nowych komponentów.
 
+\paragraph{Struktura logiki frontendowej - autentykacja użytkowników}
+\begin{center}
+    \includegraphics[width=\textwidth]{figures/frontend-auth-structure.png}
+    \captionof{figure}{Diagram struktury logiki frontendowej dotyczącej autentykacji użytkowników}
+\end{center}
+
+\paragraph{Struktura logiki frontendowej - Games}
+\begin{center}
+    \includegraphics[width=\textwidth]{figures/frontend-games-structure.png}
+    \captionof{figure}{Diagram struktury logiki frontendowej dotyczącej gier}
+\end{center}
+
+\paragraph{Struktura logiki frontendowej - Mods}
+\begin{center}
+    \includegraphics[width=\textwidth]{figures/frontend-mods-structure.png}
+    \captionof{figure}{Diagram struktury logiki frontendowej dotyczącej modyfikacji}
+\end{center}
+
+\paragraph{Struktura logiki frontendowej - User Profile}
+\begin{center}
+    \includegraphics[width=\textwidth]{figures/frontend-user-profile-structure.png}
+    \captionof{figure}{Diagram struktury logiki frontendowej dotyczącej profili użytkowników}
+\end{center}
+
 \subsubsection{Testy jednostkowe}
 Projekt \texttt{Candlelight.Api.Tests} zawiera testy jednostkowe dla backendu. Testy te wykorzystują frameworki \texttt{xUnit} i \texttt{Moq}, umożliwiając weryfikację poprawności działania serwisów i kontrolerów w izolacji. Dodatkowo podczas pracy nad kodem wykonywałem regularne testy manualne (często przy użycia \textit{Swagger}a).
 
@@ -303,6 +356,109 @@ W katalogu \texttt{wwwroot} znajdują się zasoby statyczne służące do przech
 
 \section{Obsługa autoryzacji użytkownika}
 
+\subsection{Endpointy związane z autoryzacją użytkownika}
+\begin{center}
+    \includegraphics[width=\textwidth, keepaspectratio]{figures/swagger-user-access.png}
+    \captionof{figure}{Sekcja w Swaggerze pokazująca endpointy w kontrolerze UserAccess}    
+\end{center}
+
+\subsection{Rejestracja przy pomocy formularza}
+\begin{lstlisting}[caption=Kontroler UserAccessController: endpoint SendRegisterForm, label=lst:sendregisterform]
+    /// <summary>
+    /// Registers a user with a Candlelight account.
+    /// </summary>
+    [HttpPost]
+    [ActionName("SendRegisterForm")]
+    [Route("SendRegistrationForm")]
+    public async Task<IActionResult> PostAsync([FromBody] RegistrationForm form)
+    {
+        try
+        {
+            if (!AuthenticationService.IsRegistrationFormValid(form))
+            {
+                return BadRequest("Data model is invalid.");
+            }
+
+            var user = await _authenticationService.RegisterUser(form);
+            return Ok(new {id = user.Id });
+        }
+        catch (Exception ex) 
+        { 
+            return StatusCode(500, new { error = "Internal Server Error", details = ex.Message }); 
+        }
+    }
+\end{lstlisting}
+
+Endpoint \texttt{SendRegisterForm} \ref{lst:sendregisterform} realizuje rejestrację użytkownika przy pomocy wypełnionego przez użytkownika formularza do rejestracji. Formularz ten składa się z 4 elementów typu \texttt{string} - UserName (nazwa użytkownika), Email, Password i ConfirmPassword (hasło oraz jego kopia, która powinna być identyczna). Walidacja polega na sprawdzeniu, czy:
+
+\begin{itemize}
+    \item email jest poprawny (wykorzystywany jest do tego \texttt{EmailHelper}, który korzysta z \texttt{EmailAddressAttribute} zaczerpnięty z \texttt{System.ComponentModel.DataAnnotations})
+    \item hasło nie jest za krótkie oraz czy jest one identyczne jak \texttt{string} ConfirmPassword
+    \item nazwa użytkownika jest między sześcioma a trzydziestoma znakami
+    \item żaden z powyższych \texttt{string}ów nie jest pusty.
+\end{itemize}
+
+\subsection{Logowanie przy pomocy emaila oraz hasła}
+
+\begin{lstlisting}[caption=Kontroler UserAccessController: endpoint SendLoginForm, label=lst:sendloginform]
+    /// <summary>
+    /// Logs in the user with their Candlelight account.
+    /// </summary>
+    [HttpPost]
+    [Route("SendLoginForm")]
+    [ActionName("SendLoginForm")]
+    public async Task<IActionResult> PostAsync([FromBody] LoginForm form)
+    {
+        try
+        {
+            if (!AuthenticationService.IsLoginFormValid(form))
+            {
+                return BadRequest("Data model is invalid.");
+            }
+            var result = await _authenticationService.AttemptLogin(form);
+            if (result == null)
+            {
+                return Unauthorized(form);
+            }
+            var token = _authenticationService.GenerateJwtToken(result);
+            return Ok(new { Token = token });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = "Internal Server Error", details = ex.Message });
+        }
+    }
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Serwis AuthenticationService: metoda GenerateJwtToken, label=lst:generatejwttoken]
+    public string GenerateJwtToken(AppUser user)
+    {
+         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
+         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        
+         var claims = new[]
+         {
+             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+             new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+         };
+        
+         var token = new JwtSecurityToken(
+             _issuer,
+             _audience,
+             claims,
+             expires: DateTime.UtcNow.AddHours(2),
+             signingCredentials: credentials
+         );
+        
+         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+\end{lstlisting}
+
+Powyższy fragment kodu \ref{lst:sendloginform} przedstawia implementację endpointu logowania użytkownika do aplikacji Candlelight za pomocą emaila oraz hasła. Korzysta on z serwisu AuthenticationService aby zweryfikować przesłane dane a następnie zalogować użytkownika i zwrócić token JWT. W aplikacji Candlelight token JWT jest używany do uwierzytelniania użytkownika przy każdym kolejnym żądaniu do zabezpieczonych zasobów API, zapewniając tym samym mechanizm sesji bezstanowej oraz kontrolę dostępu do danych zgodnie z tożsamością zalogowanego użytkownika
+
+
+
 \section{Zarządzanie profilem użytkownika}
 
 \section{Funkcjonalności związane z grami}
@@ -315,7 +471,28 @@ W katalogu \texttt{wwwroot} znajdują się zasoby statyczne służące do przech
 
 \section{Strona główna oraz UX aplikacji}
 
+\begin{center}
+    \includegraphics[width=\textwidth, keepaspectratio]{figures/candlelight-frontpage.png}
+\end{center}
+
+
+
 \section{Integracje z zewnętrznymi serwisami}
+\subsection{Steam}
+\subsubsection{Rejestracja oraz logowanie za pomocą konta Steam}
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\subsection{Google Fonts}
+
+Interfejs użytkownika aplikacji korzysta z biblioteki Angular Material \cite{angularmaterial2025}, która domyślnie integruje się z usługą Google Fonts (CDN Google Fonts \nolinkurl{fonts.googleapis.com}, \nolinkurl{fonts.gstatic.com})  w celu ładowania czcionki Roboto \cite{roboto2025} oraz zestawu ikon Material Icons \cite{materialicons2025}. Dzięki temu możliwe było uzyskanie spójnego i nowoczesnego wyglądu aplikacji przy minimalnym nakładzie konfiguracji.
+
+Alternatywą dla ładowania czcionek i ikon z Google Fonts jest ich lokalne hostowanie w katalogu statycznym aplikacji oraz ręczne dołączenie ich za pomocą reguł @font-face w plikach stylów. Takie rozwiązanie pozwala uniknąć zależności od zewnętrznych serwerów oraz może być wymagane w środowiskach z ograniczonym dostępem do Internetu (intranety, sieci zamknięte).
+
+W przypadku projektu Candlelight nie było konieczności stosowania lokalnej wersji, ponieważ aplikacja nie przetwarza danych szczególnie wrażliwych na poziomie frontendowym, środowisko produkcyjne nie ogranicza połączeń z Internetem, a korzystanie z CDN Google Fonts zapewnia lepszą wydajność dzięki globalnej dystrybucji oraz umożliwia cacheowanie czcionek w przeglądarce użytkownika, co przekłada się na szybsze ładowanie interfejsu i mniejsze zużycie zasobów.
+
+Dodatkowo, użycie domyślnych linków do czcionek i ikon rekomendowanych przez Angular Material zapewnia pełną kompatybilność z komponentami biblioteki bez potrzeby ręcznej konfiguracji i dostosowywania stylów, co oszczędziło niepotrzebnej pracy i straty czasu.
 
 \chapter{Podsumowanie projektu}
 

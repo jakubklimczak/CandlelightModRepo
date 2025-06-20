@@ -1,0 +1,30 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+skinparam shadowing false
+
+package "Games" {
+  package "Games Page" {
+    [Games Grid]
+  }
+
+  package "Add New Game Page" {
+    [New Steam Game Form]
+    [New Custom Game Form]
+  }
+  [Game Details Page]
+
+  [Game Service]
+  [Steam Service]
+  [Auth Token Service]
+
+  [Games Page] --> [Game Service]
+  [Games Page] --> [Auth Token Service]
+  [Add New Game Page] --> [Game Service]
+  [Game Details Page] --> [Game Service]
+  [Game Details Page] --> [Auth Token Service]
+  [New Steam Game Form] --> [Steam Service]
+  [New Custom Game Form] --> [Game Service]
+
+}
+@enduml

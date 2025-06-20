@@ -1,0 +1,23 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+skinparam shadowing false
+
+package "User Profile" {
+  package "User Profile Page" {
+    [Favourite Games Section]
+    [Favourite Mods Section]
+  }
+  [Edit User Profile Page]
+
+  [Auth Service]
+  [User Profile Service]
+
+  [User Profile Page] --> [Auth Service]
+  [User Profile Page] --> [User Profile Service]
+  [Edit User Profile Page] --> [Auth Service]
+  [Edit User Profile Page] --> [User Profile Service]
+  [Favourite Games Section] --> [User Profile Service]
+  [Favourite Mods Section] --> [User Profile Service]
+}
+@enduml

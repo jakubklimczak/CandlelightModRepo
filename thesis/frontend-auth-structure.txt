@@ -1,0 +1,20 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+skinparam shadowing false
+
+package "Authentication" {
+  [Login Page]
+  [Registration Page]
+  [Auth Service]
+  [Auth Token Service]
+  package "Steam Login Page" {
+    [Steam Login Callback]
+  }
+
+  [Login Page] --> [Auth Service]
+  [Registration Page] --> [Auth Service]
+  [Steam Login Page] --> [Auth Service]
+  [Steam Login Callback] --> [Auth Token Service]
+}
+@enduml

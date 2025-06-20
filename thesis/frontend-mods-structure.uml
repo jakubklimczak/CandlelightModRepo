@@ -1,0 +1,25 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+skinparam shadowing false
+
+package "Mods" {
+  package "Mods Page" {
+    [Mods List]
+  }
+  [Mod Details Page]
+  package "Upload Mod Page" {
+    [Upload New Version Tab]
+    [Upload New Mod Tab]
+  }
+
+  [Mods Service]
+  [Auth Token Service]
+
+  [Upload New Mod Tab] --> [Mods Service]
+  [Upload New Version Tab] --> [Mods Service]
+  [Mod Details Page] --> [Mods Service]
+  [Mod Details Page] --> [Auth Token Service]
+  [Mods List] --> [Mods Service]
+}
+@enduml
