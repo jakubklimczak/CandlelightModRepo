@@ -7,7 +7,7 @@ namespace Candlelight.Api.Tests.Helpers;
 public class CryptographyHelperTests
 {
 
-    readonly AppUser _appUser = new()
+    private readonly AppUser _appUser = new()
     {
         Id = Guid.NewGuid(),
         Email = "email@candlelight.com",

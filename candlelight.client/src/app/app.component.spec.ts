@@ -1,9 +1,10 @@
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { Component } from '@angular/core';
+
+@Component({ selector: 'app-topbar', template: '' })
+class MockTopbarComponent {}
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -12,8 +13,10 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppComponent],
-      imports: [HttpClientTestingModule],
+      declarations: [AppComponent, MockTopbarComponent],
+      providers: [
+        provideHttpClientTesting()
+      ]
     }).compileComponents();
   });
 
@@ -21,6 +24,7 @@ describe('AppComponent', () => {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
   });
 
   afterEach(() => {

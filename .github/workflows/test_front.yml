@@ -3,10 +3,10 @@ name: Tests - Frontend
 on:
   push:
     branches:
-      - '*'
+      - "*"
   pull_request:
     branches:
-      - '*'
+      - "*"
 
 jobs:
   test-frontend:
@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Install dependencies
         run: |
@@ -29,4 +29,4 @@ jobs:
       - name: Run frontend tests (Karma + Jasmine)
         run: |
           cd candlelight.client
-          npm run test -- --watch=false --browsers=Firefox
+          npm run test -- --watch=false --browsers=FirefoxHeadless
